@@ -1,0 +1,59 @@
+{% extends 'Medico/layout.html' %}
+{% load static %}
+{% block title %}Edicion de resumen{% endblock  %}
+{% block content %}
+
+<form method="post" action="{% url 'guardar_documento' %}">
+    {% csrf_token %}
+    <div>
+        <p><b>Nombre del paciente:</b> {{ documento.paciente_nombre }}</p>
+        <p><b>Edad:</b> {{ documento.edad }}</p>
+        <p><b>Número de expediente:</b> {{ documento.numero_expediente }}</p>
+        <p><b>Especialidad:</b> {{ documento.especialidad.name }}</p>
+        {% if documento.ultimo_editor %}
+            <p><b>Último editor:</b> {{ documento.ultimo_editor.get_full_name }}</p>
+        {% endif %}
+    </div>
+    <div id="summernote">
+      
+        {{documento.texto|safe}}
+  
+    </div>
+    <input type="hidden" name="content" id="content" />
+    <button type="submit">Guardar</button>
+  </form>
+
+  <script>
+    $(document).ready(function () {
+      $('#summernote').summernote({
+        placeholder: 'Hello stand alone ui',
+        tabsize: 2,
+        height: 120,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+      })
+    
+      // Asegurar que el contenido de Summernote se envíe correctamente
+      $('form').on('submit', function () {
+        var content = $('#summernote').summernote('code')
+        $('#content').val(content)
+      })
+    })
+  </script>
+
+
+
+
+
+
+
+
+
+{% endblock  %}

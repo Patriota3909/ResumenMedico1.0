@@ -1,0 +1,35 @@
+.btn {
+  background-color: #741616;
+}
+
+.btn-primary.focus, .btn-primary:focus {
+  color: #fff;
+  background-color: #153b63;
+  border-color: #0f2e4f;
+  box-shadow: 0 0 0 .2rem rgba(38,143,255,.5);
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: rgba(128,189,255,0);
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: rgba(112,31,31,0);
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+

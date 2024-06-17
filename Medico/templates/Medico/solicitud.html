@@ -2,40 +2,32 @@
 {% load static %}
 {% block content %}
 
-<h1>Crear Resumen</h1>
-<form method="post">
-    {% csrf_token %}
-    <div>
-        <label for="paciente_nombre">Nombre del Paciente:</label>
-        <input type="text" id="paciente_nombre" name="paciente_nombre" required>
-    </div>
-    <div>
-        <label for="edad">Edad:</label>
-        <input type="number" id="edad" name="edad" required>
-    </div>
-    <div>
-        <label for="numero_expediente">Número de Expediente:</label>
-        <input type="text" id="numero_expediente" name="numero_expediente" required>
-    </div>
-    <div>
-        <label for="motivo_solicitud">Motivo de Solicitud:</label>
-        <textarea id="motivo_solicitud" name="motivo_solicitud" rows="4" required></textarea>
-    </div>
-    <div>
-        <label for="especialidad">Especialidad:</label>
-        <select id="especialidad" name="especialidad" required>
-            {% for especialidad in especialidades %}
-                <option value="{{ especialidad.id }}">{{ especialidad.name }}</option>
-            {% endfor %}
+<div class="text-center text-bg-light container" style="margin-top: 12px;">
+    <div class="btn-group" role="group"><button id="btnsolicitud" class="btn btn-light" type="button" style="margin-right: 12px;"><a href={% url 'solicitud'%}>Solicitud</a></button></div><button class="btn btn-light" type="button" style="margin-left: 12px;">Busqueda global</button>
+</div>
+
+  <div class="container text-center">
+    <form class="bg-light-subtle border rounded border-1 shadow float-none align-items-center align-content-center align-self-center p-3 p-md-5" data-bs-theme="light" style="margin-left: 100px;margin-right: 100px;margin-top: 50px;" method="post">
+      {% csrf_token %}
+      <div class="fs-5 mb-3" style="text-align: left;">
+        <label class="form-label" for="subject">Nombre del paciente</label>
+        <input class="form-control" type="text" id="paciente_nombre" name="paciente_nombre"/>
+        <label class="form-label" for="email" style="margin-top: 10px;">Email</label>
+        <input id="correo_electronico" name="correo_electronico" class="form-control" type="email" />
+        <label class="form-label" style="margin-top: 10px;">Edad</label>
+        <input class="form-control" id="edad" name="edad" type="number" />
+        <label class="form-label" style="margin-top: 10px;">Numero de expediente</label>
+        <input class="form-control" id="numero_expediente" name="numero_expediente" type="number" style="padding-top: 8px;margin-bottom: 0px;" />
+        <label class="form-label" for="message" style="margin-top: 10px;">Servicio</label>
+        <select class="form-select" id="especialidad" name="especialidad">
+        {% for especialidad in especialidades%}
+            <option value="{{ especialidad.id }}">{{ especialidad.name}}</option>
+        {% endfor %}
         </select>
-    </div>
-    <div>
-        <label for="correo_electronico">Correo Electrónico:</label>
-        <input type="email" id="correo_electronico" name="correo_electronico" required>
-    </div>
-   
-    <button type="submit">Subir solicitud</button>
-</form>
-
-
-{% endblock  %}
+        <label class="form-label" style="margin-top: 10px;">Motivo de solicitud</label>
+        <textarea class="form-control" id="motivo_solicitud" name="motivo_solicitud"></textarea>
+      </div>
+      <button class="btn fs-4 link-dark border rounded shadow-sm" type="submit">Enviar</button>
+    </form>
+  </div>
+{% endblock %}
