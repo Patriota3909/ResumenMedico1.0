@@ -1,6 +1,15 @@
 from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django_summernote.fields import SummernoteTextField
+
+class MyModel(models.Model):
+    title = models.CharField(max_length=200)
+    content = SummernoteTextField()
+
+    def __str__(self):
+        return self.title
+
 
 
 class Especialidad(models.Model):
@@ -43,11 +52,11 @@ class Resumen(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     correo_electronico = models.EmailField()
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
-    texto = models.TextField()
+    texto = models.TextField(blank=True)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Solicitud')
     medico_residente = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_residente')
     medico_becario = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_becario')
-    medico_adscrito = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_adscrito')
+    medico_adscrito = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_adscrito', blank=True)
     ultimo_editor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documentos_editados')
     
     def __str__(self):
@@ -76,3 +85,13 @@ class EstadoHistorial(models.Model):
 
     def __str__(self):
         return f"{self.resumen.numero_expediente} cambió de {self.estado_anterior} a {self.estado_nuevo} el {self.fecha_cambio}"
+    
+    
+
+class Asignacion(models.Model):
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    tipo_medico = models.CharField(max_length=10, choices=Doctor.TIPOS_DE_MEDICO)
+    ultimo_medico = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+    
+    def __str__(self):
+        return f"{self.especialidad.name} - {self.tipo_medico} - {self.ultimo_medico.user.username}"

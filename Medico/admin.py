@@ -6,6 +6,7 @@ from .models import *
 
 admin.site.register(Especialidad)
 admin.site.register(Resumen)
+admin.site.register(Doctor)
 
 
 

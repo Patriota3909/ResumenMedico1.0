@@ -1,21 +1,21 @@
 {% extends 'Medico/layout.html' %}
 {% load static %}
-{% block title %}Medicos Residentes-Becarios{% endblock  %}
+{% block title %}Medicos Residentes-Becarios{% endblock %}
+
+{% block links %}
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock  %}
+
+
+
 {% block content %}
 
 <h1>Lista de Solicitudes y Revisiones</h1>
-{% comment %} Esta linea bloque de codigo filtra y crea los botones, por especialidad 
-#{% if especialidades %}
-#    <h2>Filtrar por Especialidad:</h2>
-#    <form method="get" action="{% url 'lista_solicitudes_revision' %}">
-#        {% for esp in especialidades %}
-#            <button type="submit" name="especialidad_id" value="{{ esp.id }}">{{ esp.name }}</button>
-#        {% endfor %}
-#    </form>
-#{% endif %}
-{% endcomment %}
-{% comment %} aqui termina {% endcomment %}
-
 
 
 
@@ -23,8 +23,9 @@
 <table>
     <thead>
         <tr>
+            <th>Ver detalles</th>
             <th>Número de Expediente</th>
-            <th>Nombre del Paciente</th>     
+            <th>Nombre del Paciente</th>
             <th>Especialidad</th>
             <th>Fecha de Solicitud</th>
             <th>Estado</th>
@@ -33,53 +34,182 @@
     </thead>
     <tbody>
         {% for documento in documentos_solicitud %}
-            <tr>
-                <td>{{ documento.numero_expediente }}</td>
-                <td>{{ documento.paciente_nombre }}</td>
-                <td>{{ documento.especialidad.name }}</td>
-                <td>{{ documento.fecha_solicitud }}</td>
-                <td>{{ documento.estado }}</td>
-                <td>
-                    <button><a href="{% url 'editar' documento.id %}">Editar</a></button>
-                </td>
-                <td>
-                    <form action="" method="post" action="{% url 'cambiar_estado' documento.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Enviar a revisión</a></button>
-                    </form>
-                </td>
-            </tr>
+        <tr>
+            <td>    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-{{ documento.id }}">
+                Ver Detalles
+            </button>
+
+
+      
+            <div class="modal fade" id="modal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ documento.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel-{{ documento.id }}">Detalles del Expediente {{ documento.numero_expediente }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Número de Expediente:</strong> {{ documento.numero_expediente }}</p>
+                            <p><strong>Nombre del Paciente:</strong> {{ documento.paciente_nombre }}</p>
+                            <p><strong>Especialidad:</strong> {{ documento.especialidad.name }}</p>
+                            <p><strong>Fecha de Solicitud:</strong> {{ documento.fecha_solicitud }}</p>
+                            <p><strong>Estado:</strong> {{ documento.estado }}</p>
+                            <p><strong>Medico Becario:</strong> {{ documento.medico_becario }}</p>
+                            <p><strong>Medico Residente:</strong> {{ documento.medico_residente }}</p>
+                            <p><strong>Medico Adscrito:</strong> {{ documento.medico_adscrito }}</p>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            </td>
+            <td>{{ documento.numero_expediente }}</td>
+            <td>{{ documento.paciente_nombre }}</td>
+            <td>{{ documento.especialidad.name }}</td>
+            <td>{{ documento.fecha_solicitud }}</td>
+            <td>{{ documento.estado }}</td>
+            <td>
+            <button><a href="{% url 'editar_documento' documento.id %}">Editar</a></button>
+            </td>
+            <td>
+
+
+                <form action="" method="post" action="{% url 'cambiar_estado' documento.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Enviar a revisión</button>
+                </form>
+            </td>
+
+
+
+            <td>    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal1-{{ documento.id }}">
+                Asignar medico
+            </button>
+
+
+      
+            <div class="modal fade" id="modal1-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ documento.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h5 class="modal-title" id="modalLabel-{{ documento.id }}">Asignacion de medico</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+
+
+                            <form action="{% url 'asignar_medico_resumen' documento.id%}" method="post">
+                                {%csrf_token%}
+                                <input type="hidden" name="resumen_id" value="{{ resumen.id }}">
+                                <input type="hidden" name="medico" value="{{ medico.id }}">
+                                <select class="form-select" id="medico" name="medico">
+                                    {% for med in doctor%}
+                                        <option value="{{ med.id }}">{{ med.user}}</option>
+                                    {% endfor %}
+                                </select>
+                                <br>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+
+                            </form>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <h2>En Revisión</h2>
 <table>
     <thead>
         <tr>
+            <th>Ver detalles</th>
             <th>Número de Expediente</th>
             <th>Nombre del Paciente</th>
             <th>Especialidad</th>
             <th>Fecha de Solicitud</th>
             <th>Estado</th>
-            <th>Editar</th>
+            <th>Accion</th>
         </tr>
     </thead>
     <tbody>
         {% for documento in documentos_revision %}
-            <tr>
-                <td>{{ documento.numero_expediente }}</td>
-                <td>{{ documento.paciente_nombre }}</td>
-                <td>{{ documento.especialidad.name }}</td>
-                <td>{{ documento.fecha_solicitud }}</td>
-                <td>{{ documento.estado }}</td>
-                <td>
-                    <button><a href="{% url 'editar_documento' documento.id %}">Editar</a></button>
-                </td>
-            </tr>
+        <tr>
+            <td><button>ver detalles</button></td>
+            <td>{{ documento.numero_expediente }}</td>
+            <td>{{ documento.paciente_nombre }}</td>
+            <td>{{ documento.especialidad.name }}</td>
+            <td>{{ documento.fecha_solicitud }}</td>
+            <td>{{ documento.estado }}</td>
+            <td>
+                <button><a href="{% url 'editar_documento' documento.id %}">Editar</a></button>
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
 
 
-{% endblock  %}
+
+
+
+{% endblock %}

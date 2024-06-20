@@ -1,10 +1,12 @@
 {% extends 'Medico/layout.html' %}
 {% load static %}
+{% block title %}
 
+{% endblock %}
 {% block content %}
 
 <div class="container">
-    <form method="post" action="{% url 'generate_pdf' %}">
+    <form method="post">
       {% csrf_token %}
 
       <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
@@ -17,8 +19,7 @@
         <div class="row gy-4 w-100" style="max-width: 1200px;padding-right: 0px;margin-right: 56px;margin-left: 56px;padding-left: 0px;">
           <div class="col-12" style="padding-left: 0px;padding-right: 0px;margin-right: 28px;">
             <div class="card">
-                <textarea id="summernote" name="editordata">{{documento.texto}}</textarea>
-                <input type="hidden" name="content" id="content" />
+                <textarea id="summernote" name="editordata"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
@@ -44,16 +45,6 @@
                 ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
-
-             // Asegurar que el contenido de Summernote se envíe correctamente
-      $('form').on('submit', function () {
-        let content = $('#summernote').summernote('code')
-        $('#content').val(content)
-      })
-
-      let edit = function() {
-        $('.click2edit').summernote({focus: true});
-      };
         });
       </script>
 
