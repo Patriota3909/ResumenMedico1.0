@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container">
-    <form method="post" action="{% url 'generate_pdf' %}">
+    <form method="post">
       {% csrf_token %}
 
       <div class="container d-flex flex-column align-items-center py-4 py-xl-5">

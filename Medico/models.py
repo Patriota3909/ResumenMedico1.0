@@ -56,7 +56,7 @@ class Resumen(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Solicitud')
     medico_residente = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_residente')
     medico_becario = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_becario')
-    medico_adscrito = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_adscrito', blank=True)
+    medico_adscrito = models.ManyToManyField(Doctor, related_name='resumenes_por_adscrito', blank=True)
     ultimo_editor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documentos_editados')
     
     def __str__(self):
