@@ -8,6 +8,10 @@ from django.http import HttpRequest, HttpResponseBadRequest, HttpResponse
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+from django.db.models import Q
+from .decorators import adscrito_required, adscrito_especialidad_required
+
 
 @login_required
 def home(request):
@@ -19,15 +23,11 @@ def home(request):
 @login_required
 #@doctor_tipo_required(['Residente', 'Becario'])
 #@status_permission_required(['Solicitud', 'En revisión'])
-
 def lista_solicitudes_revision(request, Especialidad_id=None):
     
     documentos_solicitud=Resumen.objects.filter(estado="Solicitud")
-    
     documentos_revison=Resumen.objects.filter(estado="En revisión")
     medicos_becres =Doctor.objects.all()
-    
-    
     if Especialidad_id:
         Especialidad_obj = get_object_or_404(Especialidad, pk=Especialidad_id)
         documentos_solicitud = documentos_solicitud.filter(Especialidad=Especialidad_obj)
@@ -50,28 +50,23 @@ def lista_solicitudes_revision(request, Especialidad_id=None):
 #@status_permission_required(['Solicitud', 'En revisión'])
 
 def editar_documento(request, documento_id):
-#    documento = get_object_or_404(Resumen, id=documento_id)
-#    
-#    if request.method == 'POST':
-#        content = request.POST.get('content')
-#        documento.texto = content
-#        documento.ultimo_editor = request.user
-#        documento.save()
-#        return redirect('lista_solicitudes_revision')
-#        
-#    return render(request, 'Medico/editar_documento.html', {
-#        'documento': documento,
-#        })
-
-   
-    documento = Resumen.objects.get(id=documento_id)  # Obtén el documento por ID
+ 
+    documento = Resumen.objects.get(id=documento_id)  
     if request.method == 'POST':
         content = request.POST.get('editordata')
-        documento.texto = content  # Actualiza el contenido
-        documento.save()  # Guarda los cambios
-        return redirect('home')  # Redirige a otra página tras guardar
+        documento.texto = content 
+        documento.save()  
+        return redirect('home') 
     return render(request, 'Medico/editar_documento.html', {'documento': documento})
 
+def cambiar_estado(request, documento_id):
+    if request.method == 'POST':
+        documento = Resumen.objects.get(id=documento_id)
+        nuevo_estado = request.POST.get('nuevo_estado')
+        if nuevo_estado in ['En revisión', 'Listo para enviar', 'Enviado']:
+            documento.estado = nuevo_estado
+            documento.save()
+        return redirect('editar_documento', documento_id=documento.id)
 
 
 
@@ -184,3 +179,46 @@ def save_document(request):
         doc.save()
         return redirect('home')  # Redirige a una página de éxito o donde prefieras
     return render(request, 'your_template.html')
+
+
+def lista_resumenes(request):
+    especialidades = Especialidad.objects.all()
+    resumenes = Resumen.objects.all()
+
+    especialidad_ids = request.GET.getlist('especialidades')
+    query = request.GET.get('q')
+
+    if especialidad_ids:
+        resumenes = resumenes.filter(especialidad__id__in=especialidad_ids)
+    
+    if query:
+        resumenes = resumenes.filter(
+            Q(paciente_nombre__icontains=query) |
+            Q(numero_expediente__icontains=query) |
+            Q(motivo_solicitud__icontains=query) |
+            Q(especialidad__name__icontains=query) |
+            Q(correo_electronico__icontains=query) |
+            Q(texto__icontains=query)
+        )
+    else:
+        resumenes = Resumen.objects.all().order_by("-fecha_solicitud")
+    
+    return render(request, 'Medico/busqueda.html', {
+        'resumenes': resumenes,
+        'especialidades': especialidades,
+    })
+    
+    
+@adscrito_required
+@adscrito_especialidad_required
+def lista_resumenes_adscrito(request):
+    especialidad =request.especialidad
+    en_revision = Resumen.objects.filter(estado='En revisión', especialidad=especialidad)
+    listos_para_enviar = Resumen.objects.filter(estado='Listo para enviar', especialidad=especialidad)
+    enviados = Resumen.objects.filter(estado='Enviado', especialidad=especialidad)
+
+    return render(request, 'Medico/MedicosAds.html', {
+        'en_revision': en_revision,
+        'listos_para_enviar': listos_para_enviar,
+        'enviados': enviados,
+    })

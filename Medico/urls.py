@@ -12,5 +12,8 @@ urlpatterns = [
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
     path('editar_documento/<int:documento_id>/', views.editar_documento, name="editar_documento"),
     path('prueba', views.prueba, name="prueba"),
+    path('lista_resumenes/', views.lista_resumenes, name='lista_resumenes'),
+    path('MedicosADS', views.lista_resumenes_adscrito, name='MedicosADS'),
+
     
 ]

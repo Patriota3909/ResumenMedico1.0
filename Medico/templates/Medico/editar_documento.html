@@ -17,13 +17,39 @@
         <div class="row gy-4 w-100" style="max-width: 1200px;padding-right: 0px;margin-right: 56px;margin-left: 56px;padding-left: 0px;">
           <div class="col-12" style="padding-left: 0px;padding-right: 0px;margin-right: 28px;">
             <div class="card">
-                <textarea id="summernote" name="editordata">{{documento.texto}}</textarea>
+                <textarea id="summernote" name="editordata">{{documento.texto}} </textarea>
                 <input type="hidden" name="content" id="content" />
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </div>
       </div>
+    </form>
+
+    <div class="container mt-3">
+      {% if documento.estado == 'Solicitud' %}
+          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="nuevo_estado" value="En revisión">
+              <button type="submit" class="btn btn-secondary">Enviar a revisión</button>
+          </form>
+      {% elif documento.estado == 'En revisión' %}
+          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="nuevo_estado" value="Listo para enviar">
+              <button type="submit" class="btn btn-secondary">Listo para enviar</button>
+          </form>
+      {% elif documento.estado == 'Listo para enviar' %}
+          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="nuevo_estado" value="Enviado">
+              <button type="submit" class="btn btn-secondary">Enviar</button>
+          </form>
+      {% endif %}
+  </div>
+
+
+
       <script>
         $(document).ready(function() {
             $('#summernote').summernote({
