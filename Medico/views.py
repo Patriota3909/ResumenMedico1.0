@@ -10,7 +10,8 @@ from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.db.models import Q
-from .decorators import adscrito_required, adscrito_especialidad_required
+from .decorators import adscrito_especialidad_required,user_tipo_required
+from django.core.exceptions import PermissionDenied
 
 
 @login_required
@@ -46,17 +47,23 @@ def lista_solicitudes_revision(request, Especialidad_id=None):
 
 
 @login_required
-#@doctor_tipo_required(['Residente', 'Becario'])
-#@status_permission_required(['Solicitud', 'En revisión'])
-
+@user_tipo_required(['Adscrito','Residente','Becario'], allowed_views=['editar_documento'])
 def editar_documento(request, documento_id):
  
     documento = Resumen.objects.get(id=documento_id)  
     if request.method == 'POST':
         content = request.POST.get('editordata')
         documento.texto = content 
-        documento.save()  
-        return redirect('home') 
+        documento.save()
+        
+        try:
+            doctor = Doctor.objects.get(user=request.user)
+            if doctor.tipo == "Adscrito":
+                return redirect('MedicosADS')
+            elif doctor.tipo in ['Residente', 'Becario']:
+                return redirect('MedicosRB')
+        except Doctor.DoesNotExist:
+              return redirect('home') 
     return render(request, 'Medico/editar_documento.html', {'documento': documento})
 
 def cambiar_estado(request, documento_id):
@@ -87,8 +94,8 @@ def generate_pdf(request):
 
 
 @login_required
-@doctor_tipo_required(['Adscrito'])
-@status_permission_required(['En revisión','Listo para enviar', 'Enviado'])
+#@doctor_tipo_required(['Adscrito'])
+#@status_permission_required(['En revisión','Listo para enviar', 'Enviado'])
 
 def lista_listo_enviado(request, documentos):
     return render(request, 'app/lista_listo_enviado.html', {'documentos': documentos})
@@ -208,16 +215,24 @@ def lista_resumenes(request):
         'especialidades': especialidades,
     })
     
-    
-@adscrito_required
-@adscrito_especialidad_required
+@login_required
+@user_tipo_required('Adscrito', allowed_views=['lista_resumenes_adscrito'])
 def lista_resumenes_adscrito(request):
-    especialidad =request.especialidad
+    #Obtenemos la especialidad del doctor
+    especialidad = None
+    try: 
+        doctor = Doctor.objects.get(user=request.user)
+        especialidad = doctor.especialidad
+    #Fitlamos los resumenes por estado y por la especialidad del medico
+    except Doctor.DoesNotExist:
+        if not request.user.is_superuser:
+            raise PermissionDenied("No tiene los permisos para ingresar a esta pagina, por favor comincate con soporte")
+                
     en_revision = Resumen.objects.filter(estado='En revisión', especialidad=especialidad)
     listos_para_enviar = Resumen.objects.filter(estado='Listo para enviar', especialidad=especialidad)
     enviados = Resumen.objects.filter(estado='Enviado', especialidad=especialidad)
 
-    return render(request, 'Medico/MedicosAds.html', {
+    return render(request, 'Medico/MedicosADS.html', {
         'en_revision': en_revision,
         'listos_para_enviar': listos_para_enviar,
         'enviados': enviados,

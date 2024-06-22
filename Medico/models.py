@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
-
+#Esta clase la utilza Summernote para su uso dentro de la platilla.
 class MyModel(models.Model):
     title = models.CharField(max_length=200)
     content = SummernoteTextField()
@@ -11,14 +11,15 @@ class MyModel(models.Model):
         return self.title
 
 
-
+#Define la especialidad y un codigo como abreviatura
 class Especialidad(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=3)
     
     def __str__(self):
         return (f"{self.name}-{self.code}")
-    
+
+#Define la clase de medico, el cual depende de una especialidad
 class Doctor(models.Model):
     TIPOS_DE_MEDICO=[
         ("Residente","Residente"),
@@ -35,7 +36,9 @@ class Doctor(models.Model):
     
     def __str__(self):
         return (f"D.{self.user.username} {self.user.last_name} - {self.tipo}")
-    
+
+
+#Define el objeto "Resumen", el cual es el modular del programa.
 class Resumen(models.Model):
 
     ESTADO_CHOICES = [
@@ -75,7 +78,7 @@ class Resumen(models.Model):
                 )
         super().save(*args, **kwargs)
 
-
+#Define es el estado del historial
 class EstadoHistorial(models.Model):
     resumen = models.ForeignKey(Resumen, on_delete=models.CASCADE, related_name='historial_estados')
     estado_anterior = models.CharField(max_length=20, choices=Resumen.ESTADO_CHOICES)
@@ -87,7 +90,7 @@ class EstadoHistorial(models.Model):
         return f"{self.resumen.numero_expediente} cambió de {self.estado_anterior} a {self.estado_nuevo} el {self.fecha_cambio}"
     
     
-
+#Esta asignación de se construyo para el registro de ediciones del objeto "Resumen"
 class Asignacion(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     tipo_medico = models.CharField(max_length=10, choices=Doctor.TIPOS_DE_MEDICO)

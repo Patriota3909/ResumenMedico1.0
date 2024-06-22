@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -7,6 +8,7 @@ urlpatterns = [
     path('solicitud', views.solicitud, name='solicitud'),
     path('MedicosRB', views.lista_solicitudes_revision, name='MedicosRB'),
     path('logout', views.exit, name="exit"),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('cambiar_estado/<int:documento_id>', views.cambiar_estado, name="cambiar_estado"),
     path('asignar_medico_resumen/<int:documento_id>', views.asignar_medico_resumen, name="asignar_medico_resumen"),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),

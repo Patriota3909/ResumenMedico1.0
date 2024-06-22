@@ -21,7 +21,7 @@
                 <th>Nombre del Paciente</th>
                 <th>Especialidad</th>
                 <th>Fecha de Solicitud</th>
-                <th>Estado</th>
+                <th>Médico Becario Asignado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -32,7 +32,7 @@
                     <td>{{ resumen.paciente_nombre }}</td>
                     <td>{{ resumen.especialidad.name }}</td>
                     <td>{{ resumen.fecha_solicitud }}</td>
-                    <td>{{ resumen.estado }}</td>
+                    <td>{{ resumen.medico_becario }}</td>
                     <td>
                         <a href="{% url 'editar_documento' resumen.id %}" class="btn btn-primary">Editar</a>
                     </td>
@@ -50,7 +50,7 @@
                 <th>Nombre del Paciente</th>
                 <th>Especialidad</th>
                 <th>Fecha de Solicitud</th>
-                <th>Estado</th>
+                <th>Médico becario asignado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -61,7 +61,7 @@
                     <td>{{ resumen.paciente_nombre }}</td>
                     <td>{{ resumen.especialidad.name }}</td>
                     <td>{{ resumen.fecha_solicitud }}</td>
-                    <td>{{ resumen.estado }}</td>
+                    <td>{{ resumen.medico_becario }}</td>
                     <td>
                         <a href="{% url 'editar_documento' resumen.id %}" class="btn btn-primary">Editar</a>
                     </td>
