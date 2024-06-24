@@ -13,8 +13,6 @@ class tipo_usuario_middleware:
             reverse('login'), 
             reverse('logout'), 
             reverse('admin:login'),
-            reverse('MedicosADS'),
-           
             ]
         
         if request.path in excluded_paths:
@@ -32,15 +30,16 @@ class tipo_usuario_middleware:
                 
                 doctor = Doctor.objects.get(user=request.user)
                 if doctor.tipo == 'Adscrito':
-                    allowed_views =['MedicosADS', 'editar_documento']
+                    allowed_views =['MedicosADS', 'editar_documento','cambiar_estado']
                     if current_view_name not in allowed_views:
                         return redirect('MedicosADS')
                 elif doctor.tipo in ['Residente', 'Becario']:
-                    if request.path != reverse('MedicosRB'):
+                    allowed_views =['MedicosRB','editar_documento','cambiar_estado']
+                    if current_view_name not in allowed_views:
                         return redirect('MedicosRB')
                 
             except Doctor.DoesNotExist:
-                pass  # Si el usuario no es un doctor, permitir el acceso a la vista solicitada en este caso a administradores para revisar el estatus de resumenes completos
+                return redirect('home')  # Si el usuario no es un doctor, permitir el acceso a la vista solicitada en este caso a administradores para revisar el estatus de resumenes completos
 
         response = self.get_response(request)
         return response

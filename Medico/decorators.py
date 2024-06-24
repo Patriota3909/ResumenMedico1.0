@@ -15,7 +15,7 @@ def user_tipo_required(allowed_tipos, allowed_views=[]):
                     return view_func(request, *args, **kwargs)
             except Doctor.DoesNotExist:
                 pass    
-            raise PermissionDenied
+            raise PermissionDenied("No tienes permiso para entrar a esta pagina")
         return _wrapped_view
     return decorador
 
@@ -70,13 +70,3 @@ def status_permission_required(status_list):
     return decorator
 
 
-# verificamos la especialidad del medico adascrito
-def adscrito_especialidad_required(view_func):
-    def _wrapped_view(request, *args, **kwargs):
-        user_doctor = get_object_or_404(Doctor, user=request.user)
-        if user_doctor.tipo == 'Adscrito':
-            request.especialidad = user_doctor.especialidad
-            return view_func(request, *args, **kwargs)
-        else:
-            raise PermissionDenied
-    return _wrapped_view

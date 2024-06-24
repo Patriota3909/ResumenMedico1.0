@@ -20,31 +20,27 @@
                 <textarea id="summernote" name="editordata">{{documento.texto}} </textarea>
                 <input type="hidden" name="content" id="content" />
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" >Guardar</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" >Guardar</button>
           </div>
         </div>
       </div>
-
-
-        <!-- Modal de confirmación -->
-        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      ¿Seguro que deseas guardar los cambios?
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                      <button type="button" class="btn btn-primary" id="confirmSave">Guardar</button>
-                  </div>
-              </div>
+<!-- Modal de confirmación -->
+      <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              ¿Seguro que deseas guardar los cambios?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="editForm">Guardar</button>
+            </div>
           </div>
+        </div>
       </div>
 
 
@@ -52,24 +48,97 @@
 
     <div class="container mt-3">
       {% if documento.estado == 'Solicitud' %}
-          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+          <form method="post" id="form_revision"action="{% url 'cambiar_estado' documento.id %}">
               {% csrf_token %}
               <input type="hidden" name="nuevo_estado" value="En revisión">
-              <button type="submit" class="btn btn-secondary">Enviar a revisión</button>
-          </form>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision" class="btn btn-secondary">Enviar a revisión</button>
+
+              <!-- Modal de confirmación de estado -->
+      <div class="modal fade" id="confirmModal_enrevision" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h1>
+                Este resumen se enviará a revisión</h1>
+                <h2>¿Estas deacuerdo?</h2>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="form_revision">Si, Enviar a revisión</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+
       {% elif documento.estado == 'En revisión' %}
-          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+    <form method="post" id="form_listoenviar"action="{% url 'cambiar_estado' documento.id %}">
               {% csrf_token %}
               <input type="hidden" name="nuevo_estado" value="Listo para enviar">
-              <button type="submit" class="btn btn-secondary">Listo para enviar</button>
-          </form>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar" class="btn btn-secondary">Listo para enviar</button>
+
+              
+              <!-- Modal de confirmación de estado -->
+      <div class="modal fade" id="confirmModal_listoenviar" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h1>Este resumen pasará a listos para enviar</h1>
+              <h2>¿Estas deacuerdo?</h2>
+              
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="form_listoenviar">Si</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
       {% elif documento.estado == 'Listo para enviar' %}
-          <form method="post" action="{% url 'cambiar_estado' documento.id %}">
+    <form method="post" id="form_enviado" action="{% url 'cambiar_estado' documento.id %}">
               {% csrf_token %}
               <input type="hidden" name="nuevo_estado" value="Enviado">
-              <button type="submit" class="btn btn-secondary">Enviar</button>
-          </form>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado" class="btn btn-secondary">Enviar</button>
+
+
+                           
+              <!-- Modal de confirmación de estado -->
+      <div class="modal fade" id="confirmModal_enviado" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar envio</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              ¿Esta seguro de enviar este resumen?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="form_enviado">Si, enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
       {% endif %}
+
+
+
   </div>
 
 
@@ -105,10 +174,9 @@
         $('.click2edit').summernote({focus: true});
       };
 
-      $('#confirmSave').click(function() {
-        $('#confirmModal').modal('hide');  // Cerrar el modal
-        $('#editForm').submit();  // Enviar el formulario
-           });
+
+   
+
       });
       </script>
 
