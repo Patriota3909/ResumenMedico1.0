@@ -110,7 +110,7 @@ def editar_documento(request, documento_id):
 
 
 @login_required
-@user_tipo_required(['Adscrito','Becario'], allowed_views=['cambiar_estado'])
+@user_tipo_required(['Adscrito','Becario'])
 def cambiar_estado(request, documento_id):
     if request.method == 'POST':
         
