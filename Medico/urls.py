@@ -15,6 +15,7 @@ urlpatterns = [
     path('cambiar_estado/<int:documento_id>', views.cambiar_estado, name="cambiar_estado"),
     path('asignar_medico_resumen/<int:documento_id>', views.asignar_medico_resumen, name="asignar_medico_resumen"),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
+    path('asignar_medico_residente', views.asignar_medico_residente, name='asignar_medico_residente'),
  
 
     

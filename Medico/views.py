@@ -39,23 +39,57 @@ def home(request):
 @login_required
 @user_tipo_required(['Becario','Residente'])
 def lista_solicitudes_revision(request, Especialidad_id=None):
-    documentos_solicitud=Resumen.objects.filter(estado="Solicitud")
-    documentos_revison=Resumen.objects.filter(estado="En revisión")
-    medicos_becres =Doctor.objects.all()
+    user = request.user
+    try: 
+        doctor = Doctor.objects.get(user=user)
+    except Doctor.DoesNotExist:
+        raise PermissionDenied("No tienes permisos para acceder a esta vista")
+
+    if doctor.tipo == 'Becario':
+        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_becario=doctor)
+        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_becario=doctor)
+    elif doctor.tipo == 'Residente':
+        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_residente=doctor)
+        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_residente=doctor)
+
+   
+    
+
     if Especialidad_id:
         Especialidad_obj = get_object_or_404(Especialidad, pk=Especialidad_id)
         documentos_solicitud = documentos_solicitud.filter(Especialidad=Especialidad_obj)
         documentos_revision = documentos_revision.filter(Especialidad=Especialidad_obj)
 
-    especialidades = Especialidad.objects.all()  
+    especialidades = Especialidad.objects.all()
+    residentes = Doctor.objects.filter(especialidad=doctor.especialidad, tipo="Residente")  
     
     
     return render(request, 'Medico/MedicosRB.html', {
         'documentos_solicitud': documentos_solicitud,
         'documentos_revision': documentos_revison,
         'especialidades': especialidades,
-        'doctor': medicos_becres,
+        'doctor':doctor,
+        'residentes':residentes,
+        
+        
         })
+#########################################################################################
+
+@login_required
+@user_tipo_required(['Becario'])
+def asignar_medico_residente(request):
+    if request.method == 'POST':
+        resumen_id = request.POST.get('resumen_id')
+        residente_id = request.POST.get('residente')
+        
+        resumen = get_object_or_404(Resumen, id=resumen_id)
+        residente = get_object_or_404(Doctor, id=residente_id)
+        
+        resumen.medico_residente = residente
+        resumen.save()
+        
+        return redirect('MedicosRB')
+
 #########################################################################################
 
 @login_required
