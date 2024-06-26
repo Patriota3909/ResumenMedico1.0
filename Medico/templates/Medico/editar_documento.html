@@ -16,10 +16,12 @@
         </div>
         <div class="row gy-4 w-100" style="max-width: 1200px;padding-right: 0px;margin-right: 56px;margin-left: 56px;padding-left: 0px;">
           <div class="col-12" style="padding-left: 0px;padding-right: 0px;margin-right: 28px;">
+            
             <div class="card">
                 <textarea id="summernote" name="editordata">{{documento.texto}} </textarea>
                 <input type="hidden" name="content" id="content" />
             </div>
+
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" >Guardar</button>
           </div>
         </div>
@@ -43,11 +45,32 @@
         </div>
       </div>
 
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal">Generar PDF</button>
+      <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">Generar PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Vista previa del documento</h6>
+                    <div id="preview-content" style="border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmGeneratePDF">Generar PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     </form>
 
     <div class="container mt-3">
-      {% if documento.estado == 'Solicitud' %}
+      {% if documento.estado == 'Solicitud' and user_tipo != 'Residente' %}
           <form method="post" id="form_revision"action="{% url 'cambiar_estado' documento.id %}">
               {% csrf_token %}
               <input type="hidden" name="nuevo_estado" value="En revisión">
@@ -134,6 +157,8 @@
           </div>
         </div>
       </div>
+      
+
     </form>
       {% endif %}
 
@@ -174,6 +199,37 @@
         $('.click2edit').summernote({focus: true});
       };
 
+      // Añadir funcionalidad para mostrar la vista previa en el modal
+      $('#pdfModal').on('show.bs.modal', function () {
+        let content = $('#summernote').summernote('code');
+        document.getElementById('preview-content').innerHTML = content;
+      });
+
+
+      // Añadir funcionalidad para generar PDF
+        $('#confirmGeneratePDF').on('click', function() {
+            let content = $('#summernote').summernote('code');
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "generate_pdf" %}';
+            form.target = '_blank';
+
+            let csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+
+            let contentInput = document.createElement('input');
+            contentInput.type = 'hidden';
+            contentInput.name = 'content';
+            contentInput.value = content;
+            form.appendChild(contentInput);
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        });
 
    
 

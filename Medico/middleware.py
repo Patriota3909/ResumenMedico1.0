@@ -13,6 +13,8 @@ class tipo_usuario_middleware:
             reverse('login'), 
             reverse('logout'), 
             reverse('admin:login'),
+            reverse('MedicosADS'),
+            reverse('MedicosRB'),
             ]
         
         if request.path in excluded_paths:

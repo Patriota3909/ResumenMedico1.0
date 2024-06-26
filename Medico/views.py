@@ -13,7 +13,8 @@ from django.db.models import Q
 from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
 
-#####################################################################################
+#--------------------Pagina principal----------------------
+#---vista permitida solo para grupos de usuarios-----------
 @login_required
 def home(request):
     try:
@@ -30,14 +31,15 @@ def home(request):
 
         return render(request, 'home.html')
     return render(request, 'Medico/home.html')
-    
+#-----------------------------------------------------------
 
-####################################################################################################################
 
-######################################################### VISTA DE MEDICOS ##########################################################################
 
-@login_required
+#------- VISTA DE MEDICOS 
+#------Decorador login y user_tipo_required
+@login_required 
 @user_tipo_required(['Becario','Residente'])
+#------------------------------------------
 def lista_solicitudes_revision(request, Especialidad_id=None):
     user = request.user
     try: 
@@ -73,25 +75,6 @@ def lista_solicitudes_revision(request, Especialidad_id=None):
         
         
         })
-#########################################################################################
-
-@login_required
-@user_tipo_required(['Becario'])
-def asignar_medico_residente(request):
-    if request.method == 'POST':
-        resumen_id = request.POST.get('resumen_id')
-        residente_id = request.POST.get('residente')
-        
-        resumen = get_object_or_404(Resumen, id=resumen_id)
-        residente = get_object_or_404(Doctor, id=residente_id)
-        
-        resumen.medico_residente = residente
-        resumen.save()
-        
-        return redirect('MedicosRB')
-
-#########################################################################################
-
 @login_required
 @user_tipo_required(['Adscrito'])
 def lista_resumenes_adscrito(request):
@@ -116,15 +99,11 @@ def lista_resumenes_adscrito(request):
         'enviados': enviados,
     })
 
-#############################YA FUNCIONA NO LO TOQUES ###################################
-
-
-
-
+#-----------Renderiza, guarda, y cambio de status el resumen-------------------------------------
 @login_required
 @user_tipo_required(['Adscrito','Residente','Becario'])
 def editar_documento(request, documento_id):
- 
+    user_tipo = request.user.doctor.tipo
     documento = Resumen.objects.get(id=documento_id)  
     if request.method == 'POST':
         content = request.POST.get('editordata')
@@ -139,12 +118,30 @@ def editar_documento(request, documento_id):
                 return redirect('MedicosRB')
         except Doctor.DoesNotExist:
               return redirect('home') 
-    return render(request, 'Medico/editar_documento.html', {'documento': documento})
-#########################################################################################
-
-
+    return render(request, 'Medico/editar_documento.html', {
+        'documento': documento,
+        'user_tipo': user_tipo,
+        
+        })
+#--------------------------------------------------------------------------------------------------
 @login_required
-@user_tipo_required(['Adscrito','Becario'])
+@user_tipo_required(['Becario'])
+def asignar_medico_residente(request):
+    if request.method == 'POST':
+        resumen_id = request.POST.get('resumen_id')
+        residente_id = request.POST.get('residente')
+        
+        resumen = get_object_or_404(Resumen, id=resumen_id)
+        residente = get_object_or_404(Doctor, id=residente_id)
+        
+        resumen.medico_residente = residente
+        resumen.save()
+        
+        return redirect('MedicosRB')
+
+#------------Cambia el status del Resumen----------------------------------------------------------
+@login_required
+@user_tipo_required(['Adscrito','Becario'], allowed_views=['cambiar_estado'])
 def cambiar_estado(request, documento_id):
     if request.method == 'POST':
         
@@ -162,7 +159,7 @@ def cambiar_estado(request, documento_id):
             except Doctor.DoesNotExist:
                 return redirect('home')
     return redirect('home')
-       
+#--------------------------------------------------------------------------------------------------
 
 ###############################################################################################
 
@@ -218,13 +215,13 @@ def solicitud(request):
     return render(request, 'Medico/solicitud.html', {'especialidades': especialidades})
 
 
-
+#-----Para salir de la sesion--------------------
 def exit(request):
     logout(request)
     return redirect('home')
-
+#------------------------------------------------
     
-    
+#--------Para asignar medico residente-----------    
 def asignar_medico_resumen(request, documento_id):
     if request.method == 'POST':
         medico_id = request.POST.get('medico_id')
@@ -238,17 +235,11 @@ def asignar_medico_resumen(request, documento_id):
         resumen.medico_residente = medico
         resumen.save()
         return redirect('Medico/MedicosRB.html')
-
- 
     return render(request, 'Medico/MedicosRB.html')
+#------------------------------------------------------
 
 
-
-
-
-
-
-
+#---Esta vista bronda la lista de resumenes con todos los detalles----------------
 def lista_resumenes(request):
     especialidades = Especialidad.objects.all()
     resumenes = Resumen.objects.all()
@@ -276,3 +267,4 @@ def lista_resumenes(request):
         'especialidades': especialidades,
     })
     
+#-----------------------------------------------------------------------------------------
