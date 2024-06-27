@@ -139,13 +139,13 @@ def asignar_medico_residente(request):
         resumen.save()
 
         subject = 'Tiene una nueva asignación de resumen'
-        message = f'ha sido asignado para realizar el resumen con el número de expediente {resumen.numero_expediente}.'
+        message = f'ha sido asignado para realizar el resumen con el número de expediente {resumen.numero_expediente}. entra a tu plataforma .... para revisarlo'
         from_email = 'arturo.olivares@imoiap.com.mx'
         recipient_list = [residente.email]
 
         try: 
             send_mail(subject, message, from_email, recipient_list)
-        except Exception as e
+        except Exception as e:
             print(f'Error al enviar correo: {e}')
         
         return redirect('MedicosRB')
