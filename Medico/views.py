@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from datetime import timedelta
 from .decorators import doctor_tipo_required, status_permission_required
 from django.contrib.auth.decorators import login_required 
 from .models import Resumen, Especialidad, Doctor
@@ -13,6 +14,7 @@ from django.db.models import Q
 from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.conf import settings
 
 #--------------------Pagina principal----------------------
 #---vista permitida solo para grupos de usuarios-----------
@@ -41,7 +43,7 @@ def home(request):
 @login_required 
 @user_tipo_required(['Becario','Residente'])
 #------------------------------------------
-def lista_solicitudes_revision(request, Especialidad_id=None):
+def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
     user = request.user
     try: 
         doctor = Doctor.objects.get(user=user)
@@ -49,11 +51,11 @@ def lista_solicitudes_revision(request, Especialidad_id=None):
         raise PermissionDenied("No tienes permisos para acceder a esta vista")
 
     if doctor.tipo == 'Becario':
-        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_becario=doctor)
-        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_becario=doctor)
+        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_becario=doctor).order_by('-fecha_modificacion')
+        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_becario=doctor).order_by('-fecha_modificacion')
     elif doctor.tipo == 'Residente':
-        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_residente=doctor)
-        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_residente=doctor)
+        documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_residente=doctor).order_by('-fecha_modificacion')
+        documentos_revison = Resumen.objects.filter(estado="En revisión", medico_residente=doctor).order_by('-fecha_modificacion')
 
    
     
@@ -73,12 +75,13 @@ def lista_solicitudes_revision(request, Especialidad_id=None):
         'especialidades': especialidades,
         'doctor':doctor,
         'residentes':residentes,
+        'edited_id':edited_id,
         
         
         })
 @login_required
 @user_tipo_required(['Adscrito'])
-def lista_resumenes_adscrito(request):
+def lista_resumenes_adscrito(request, edited_id=None):
     
     #Obtenemos la especialidad del doctor
     especialidad = None
@@ -114,9 +117,9 @@ def editar_documento(request, documento_id):
         try:
             doctor = Doctor.objects.get(user=request.user)
             if doctor.tipo == "Adscrito":
-                return redirect('MedicosADS')
+                return redirect('MedicosADS_with_id', edited_id=documento.id)
             elif doctor.tipo in ['Residente', 'Becario']:
-                return redirect('MedicosRB')
+                return redirect('MedicosRB_with_id', edited_id=documento.id)
         except Doctor.DoesNotExist:
               return redirect('home') 
     return render(request, 'Medico/editar_documento.html', {
@@ -161,6 +164,17 @@ def cambiar_estado(request, documento_id):
         if nuevo_estado in ['En revisión', 'Listo para enviar', 'Enviado']:
             documento.estado = nuevo_estado
             documento.save()
+            if nuevo_estado == 'En revisión':
+                adscritos = documento.medico_adscrito.all()
+                email_addresses = [adscrito.user.email for adscrito in adscritos]
+                
+                send_mail(
+                    subject='Se ha solicitado la revisión de un resumen',
+                    message= f'Se ha solicitado la revisión del resumen con numero de expedediente {documento.numero_expediente}',
+                    from_email= settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=email_addresses,
+                    fail_silently=False,
+                    )
             try:
                 doctor = Doctor.objects.get(user=request.user)
                 if doctor.tipo == "Adscrito":
@@ -270,9 +284,9 @@ def lista_resumenes(request):
             Q(correo_electronico__icontains=query) |
             Q(texto__icontains=query)
         )
-    else:
-        resumenes = Resumen.objects.all().order_by("-fecha_solicitud")
     
+    
+    resumenes = sorted(resumenes, key=lambda x: x.fecha_entrega_programada)
     return render(request, 'Medico/busqueda.html', {
         'resumenes': resumenes,
         'especialidades': especialidades,

@@ -1,4 +1,5 @@
 from django.utils import timezone
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
@@ -55,6 +56,7 @@ class Resumen(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     correo_electronico = models.EmailField()
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
+    fecha_modificacion = models.DateTimeField(auto_now=True)
     texto = models.TextField(blank=True)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Solicitud')
     medico_residente = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name='resumenes_por_residente')
@@ -77,6 +79,10 @@ class Resumen(models.Model):
                     usuario=self.medico_residente.user if self.medico_residente else None  # Ajusta según el usuario que hace el cambio
                 )
         super().save(*args, **kwargs)
+        
+    @property
+    def fecha_entrega_programada(self):
+        return self.fecha_solicitud + timedelta(days=10)
 
 #Define es el estado del historial
 class EstadoHistorial(models.Model):

@@ -110,7 +110,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'arturo.olivares@imoiap.com.mx'
-EMAIL_HOST_PASSWORD = 'arturo.O123#'
+DEFAULT_FROM_EMAIL = 'arturo.olivares@imoiap.com.mx'
+EMAIL_HOST_PASSWORD = 'ytkhwbqwwfefaffv'
 
 
 # Internationalization
