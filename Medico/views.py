@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.db.models import Q
 from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 
 #--------------------Pagina principal----------------------
 #---vista permitida solo para grupos de usuarios-----------
@@ -136,6 +137,16 @@ def asignar_medico_residente(request):
         
         resumen.medico_residente = residente
         resumen.save()
+
+        subject = 'Tiene una nueva asignación de resumen'
+        message = f'ha sido asignado para realizar el resumen con el número de expediente {resumen.numero_expediente}.'
+        from_email = 'arturo.olivares@imoiap.com.mx'
+        recipient_list = [residente.email]
+
+        try: 
+            send_mail(subject, message, from_email, recipient_list)
+        except Exception as e
+            print(f'Error al enviar correo: {e}')
         
         return redirect('MedicosRB')
 
