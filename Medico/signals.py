@@ -2,6 +2,7 @@ from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Resumen, Doctor, Asignacion, Especialidad
+from django.core.mail import send_mail
 
 def obtener_siguiente_becario(especialidad):
     becarios = list(Doctor.objects.filter(especialidad=especialidad, tipo='Becario').order_by('id'))
@@ -33,8 +34,11 @@ def asignar_medicos(sender, instance, created, **kwargs):
         with transaction.atomic():
             # Asignar todos los adscritos de la especialidad
             adscritos = Doctor.objects.filter(especialidad=especialidad, tipo='Adscrito')
+            adscritos_emails = []
+
             for adscrito in adscritos:
                 instance.medico_adscrito.add(adscrito)
+                adscritos_emails.append(adscrito.email)
             
             # Asignar un becario de la especialidad
             becario = obtener_siguiente_becario(especialidad)
@@ -42,3 +46,18 @@ def asignar_medicos(sender, instance, created, **kwargs):
 
             # Guardar el resumen con los médicos asignados
             instance.save()
+
+            #Enviar correos de notificacion
+            if adscritos_emails or becario:
+                subject = 'Nuevo resumen asignado'
+                message = f'Se ha asignado un nuevo resumen con el numero de expediente {instance.numero_expediente}. Revisalo en tu plataforma de resumenes medicos'
+                from_email = 'arturo.olivares@imoiap.com.mx'
+
+                recipient_list = adscritos_emails
+                if becario:
+                    recipient_list.append(becario.email)
+
+                try:
+                    send_mail(subject, message, from_email, recipient_list)
+                except Exception as e:
+                    print(f'Error al enviar el correo {e}')
