@@ -159,14 +159,14 @@
                                     <td><a href="{% url 'editar_documento' documento.id %}"><i class="far fa-edit"></i></a></td>
                                     {% if request.user.doctor.tipo == 'Becario' %}
                                     <td>
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
+                                        <button class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residentes</button>
                                         <div class="modal fade" id="asignarResidenteModal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="asignarResidenteModalLabel-{{ documento.id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar Medico Residente</h5>
+                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar Medico Residentes</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
+                                                            <span aria-hidden="true">Cerrar</span>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">

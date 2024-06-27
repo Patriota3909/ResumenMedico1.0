@@ -5,106 +5,121 @@
 
 <div class="container">
     <form method="post" id="editForm">
-      {% csrf_token %}
+                {% csrf_token %}
 
-      <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
-        <div class="row mb-5">
-          <div class="col-md-8 col-xl-12 text-center mx-auto">
-            <h2>Prueba1</h2>
-            <p class="w-lg-50">Esta editando el numero de expediente :</p>
-          </div>
-        </div>
-        <div class="row gy-4 w-100" style="max-width: 1200px;padding-right: 0px;margin-right: 56px;margin-left: 56px;padding-left: 0px;">
-          <div class="col-12" style="padding-left: 0px;padding-right: 0px;margin-right: 28px;">
-            
-            <div class="card">
-                <textarea id="summernote" name="editordata">{{documento.texto}} </textarea>
-                <input type="hidden" name="content" id="content" />
-            </div>
+                <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
+                  <!--Bloque div para el titulo-->
+                  <div class="row mb-5">
+                    <div class="col-md-8 col-xl-12 text-center mx-auto">
+                      <h2>Prueba1</h2>
+                      <p class="w-lg-50">Esta editando el numero de expediente :</p>
+                    </div>
+                  </div>
 
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" >Guardar</button>
-          </div>
-        </div>
-      </div>
-<!-- Modal de confirmación -->
-      <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              ¿Seguro que deseas guardar los cambios?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary" form="editForm">Guardar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal">Generar PDF</button>
-      <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Generar PDF</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <!--Editor de summernote-->
+                  <div class="row gy-4 w-100" style="max-width: 1200px;padding-right: 0px;margin-right: 56px;margin-left: 56px;padding-left: 0px;">
+                    <div class="col-12" style="padding-left: 0px;padding-right: 0px;margin-right: 28px;">
+                      <div class="card">
+                          <textarea id="summernote" name="editordata">{{documento.texto}} </textarea>
+                          <input type="hidden" name="content" id="content" />
+                      </div>
+                      <!--Boton para guardar el contenido-->
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" >Guardar</button>
+                    </div>
+                  </div>
                 </div>
-                <div class="modal-body">
-                    <h6>Vista previa del documento</h6>
-                    <div id="preview-content" style="border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto;"></div>
+                
+                
+                
+                <!--INICIA- Modal de confirmación de guardado-->
+                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        ¿Seguro que deseas guardar los cambios?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" form="editForm">Guardar</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmGeneratePDF">Generar PDF</button>
+                <!--TERMINA Modal de confirmacio de guardado-->
+                
+                <!--Boton para generar el PDF, QUE APERTURA UN MODAL-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal">Vista previa</button>
+
+                <!--INICIO -Modal de confirmacion de generar el pdf CON VISTA PREVIA-->
+                <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="pdfModalLabel">Generar PDF</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <h6>Vista previa del documento</h6>
+                              <div id="preview-content" style="border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto;"></div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                              <button type="button" class="btn btn-primary" id="confirmGeneratePDF">Generar PDF</button>
+                          </div>
+                      </div>
+                  </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    </form>
-
+                <!--TERMINA Modal de generacion de pdf CON VISTA PREVIA-->
+                
+                
+  </form>     
+  
+  
     <div class="container mt-3">
       {% if documento.estado == 'Solicitud' and user_tipo != 'Residente' %}
-          <form method="post" id="form_revision"action="{% url 'cambiar_estado' documento.id %}">
-              {% csrf_token %}
-              <input type="hidden" name="nuevo_estado" value="En revisión">
-              <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision" class="btn btn-secondary">Enviar a revisión</button>
+        <form method="post" id="form_revision"action="{% url 'cambiar_estado' documento.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="nuevo_estado" value="En revisión">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision" class="btn btn-secondary">
+              Enviar a revisión
+            </button>
 
               <!-- Modal de confirmación de estado -->
-      <div class="modal fade" id="confirmModal_enrevision" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <h1>
-                Este resumen se enviará a revisión</h1>
-                <h2>¿Estas deacuerdo?</h2>
+            <div class="modal fade" id="confirmModal_enrevision" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <h1>
+                      Este resumen se enviará a revisión
+                    </h1>
+                    <h2>
+                    ¿Estas deacuerdo?
+                    </h2>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="form_revision">Si, Enviar a revisión</button>
+                  </div>
+                </div>
               </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary" form="form_revision">Si, Enviar a revisión</button>
             </div>
-          </div>
-        </div>
-      </div>
-
+            <!--TERMINA Modal de confirmacion CAMBIO DE ESTADO-->
     </form>
 
 
-      {% elif documento.estado == 'En revisión' %}
-    <form method="post" id="form_listoenviar"action="{% url 'cambiar_estado' documento.id %}">
-              {% csrf_token %}
-              <input type="hidden" name="nuevo_estado" value="Listo para enviar">
-              <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar" class="btn btn-secondary">Listo para enviar</button>
+    {% elif documento.estado == 'En revisión' %}
+      <form method="post" id="form_listoenviar"action="{% url 'cambiar_estado' documento.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="nuevo_estado" value="Listo para enviar">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar" class="btn btn-secondary">Listo para enviar</button>
 
               
               <!-- Modal de confirmación de estado -->
@@ -157,13 +172,8 @@
           </div>
         </div>
       </div>
-      
-
     </form>
       {% endif %}
-
-
-
   </div>
 
 
