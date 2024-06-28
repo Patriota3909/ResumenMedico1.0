@@ -27,6 +27,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+
+    
 </head>
 
 <body>
@@ -40,7 +42,7 @@
                                 <div class="col-md-6 d-flex flex-column justify-content-between">
                                     <div class="text-white p-2" style="text-align: left;margin-bottom: -65px;"><img class="border rounded" src="{% static 'assets/img/images.png' %}" width="80" height="80" style="margin-top: 7px;margin-left: 34px;">
                                         <h2 class="fw-bold text-white mb-2" style="margin-top: 10px;margin-left: 34px;">{{ user.username | upper}}</h2>
-                                        <p class="mb-4" style="margin-left: 34px;">Residente</p>
+                                        <p class="mb-4" style="margin-left: 34px;">{{doctor.tipo}}</p>
                                     </div>
                                     <div>
                                         <nav class="navbar navbar-expand-md navbar-dark" style="margin-top: 30px;">
@@ -65,19 +67,17 @@
         </section>
         <section>
             <div class="container text-center">
+                
+                <!--INICIA Busqueda global-->
                 <div class="row" style="margin-bottom: 17px;">
-                   
-
-
                     <div class="text-start d-xl-flex align-items-xl-center col-md-6" id="campo">
                         <h6 class="text-start col-md-6" style="margin-right: -183px;">Buscar...</h6>
                         <input class="border rounded form-control-lg form-control me-2" id="searchInput" type="search" placeholder="¿Que quieres encontrar?">
-                    </div>
-                
-                
-                
-                
-                  </div>
+                    </div>         
+                </div>
+                <!--Termina busqueda global -->
+
+
                 <!--Aqui empieza la tabla de solicitudes-->
                 
                 <div class="border rounded" id="tabla1">
@@ -118,29 +118,14 @@
                                                   
                                                 </div>
                                                 <div class="modal-body">
-                                                  <p>
-                                                    <strong>Número de Expediente:</strong> {{ documento.numero_expediente }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Nombre del Paciente:</strong> {{ documento.paciente_nombre }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Especialidad:</strong> {{ documento.especialidad.name }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Estado:</strong> {{ documento.estado }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Medico Becario:</strong> {{ documento.medico_becario }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Medico Residente:</strong> {{ documento.medico_residente }}
-                                                  </p>
-                                                  <p>
-                                                    <strong>Medico Adscrito:</strong>
+                                                  <p><strong>Número de Expediente:</strong> {{ documento.numero_expediente }}</p>
+                                                  <p><strong>Nombre del Paciente:</strong> {{ documento.paciente_nombre }}</p>
+                                                  <p><strong>Especialidad:</strong> {{ documento.especialidad.name }}</p>
+                                                  <p><strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada|date:"F j" }}</p>
+                                                  <p><strong>Estado:</strong> {{ documento.estado }}</p>
+                                                  <p><strong>Medico Becario:</strong> {{ documento.medico_becario }}</p>
+                                                  <p><strong>Medico Residente:</strong> {{ documento.medico_residente }}</p>
+                                                  <p><strong>Medico Adscrito:</strong>
                                                     {% for adscrito in documento.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -160,14 +145,14 @@
 
                                     <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.paciente_nombre }}</td>
-                                    <td>{{ documento.fecha_entrega_programada }}</td>
+                                    <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
                                     <td>{{ documento.especialidad.name}}</td>
                                     <td><a href="{% url 'editar_documento' documento.id %}"><i class="far fa-edit"></i></a></td>
                                     {% if request.user.doctor.tipo == 'Becario' %}
                                     <td>
-                                        <button class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
+                                        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
                                         <div class="modal fade" id="asignarResidenteModal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="asignarResidenteModalLabel-{{ documento.id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -188,7 +173,7 @@
                                                                 </select>
                                                             </div>
                                                             <br>
-                                                            <button type="submit" class="btn btn-primary">Asignar</button>
+                                                            <button type="submit" class="btn btn-danger">Asignar</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -210,7 +195,7 @@
 
                 <div class="border rounded" id="tabla2" style="display: none;">
                     <div>
-                        <h1 class="text-center text-secondary">En revision</h1>
+                        <h1 class="text-center text-secondary">En revisión</h1>
                         <h5 style="color: var(--bs-body-bg);background: rgb(123, 134, 140);margin-top: 6px;"></h5>
                     </div>
                     <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
@@ -235,7 +220,7 @@
                             </thead>
                             <tbody>
                                 {% for documento in documentos_revision %}
-                                <tr>
+                                <tr id="documento-{{ documento.id }}" class="{% if documento.id == edited_id%}highlight{% endif %}">
                                     <td><button class="btn btn-primary text-center border rounded-circle" data-bss-hover-animate="pulse" type="button" data-bs-toggle="modal" data-bs-target="#modal-{{ documento.id }}" style="color: rgb(242,241,241);background: rgb(140,24,24);"><i class="fa fa-eye"></i></button>
                                         <div class="modal fade" id="modal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ documento.id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -255,7 +240,7 @@
                                                     <strong>Especialidad:</strong> {{ documento.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    <strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada }}
+                                                    <strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
                                                     <strong>Estado:</strong> {{ documento.estado }}
@@ -284,7 +269,7 @@
                                     </td>
                                     <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.paciente_nombre }}</td>
-                                    <td>{{ documento.fecha_entrega_programada }}</td>
+                                    <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
                                     <td>
@@ -318,7 +303,8 @@
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
-                                                            <button type="submit" class="btn btn-primary">Asignar</button>
+                                                            <br>
+                                                            <button type="submit" class="btn btn-danger">Asignar</button>
                                                         </form>
                                                     </div>
                                                 </div>

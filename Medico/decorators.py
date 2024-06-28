@@ -35,6 +35,9 @@ def user_tipo_required(allowed_tipos, allowed_views=[]):
 
 
 
+
+
+
 #"Este decorador verifica el tipo de doctor"
 #//////////////////////////////////////////////////////////////////////
 def doctor_tipo_required(tipo_medico):

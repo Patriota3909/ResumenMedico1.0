@@ -15,6 +15,13 @@
     <link rel="stylesheet" href="{% static 'assets/css/Banner-Heading-Image-images.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Footer-Basic-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+
+    <style>
+      .highlight {
+          background-color: yellow;
+          font-weight: bold;
+      }
+  </style>
 </head>
 
 <body>
@@ -93,7 +100,7 @@
                             </thead>
                             <tbody>
                                 {% for resumen in en_revision %}
-                                <tr>
+                                <tr id="resumen-{{ resumen.id }}" class="{% if resumen.id == edited_id %}highlight{% endif %}">
                                     <td>
                                         <button class="btn btn-primary text-center border rounded-circle" data-bss-hover-animate="pulse" type="button" data-bs-toggle="modal" data-bs-target="#modal-{{ resumen.id }}" style="color: rgb(242,241,241);background: rgb(140,24,24);"><i class="fa fa-eye"></i></button>
                                         <div class="modal fade" id="modal-{{ resumen.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ resumen.id }}" aria-hidden="true">
@@ -145,7 +152,7 @@
                                     </td>
                                     <td>{{ resumen.numero_expediente }}</td>
                                     <td>{{ resumen.paciente_nombre }}</td>
-                                    <td>{{ resumen.fecha_solicitud }}</td>
+                                    <td>{{ resumen.fecha_entrega_programada }}</td>
                                     <td>{{ resumen.medico_becario }}</td>
                                     <td>{{ resumen.medico_residente }}</td>
                                     <td>{{ resumen.especialidad.name}}</td>
@@ -167,7 +174,7 @@
                                     <th>Ver más</th>
                                     <th>Número de expediente</th>
                                     <th>Nombre del paciente</th>
-                                    <th>Fecha de solicitud</th>
+                                    <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
                                     <th>Especialidad</th>
@@ -176,7 +183,7 @@
                             </thead>
                             <tbody>
                                 {% for resumen in listos_para_enviar %}
-                                <tr>
+                                <tr id="resumen-{{ resumen.id }}" class="{% if resumen.id == edited_id %}highlight{% endif %}">
                                     <td>
                                         <button class="btn btn-primary text-center border rounded-circle" data-bss-hover-animate="pulse" type="button" data-bs-toggle="modal" data-bs-target="#modal-{{ resumen.id }}" style="color: rgb(242,241,241);background: rgb(140,24,24);"><i class="fa fa-eye"></i></button>
                                         <div class="modal fade" id="modal-{{ resumen.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ resumen.id }}" aria-hidden="true">
@@ -320,3 +327,6 @@
 </body>
 
 </html>
+
+
+

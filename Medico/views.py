@@ -16,6 +16,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
 
+
 #--------------------Pagina principal----------------------
 #---vista permitida solo para grupos de usuarios-----------
 @login_required
@@ -101,6 +102,7 @@ def lista_resumenes_adscrito(request, edited_id=None):
         'en_revision': en_revision,
         'listos_para_enviar': listos_para_enviar,
         'enviados': enviados,
+        'edited_id': edited_id,
     })
 
 #-----------Renderiza, guarda, y cambio de status el resumen-------------------------------------
