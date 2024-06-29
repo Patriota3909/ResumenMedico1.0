@@ -15,6 +15,8 @@ from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
+from .forms import MiFormulario
+from .models import Article
 
 
 #--------------------Pagina principal----------------------
@@ -295,3 +297,13 @@ def lista_resumenes(request):
     })
     
 #-----------------------------------------------------------------------------------------
+
+def mi_vista(request):
+    if request.method == 'POST':
+        form = MiFormulario(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = MiFormulario()
+    return render(request, 'ckeditor5_template.html', {'form': form})
+

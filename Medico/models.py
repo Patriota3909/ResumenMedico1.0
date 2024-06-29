@@ -3,6 +3,14 @@ from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
+from django_ckeditor_5.fields import CKEditor5Field
+
+#Esta clase la utiliza ckeditor5
+class Article(models.Model):
+    title=models.CharField('Title', max_length=200)
+    text=CKEditor5Field('Text', config_name='extends')
+
+
 #Esta clase la utilza Summernote para su uso dentro de la platilla.
 class MyModel(models.Model):
     title = models.CharField(max_length=200)
@@ -10,6 +18,8 @@ class MyModel(models.Model):
 
     def __str__(self):
         return self.title
+    
+
 
 
 #Define la especialidad y un codigo como abreviatura
