@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from datetime import timedelta
 from .decorators import doctor_tipo_required, status_permission_required
 from django.contrib.auth.decorators import login_required 
-from .models import Resumen, Especialidad, Doctor
+from .models import Resumen, Especialidad, Doctor, Documento
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import logout
 from django.http import HttpRequest, HttpResponseBadRequest, HttpResponse
@@ -15,8 +15,8 @@ from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import MiFormulario
-from .models import Article
+
+from .forms import DocumentoForm
 
 
 #--------------------Pagina principal----------------------
@@ -168,6 +168,7 @@ def cambiar_estado(request, documento_id):
         if nuevo_estado in ['En revisión', 'Listo para enviar', 'Enviado']:
             documento.estado = nuevo_estado
             documento.save()
+            
             if nuevo_estado == 'En revisión':
                 adscritos = documento.medico_adscrito.all()
                 email_addresses = [adscrito.user.email for adscrito in adscritos]
@@ -299,11 +300,14 @@ def lista_resumenes(request):
 #-----------------------------------------------------------------------------------------
 
 def mi_vista(request):
-    if request.method == 'POST':
-        form = MiFormulario(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-    else:
-        form = MiFormulario()
-    return render(request, 'ckeditor5_template.html', {'form': form})
+    return render(request, 'Medico/index.html')
 
+def editar_froala(request):
+   
+    if request.method == 'POST':
+        form = DocumentoForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = DocumentoForm()
+    return render(request, 'Medico/prueba.html', {'form': form})

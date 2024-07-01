@@ -18,7 +18,7 @@ urlpatterns = [
     path('asignar_medico_resumen/<int:documento_id>', views.asignar_medico_resumen, name="asignar_medico_resumen"),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
     path('asignar_medico_residente', views.asignar_medico_residente, name='asignar_medico_residente'),
-    path('mi_vista',views.mi_vista, name="mi_vista"),
+    path('editar_froala',views.editar_froala, name="editar_froala"),
     
 
     

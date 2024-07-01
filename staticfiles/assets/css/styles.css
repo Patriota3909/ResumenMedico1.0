@@ -1,0 +1,34 @@
+body {
+  /*margin: 0;*/
+  font-family: 'Nunito';
+  /*font-size: var(--bs-body-font-size);*/
+  /*font-weight: var(--bs-body-font-weight);*/
+  /*line-height: var(--bs-body-line-height);*/
+  /*color: var(--bs-body-color);*/
+  /*text-align: var(--bs-body-text-align);*/
+  /*background-color: var(--bs-body-bg);*/
+  /*-webkit-text-size-adjust: 100%;*/
+  /*-webkit-tap-highlight-color: transparent;*/
+}
+
+.table {
+  /*--bs-table-color-type: initial;*/
+  /*--bs-table-bg-type: initial;*/
+  /*--bs-table-color-state: initial;*/
+  /*--bs-table-bg-state: initial;*/
+  /*--bs-table-color: var(--bs-emphasis-color);*/
+  /*--bs-table-bg: var(--bs-body-bg);*/
+  /*--bs-table-border-color: var(--bs-border-color);*/
+  /*--bs-table-accent-bg: transparent;*/
+  /*--bs-table-striped-color: var(--bs-emphasis-color);*/
+  /*--bs-table-striped-bg: rgba(var(--bs-emphasis-color-rgb), 0.05);*/
+  /*--bs-table-active-color: var(--bs-emphasis-color);*/
+  /*--bs-table-active-bg: rgba(var(--bs-emphasis-color-rgb), 0.1);*/
+  /*--bs-table-hover-color: var(--bs-emphasis-color);*/
+  --bs-table-hover-bg: rgba(34, 71, 126, 0.2);
+  /*width: 100%;*/
+  /*margin-bottom: 1rem;*/
+  /*vertical-align: top;*/
+  /*border-color: var(--bs-table-border-color);*/
+}
+

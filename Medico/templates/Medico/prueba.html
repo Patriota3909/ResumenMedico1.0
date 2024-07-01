@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Documento</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/css/froala_editor.pkgd.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/js/froala_editor.pkgd.min.js"></script>
+    {{ form.media }}
+    <style>
+        .fr-wrapper div.fr-element {
+            width: 735px; /* Ancho de un documento A4 en píxeles */
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Editar Documento</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <script>
+        $(function() {
+            $('textarea').froalaEditor({
+                width: '780', // Ancho de un documento A4 en píxeles
+                heightMin: 1115,
+                heightMax: 1115,
+                toolbarButtons: ['bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
+                pluginsEnabled: ['align', 'link', 'lists']
+
+            });
+        });
+    </script>
+</body>
+</html>

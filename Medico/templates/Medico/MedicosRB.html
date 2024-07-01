@@ -373,16 +373,14 @@
             event.preventDefault();
             document.getElementById('tabla1').style.display = 'block';
             document.getElementById('tabla2').style.display = 'none';
-            document.getElementById('showTable1').classList.add('active');
-            document.getElementById('showTable2').classList.remove('active');
+            
         });
 
         document.getElementById('tabla_revision').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('tabla1').style.display = 'none';
             document.getElementById('tabla2').style.display = 'block';
-            document.getElementById('showTable1').classList.remove('active');
-            document.getElementById('showTable2').classList.add('active');
+            
         });
     </script>
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>

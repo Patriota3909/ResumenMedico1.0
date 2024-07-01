@@ -3,12 +3,16 @@ from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
-from django_ckeditor_5.fields import CKEditor5Field
+from froala_editor.fields import FroalaField
 
-#Esta clase la utiliza ckeditor5
-class Article(models.Model):
-    title=models.CharField('Title', max_length=200)
-    text=CKEditor5Field('Text', config_name='extends')
+
+
+class Documento(models.Model):
+    titulo = models.CharField(max_length=200)
+    contenido = FroalaField()
+
+
+
 
 
 #Esta clase la utilza Summernote para su uso dentro de la platilla.

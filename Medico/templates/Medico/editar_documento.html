@@ -15,9 +15,9 @@
     <!-- Botones Condicionales para Cambiar Estado -->
     {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
       <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
-    {% elif documento.estado == 'En revisión' and user_tipo == 'Becario' %}
+    {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
       <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
-    {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Becario' %}
+    {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
       <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar</button>
     {% endif %}
   </div>
@@ -29,7 +29,7 @@
     <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
       <!-- Bloque div para el titulo -->
       <div class="row mb-5">
-        <div class="col-md-8 col-xl-12 text-center mx-auto">
+        <div class="col-md-12 col-xl-12 text-center mx-auto">
           <h2>Estás editando el resumen de: {{documento.paciente_nombre|upper}}</h2>
           <p class="w-lg-50">con número de expediente: <strong>{{documento.numero_expediente}}</strong></p>
         </div>

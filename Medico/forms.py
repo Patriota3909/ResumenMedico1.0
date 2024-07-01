@@ -1,7 +1,8 @@
 from django import forms
-from .models import Article
+from .models import Documento
 
-class MiFormulario(forms.ModelForm):
+class DocumentoForm(forms.ModelForm):
     class Meta:
-        model = Article
-        fields = '__all__'
+        model = Documento
+        fields = ['titulo', 'contenido']
+
