@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Documento</title>
-    {% load static %}
+    <title>Probar Froala Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/css/froala_editor.pkgd.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/js/froala_editor.pkgd.min.js"></script>
-    {{ form.media }}
+    
     <style>
         .fr-wrapper div.fr-element {
-            width: 735px; /* Ancho de un documento A4 en píxeles */
+            width: 794px; /* Ancho de un documento A4 en píxeles */
             border: 1px solid #ccc;
             padding: 20px;
             box-sizing: border-box;
@@ -18,23 +18,22 @@
     </style>
 
 </head>
+
+
 <body>
-    <h1>Editar Documento</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.as_p }}
+    <h1>Probar Froala Editor</h1>
+    <form method="post" action="/guardar_documento/">
+        <textarea name="contenido" id="contenido"></textarea>
         <button type="submit">Guardar</button>
     </form>
     <script>
         $(function() {
-            $('textarea').froalaEditor({
-                width: '780', // Ancho de un documento A4 en píxeles
-                heightMin: 1115,
-                heightMax: 1115,
+            $('#contenido').froalaEditor({
+                width: '794', // Ancho de un documento A4 en píxeles
+                heightMin: 1123,
+                heightMax: 1123,
                 toolbarButtons: ['bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
                 pluginsEnabled: ['align', 'link', 'lists']
-
             });
         });
     </script>

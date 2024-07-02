@@ -149,7 +149,7 @@
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
                                     <td>{{ documento.especialidad.name}}</td>
-                                    <td><a href="{% url 'editar_documento' documento.id %}"><i class="far fa-edit"></i></a></td>
+                                    <td><a href="{% url 'editar_documento2' documento.id %}"><i class="far fa-edit"></i></a></td>
                                     {% if request.user.doctor.tipo == 'Becario' %}
                                     <td>
                                         <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
@@ -274,7 +274,7 @@
                                     <td>{{documento.medico_residente}}</td>
                                     <td>
                                       {% if not request.user.doctor.tipo == 'Residente' %}
-                                      <a href="{% url 'editar_documento' documento.id %}"><i class="far fa-edit"></i></a>
+                                      <a href="{% url 'editar_documento2' documento.id %}"><i class="far fa-edit"></i></a>
                                       {% else %}
                                       <i class="far fa-edit" style="color: grey;"></i>
                                       {% endif %}                                    

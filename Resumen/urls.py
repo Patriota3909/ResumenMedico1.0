@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('summernote/', include('django_summernote.urls')),
-    path('ckeditor5/', include('django_ckeditor_5.urls')),
     path('froala_editor/', include('froala_editor.urls')),
 ]
 

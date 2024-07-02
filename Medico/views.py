@@ -15,8 +15,9 @@ from .decorators import user_tipo_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
+from .forms import ResumenForm
 
-from .forms import DocumentoForm
+
 
 
 #--------------------Pagina principal----------------------
@@ -132,6 +133,23 @@ def editar_documento(request, documento_id):
         
         })
 #--------------------------------------------------------------------------------------------------
+#PRUEBA DE CODIGO CON FROALA
+#######
+######################################################################
+#########################################################################
+
+
+
+
+
+
+###########################################################################
+
+
+
+
+
+#---------------------------------------------------------------------------------------------------------
 @login_required
 @user_tipo_required(['Becario'])
 def asignar_medico_residente(request):
@@ -165,7 +183,7 @@ def cambiar_estado(request, documento_id):
         
         documento = get_object_or_404(Resumen, id=documento_id)
         nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado in ['En revisión', 'Listo para enviar', 'Enviado']:
+        if nuevo_estado in ['Solicitud','En revisión', 'Listo para enviar', 'Enviado']:
             documento.estado = nuevo_estado
             documento.save()
             
@@ -302,12 +320,167 @@ def lista_resumenes(request):
 def mi_vista(request):
     return render(request, 'Medico/index.html')
 
+
 def editar_froala(request):
-   
     if request.method == 'POST':
-        form = DocumentoForm(request.POST)
+        contenido = request.POST.get('contenido')
+        pass
+        # Aquí puedes manejar el contenido, guardarlo en la base de datos, etc.
+        # Por ejemplo, guardar el contenido en un archivo:
+        
+ 
+    return render(request, 'Medico/prueba.html')
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+TEMPLATE_CONTENT ="""
+<p><img src="http://127.0.0.1:8000/media/uploads/froala_editor/images/images.png" style="width: 64px;" class="fr-fic fr-dii fr-fil fr-rounded">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Quer&eacute;taro, Qro. a__ del mes__ del a&ntilde;o 20___</p>
+
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;RESUMEN M&Eacute;DICO</strong></p>
+
+<p style="text-align: center;"><strong>_________________________________________________________________________________</strong></p>
+
+<table style="width: 100%;">
+	<tbody>
+		<tr>
+			<td style="width: 24.964%;">Nombre del paciente:</td>
+			<td style="width: 33.3333%; width: 25.0000%;"><strong>{nombre}</strong></td>
+			<td style="width: 24.964%;">G&eacute;nero:</td>
+			<td style="width: 24.964%;"></td>
+		</tr>
+		<tr>
+			<td style="width: 24.964%;">Numero de expediente:</td>
+			<td style="width: 33.3333%; width: 25.0000%;"><strong>{expediente}</strong></td>
+			<td style="width: 24.964%;">Fecha de nacimiento:</td>
+			<td style="width: 24.964%;"></td>
+		</tr>
+		<tr>
+			<td style="width: 24.964%;">Edad:</td>
+			<td style="width: 33.3333%; width: 25.0000%;"><strong>{edad}</strong></td>
+			<td style="width: 24.964%;">
+				<br>
+			</td>
+			<td style="width: 24.964%;">
+				<br>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p style="margin-left: 40px; text-align: center;"><span style="font-size: 12px;"><u>INFORME</u></span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;">Padecimiento actual:</span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><br></span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Diagnostico:</strong></span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Tratamientos&nbsp;</strong><strong>realizados</strong>:</span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Resultados&nbsp;</strong><strong>de&nbsp;</strong><strong>estudios&nbsp;</strong><strong>de&nbsp;</strong><strong>laboratorio&nbsp;</strong><strong>y&nbsp;</strong><strong>gabinete</strong>:</span></p>
+
+<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Evoluci&oacute;n</strong>:</span></p>
+
+<p style="margin-left: 40px; text-align: left;">
+	<br>
+</p>
+
+<p style="margin-left: 40px; text-align: left;">
+	<br>
+</p>
+
+<p>
+	<br>
+</p>
+
+<table style="width: 46%; margin-right: calc(54%);">
+	<thead>
+		<tr>
+			<th colspan="3" style="width: 99.723%;" class="fr-thick"><span style="font-size: 12px;"><span style="font-family: Tahoma, Geneva, sans-serif;">PRON&Oacute;STICO (PARA LA VIDA Y PARA LA FUNCI&Oacute;N)</span>&nbsp;</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">FUNCI&Oacute;N</span></td>
+			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">VIDA</span></td>
+		</tr>
+		<tr>
+			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Favorable</span></td>
+			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+		</tr>
+		<tr>
+			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Reservado</span></td>
+			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+		</tr>
+		<tr>
+			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Desfavorable</span></td>
+			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>
+	<br>
+</p>
+
+<p style="text-align: center;">Nombre del m&eacute;dico: </p>
+
+<p style="text-align: center;">C&eacute;dula Profesional: </p>
+
+<p style="text-align: center;"><span class="fr-img-caption fr-fic fr-dib" style="width: 304px;"><span class="fr-img-wrap"><img src="http://127.0.0.1:8000/media/uploads/froala_editor/images/images_s0lfoMS.png" style="width: 304px;" class="fr-fic fr-dib"><span class="fr-inner"></span></span></span></p>
+
+<p>
+	<br>
+</p>
+<hr>
+
+<p>
+	<br>
+</p>
+
+
+
+
+
+"""
+
+
+
+
+@login_required
+@user_tipo_required(['Adscrito', 'Residente', 'Becario'])
+def editar_documento2(request, documento_id):
+    user_tipo = request.user.doctor.tipo
+    documento = get_object_or_404(Resumen, id=documento_id)
+
+    if request.method == 'POST':
+        form = ResumenForm(request.POST, instance=documento)
         if form.is_valid():
-            pass
+            form.save()
+            doctor = Doctor.objects.get(user=request.user)
+            if doctor.tipo == "Adscrito":
+                return redirect('MedicosADS_with_id', edited_id=documento.id)
+            elif doctor.tipo in ['Residente', 'Becario']:
+                return redirect('MedicosRB_with_id', edited_id=documento.id)
     else:
-        form = DocumentoForm()
-    return render(request, 'Medico/prueba.html', {'form': form})
+        if not documento.texto:
+            documento.texto = TEMPLATE_CONTENT.format(
+                nombre = documento.paciente_nombre,
+                edad = documento.edad,
+                expediente = documento.numero_expediente,
+
+            )
+        
+        form = ResumenForm(instance=documento)
+
+    return render(request, 'Medico/editar_documento2.html', {
+        'form': form,
+        'documento': documento,
+        'user_tipo': user_tipo,
+    })

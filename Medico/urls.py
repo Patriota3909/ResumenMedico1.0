@@ -14,6 +14,7 @@ urlpatterns = [
     path('MedicosADS', views.lista_resumenes_adscrito, name='MedicosADS'),
     path('MedicosADS/<int:edited_id>/', views.lista_resumenes_adscrito, name='MedicosADS_with_id'),
     path('editar_documento/<int:documento_id>/', views.editar_documento, name="editar_documento"),
+    path('editar_documento2/<int:documento_id>/', views.editar_documento2, name="editar_documento2"),
     path('cambiar_estado/<int:documento_id>', views.cambiar_estado, name="cambiar_estado"),
     path('asignar_medico_resumen/<int:documento_id>', views.asignar_medico_resumen, name="asignar_medico_resumen"),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
