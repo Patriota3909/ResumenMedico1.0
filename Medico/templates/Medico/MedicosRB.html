@@ -8,6 +8,10 @@
             background-color: orange;
             font-weight: bold;
         }
+        td{
+            vertical-align: middle;
+        }
+
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -82,16 +86,15 @@
                 
                 <div class="border rounded" id="tabla1">
                     <div>
-                        <h1 class="text-center text-secondary">Solicitudes</h1>
-                        <h5 style="color: var(--bs-body-bg);background: rgb(123, 134, 140);margin-top: 6px;"></h5>
+                        <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">Solicitudes</h1>
                     </div>
-                    <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded" style="display: flex;align-items: center;">
+                    <div class="table-responsive text-uppercase  align-items-center text-bg-secondary border rounded" style="display: flex;align-items: center;">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
                                     <th>Ver más</th>
-                                    <th>Número de expediente</th>
                                     <th>Nombre del paciente</th>
+                                    <th>Número de expediente</th>
                                     <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
@@ -118,14 +121,14 @@
                                                   
                                                 </div>
                                                 <div class="modal-body">
-                                                  <p><strong>Número de Expediente:</strong> {{ documento.numero_expediente }}</p>
-                                                  <p><strong>Nombre del Paciente:</strong> {{ documento.paciente_nombre }}</p>
-                                                  <p><strong>Especialidad:</strong> {{ documento.especialidad.name }}</p>
-                                                  <p><strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada|date:"F j" }}</p>
-                                                  <p><strong>Estado:</strong> {{ documento.estado }}</p>
-                                                  <p><strong>Medico Becario:</strong> {{ documento.medico_becario }}</p>
-                                                  <p><strong>Medico Residente:</strong> {{ documento.medico_residente }}</p>
-                                                  <p><strong>Medico Adscrito:</strong>
+                                                  <p>Número de Expediente: {{ documento.numero_expediente }}</p>
+                                                  <p>Nombre del Paciente: {{ documento.paciente_nombre }}</p>
+                                                  <p>Especialidad: {{ documento.especialidad.name }}</p>
+                                                  <p>Fecha de Solicitud: {{ documento.fecha_entrega_programada|date:"F j" }}</p>
+                                                  <p>Estado: {{ documento.estado }}</p>
+                                                  <p>Medico Becario: {{ documento.medico_becario }}</p>
+                                                  <p>Medico Residente: {{ documento.medico_residente }}</p>
+                                                  <p>Medico Adscrito:
                                                     {% for adscrito in documento.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -143,8 +146,8 @@
 
 
 
-                                    <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.paciente_nombre }}</td>
+                                    <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
@@ -165,7 +168,7 @@
                                                             {% csrf_token %}
                                                             <input type="hidden" name="resumen_id" value="{{ documento.id }}">
                                                             <div class="form-group">
-                                                                <label for="residente">Seleccionar Medico Residente</label>
+                                                                <label for="residente">Seleccionar</label>
                                                                 <select class="form-control" id="residente" name="residente">
                                                                     {% for residente in residentes %}
                                                                     <option value="{{ residente.id }}">{{ residente.user.get_full_name }}</option>
@@ -195,16 +198,16 @@
 
                 <div class="border rounded" id="tabla2" style="display: none;">
                     <div>
-                        <h1 class="text-center text-secondary">En revisión</h1>
-                        <h5 style="color: var(--bs-body-bg);background: rgb(123, 134, 140);margin-top: 6px;"></h5>
+                        <h1  class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">En revisión</h1>
+                        
                     </div>
                     <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
                                     <th>Ver más</th>
-                                    <th>Número de expediente</th>
                                     <th>Nombre del paciente</th>
+                                    <th>Número de expediente</th>
                                     <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
@@ -231,28 +234,28 @@
                                                 </div>
                                                 <div class="modal-body">
                                                   <p>
-                                                    <strong>Número de Expediente:</strong> {{ documento.numero_expediente }}
+                                                    Número de Expediente: {{ documento.numero_expediente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Nombre del Paciente:</strong> {{ documento.paciente_nombre }}
+                                                    Nombre del Paciente: {{ documento.paciente_nombre }}
                                                   </p>
                                                   <p>
-                                                    <strong>Especialidad:</strong> {{ documento.especialidad.name }}
+                                                    Especialidad: {{ documento.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    <strong>Fecha de Solicitud:</strong> {{ documento.fecha_entrega_programada|date:"F j" }}
+                                                    Fecha de Solicitud: {{ documento.fecha_entrega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
-                                                    <strong>Estado:</strong> {{ documento.estado }}
+                                                    Estado: {{ documento.estado }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Becario:</strong> {{ documento.medico_becario }}
+                                                    Medico Becario: {{ documento.medico_becario }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Residente:</strong> {{ documento.medico_residente }}
+                                                    Medico Residente: {{ documento.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medicos Adscritos:</strong>
+                                                    Medicos Adscritos:
                                                     {% for adscrito in documento.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -267,8 +270,8 @@
                                             </div>
                                           </div>
                                     </td>
-                                    <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.paciente_nombre }}</td>
+                                    <td>{{ documento.numero_expediente }}</td>
                                     <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
@@ -286,10 +289,8 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar Medico Residente</h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
+                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar a Medico Residente</h5>
+                                                      
                                                     </div>
                                                     <div class="modal-body">
                                                         <form method="post" action="{% url 'asignar_medico_residente' %}">

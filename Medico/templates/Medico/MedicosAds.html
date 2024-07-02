@@ -42,7 +42,7 @@
                                             <div class="container collapse navbar-collapse" id="navbarButtons"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1" type="button" style="margin-left: 24px;"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                                                 <div class="collapse navbar-collapse" id="navcol-1">
                                                     <ul class="navbar-nav">
-                                                        <li class="nav-item"><a class="nav-link active" id="tabla_revision" href="#">En revisión</a></li>
+                                                        <li class="nav-item"><a class="nav-link" id="tabla_revision" href="#">En revisión</a></li>
                                                         <li class="nav-item"><a class="nav-link" id="tabla_listos" href="#">Listos para enviar</a></li>
                                                         <li class="nav-item"><a class="nav-link" id="tabla_enviados" href="#">Enviados</a></li>
                                                         <li class="nav-item"><a  class ="nav-link" href={% url 'exit' %}>Salir</a></button></li>
@@ -82,16 +82,16 @@
                 <!-- Aqui empieza la otra tabla de en revision-->
                 <div class="border rounded" id="tabla1">
                   <div>
-                    <h1 class="text-center text-secondary">En revisión</h1>
-                    <h5 style="color: var(--bs-body-bg);background: rgb(123, 134, 140);margin-top: 6px;"></h5>
+                    <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">En revisión</h1>
+                    
                 </div>
                     <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
                                     <th>Ver más</th>
-                                    <th>Número de expediente</th>
                                     <th>Nombre del paciente</th>
+                                    <th>Número de expediente</th>
                                     <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
@@ -113,28 +113,28 @@
                                                 </div>
                                                 <div class="modal-body">
                                                   <p>
-                                                    <strong>Número de Expediente:</strong> {{ resumen.numero_expediente }}
+                                                    Número de Expediente: {{ resumen.numero_expediente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Nombre del Paciente:</strong> {{ resumen.paciente_nombre }}
+                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
                                                   </p>
                                                   <p>
-                                                    <strong>Especialidad:</strong> {{ resumen.especialidad.name }}
+                                                    Especialidad: {{ resumen.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    <strong>Fecha de entrega programada:</strong> {{ resumen.fecha_entrega_programada }}
+                                                    Fecha de entrega programada: {{ resumen.fecha_entrega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
-                                                    <strong>Estado:</strong> {{ resumen.estado }}
+                                                    Estado: {{ resumen.estado }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Becario:</strong> {{ resumen.medico_becario }}
+                                                    Medico Becario: {{ resumen.medico_becario }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Residente:</strong> {{ resumen.medico_residente }}
+                                                    Medico Residente: {{ resumen.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medicos Adscritos:</strong>
+                                                    Medicos Adscritos:
                                                     {% for adscrito in resumen.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -151,9 +151,9 @@
 
 
                                     </td>
-                                    <td>{{ resumen.numero_expediente }}</td>
                                     <td>{{ resumen.paciente_nombre }}</td>
-                                    <td>{{ resumen.fecha_entrega_programada }}</td>
+                                    <td>{{ resumen.numero_expediente }}</td>
+                                    <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{ resumen.medico_becario }}</td>
                                     <td>{{ resumen.medico_residente }}</td>
                                     <td>{{ resumen.especialidad.name}}</td>
@@ -169,16 +169,16 @@
                 <!-- Aqui empieza la otra tabla de en listos para enviar-->
                 <div class="border rounded" id="tabla2" style="display: none;">
                   <div>
-                    <h1 class="text-center text-secondary">Listos para enviar</h1>
-                    <h5 style="color: var(--bs-body-bg);background: rgb(123, 134, 140);margin-top: 6px;"></h5>
+                    <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">Listos para enviar</h1>
+                    
                 </div>
                     <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
                                     <th>Ver más</th>
-                                    <th>Número de expediente</th>
                                     <th>Nombre del paciente</th>
+                                    <th>Número de expediente</th>
                                     <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
@@ -200,28 +200,28 @@
                                                 </div>
                                                 <div class="modal-body">
                                                   <p>
-                                                    <strong>Número de Expediente:</strong> {{ resumen.numero_expediente }}
+                                                    Número de Expediente: {{ resumen.numero_expediente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Nombre del Paciente:</strong> {{ resumen.paciente_nombre }}
+                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
                                                   </p>
                                                   <p>
-                                                    <strong>Especialidad:</strong> {{ resumen.especialidad.name }}
+                                                    Especialidad:  {{ resumen.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    <strong>Fecha de Solicitud:</strong> {{ resumen.fecha_solicitud }}
+                                                    Fecha de Solicitud: {{ resumen.fecha_entega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
-                                                    <strong>Estado:</strong> {{ resumen.estado }}
+                                                    Estado: {{ resumen.estado }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Becario:</strong> {{ resumen.medico_becario }}
+                                                    Medico Becario: {{ resumen.medico_becario }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medico Residente:</strong> {{ resumen.medico_residente }}
+                                                    Medico Residente: {{ resumen.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    <strong>Medicos Adscritos:</strong>
+                                                    Medicos Adscritos:
                                                     {% for adscrito in resumen.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -236,9 +236,9 @@
                                             </div>
                                           </div>
                                     </td>
-                                    <td>{{ resumen.numero_expediente }}</td>
                                     <td>{{ resumen.paciente_nombre }}</td>
-                                    <td>{{ resumen.fecha_entrega_programada }}</td>
+                                    <td>{{ resumen.numero_expediente }}</td>
+                                    <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
                                     <td>{{ resumen.medico_becario }}</td>
                                     <td>{{ resumen.medico_residente }}</td>
                                     <td>{{ resumen.especialidad.name}}</td>

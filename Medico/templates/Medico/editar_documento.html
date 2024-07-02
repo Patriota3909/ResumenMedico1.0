@@ -13,7 +13,7 @@
     <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#pdfModal">Vista previa</button>
 
     <!-- Botones Condicionales para Cambiar Estado -->
-    {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
+    {% if documento.estado == 'Solicitud'%}
       <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
     {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
       <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>

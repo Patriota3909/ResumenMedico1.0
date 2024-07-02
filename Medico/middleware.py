@@ -15,32 +15,44 @@ class tipo_usuario_middleware:
             reverse('admin:login'),
             reverse('MedicosADS'),
             reverse('MedicosRB'),
+            
             ]
+        print(f"Requested path: {request.path}")
+
         
         if request.path in excluded_paths:
+            print("Path is excluded from checks.")
             return self.get_response(request)
         
         if not request.resolver_match:
+            print("No resolver match found.")
             return self.get_response(request)
         
         current_view_name = request.resolver_match.view_name
+        print(f"Current view name: {current_view_name}")
         # Verificar si el usuario está autenticado
         if request.user.is_authenticated:
+            print("User is authenticated.")
             if request.user.is_superuser:
+                print("User is superuser.")
                 return self.get_response(request)
             try:
                 
                 doctor = Doctor.objects.get(user=request.user)
+                (f"Doctor type: {doctor.tipo}")
                 if doctor.tipo == 'Adscrito':
                     allowed_views =['MedicosADS', 'editar_documento','cambiar_estado']
                     if current_view_name not in allowed_views:
+                        print(f"View {current_view_name} is not allowed for Adscrito.")
                         return redirect('MedicosADS')
                 elif doctor.tipo in ['Residente', 'Becario']:
                     allowed_views =['MedicosRB','editar_documento','cambiar_estado']
                     if current_view_name not in allowed_views:
+                        print(f"View {current_view_name} is not allowed for {doctor.tipo}.")
                         return redirect('MedicosRB')
                 
             except Doctor.DoesNotExist:
+                print("Doctor does not exist.")
                 return redirect('home')  # Si el usuario no es un doctor, permitir el acceso a la vista solicitada en este caso a administradores para revisar el estatus de resumenes completos
 
         response = self.get_response(request)

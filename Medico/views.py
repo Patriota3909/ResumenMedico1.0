@@ -16,8 +16,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ResumenForm
-
-
+from django.contrib import messages
 
 
 #--------------------Pagina principal----------------------
@@ -133,23 +132,6 @@ def editar_documento(request, documento_id):
         
         })
 #--------------------------------------------------------------------------------------------------
-#PRUEBA DE CODIGO CON FROALA
-#######
-######################################################################
-#########################################################################
-
-
-
-
-
-
-###########################################################################
-
-
-
-
-
-#---------------------------------------------------------------------------------------------------------
 @login_required
 @user_tipo_required(['Becario'])
 def asignar_medico_residente(request):
@@ -177,35 +159,52 @@ def asignar_medico_residente(request):
 
 #------------Cambia el status del Resumen----------------------------------------------------------
 @login_required
-@user_tipo_required(['Adscrito','Becario'], allowed_views=['cambiar_estado'])
+@user_tipo_required(['Adscrito','Becario'])
 def cambiar_estado(request, documento_id):
+    print("Entrando en la vista cambiar_estado")
     if request.method == 'POST':
         
+        print("Solicitud POST recibida")
         documento = get_object_or_404(Resumen, id=documento_id)
         nuevo_estado = request.POST.get('nuevo_estado')
-        if nuevo_estado in ['Solicitud','En revisión', 'Listo para enviar', 'Enviado']:
-            documento.estado = nuevo_estado
-            documento.save()
+           # Log para verificar los datos recibidos
+        print(f"Documento ID: {documento_id}")
+        print(f"Nuevo estado: {nuevo_estado}")
+        print(f"Estado actual: {documento.estado}")
+        print(f"Usuario: {request.user.username}")
+        print(f"Tipo de usuario: {request.user.doctor.tipo}")
+        if nuevo_estado in ['En revisión', 'Listo para enviar', 'Enviado']:
+            if documento.estado == 'Solicitud' and nuevo_estado == 'En revisión':
+                documento.estado = nuevo_estado
+                documento.save()
+                print(f"Estado cambiado a: {documento.estado}")
             
-            if nuevo_estado == 'En revisión':
-                adscritos = documento.medico_adscrito.all()
-                email_addresses = [adscrito.user.email for adscrito in adscritos]
+            
+            #envio de correo a los medicos adscritos para revisión
+                if nuevo_estado == 'En revisión':
+                    adscritos = documento.medico_adscrito.all()
+                    email_addresses = [adscrito.user.email for adscrito in adscritos]
                 
-                send_mail(
-                    subject='Se ha solicitado la revisión de un resumen',
-                    message= f'Se ha solicitado la revisión del resumen con numero de expedediente {documento.numero_expediente}',
-                    from_email= settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=email_addresses,
-                    fail_silently=False,
-                    )
-            try:
-                doctor = Doctor.objects.get(user=request.user)
-                if doctor.tipo == "Adscrito":
-                    return redirect('MedicosADS')
-                elif doctor.tipo in ['Becario']:
-                    return redirect('MedicosRB')
-            except Doctor.DoesNotExist:
-                return redirect('home')
+                    send_mail(
+                        subject='Se ha solicitado la revisión de un resumen',
+                        message= f'Se ha solicitado la revisión del resumen con numero de expedediente {documento.numero_expediente}',
+                        from_email= settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=email_addresses,
+                        fail_silently=False,
+                        )
+                try:
+                    doctor = Doctor.objects.get(user=request.user)
+                    if doctor.tipo == "Adscrito":
+                        return redirect('MedicosADS')
+                    elif doctor.tipo in ['Becario']:
+                        return redirect('MedicosRB')
+                except Doctor.DoesNotExist:
+                    return redirect('home')
+            else:
+                documento.estado = nuevo_estado
+                documento.save()
+                print(f"Estado cambiado a: {documento.estado}")
+         
     return redirect('home')
 #--------------------------------------------------------------------------------------------------
 
@@ -321,15 +320,6 @@ def mi_vista(request):
     return render(request, 'Medico/index.html')
 
 
-def editar_froala(request):
-    if request.method == 'POST':
-        contenido = request.POST.get('contenido')
-        pass
-        # Aquí puedes manejar el contenido, guardarlo en la base de datos, etc.
-        # Por ejemplo, guardar el contenido en un archivo:
-        
- 
-    return render(request, 'Medico/prueba.html')
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
