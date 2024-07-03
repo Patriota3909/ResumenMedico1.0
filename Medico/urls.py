@@ -29,7 +29,8 @@ urlpatterns = [
     path('asignar_medico_resumen/<int:documento_id>', views.asignar_medico_resumen, name="asignar_medico_resumen"),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
     path('asignar_medico_residente', views.asignar_medico_residente, name='asignar_medico_residente'),
-
+    path('insertar_firma/<int:documento_id>/', views.insertar_firma, name='insertar_firma'),
+    path('enviar_documento/<int:documento_id>/', views.enviar_documento, name='enviar_documento'),
     
 
     

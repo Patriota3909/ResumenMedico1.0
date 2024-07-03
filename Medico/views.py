@@ -17,6 +17,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ResumenForm
 from django.contrib import messages
+from django.utils.html import format_html
+from django.core.mail import EmailMessage
+
 
 
 #--------------------Pagina principal----------------------
@@ -474,3 +477,56 @@ def editar_documento2(request, documento_id):
         'documento': documento,
         'user_tipo': user_tipo,
     })
+    
+    
+@login_required
+def insertar_firma(request, documento_id):
+    documento = get_object_or_404(Resumen, id=documento_id)
+    doctor = Doctor.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        firma_electronica_url = doctor.firma_electronica.url
+
+        # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
+        firma_html = format_html(
+            '<div style="text-align: right;"><p>Cedula {} </p><img src="{}" alt="Firma Electrónica" style="width: 200px; height: 100px;"></div>',
+            doctor.cedula, firma_electronica_url
+        )
+        documento.texto += firma_html
+        documento.save()
+
+        return redirect('editar_documento2', documento_id=documento_id)
+
+    return render(request, 'Medico/editar_documento2.html', {'documento': documento})
+
+@login_required
+def enviar_documento(request, documento_id):
+    documento = get_object_or_404(Resumen, id=documento_id)
+    correo_paciente = request.POST.get('correo_paciente')
+
+    if request.method == 'POST':
+        # Renderizar la plantilla HTML a PDF
+        template = get_template('Medico/pdf_template.html')
+        context = {'documento': documento}
+        html = template.render(context)
+        response = HttpResponse(content_type='application/pdf')
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error al generar el PDF')
+
+        # Enviar el correo electrónico
+        email = EmailMessage(
+            'Resumen Médico',
+            'Adjunto encontrará su resumen médico en formato PDF.',
+            'from@example.com',
+            [correo_paciente]
+        )
+        email.attach('resumen.pdf', response.content, 'application/pdf')
+        email.send()
+                # Cambiar el estado del documento a "Enviado"
+        documento.estado = 'Enviado'
+        documento.save()
+
+        return redirect('MedicosADS_with_id', edited_id=documento_id)
+
+    return redirect('editar_documento2', documento_id=documento_id)

@@ -70,6 +70,7 @@
                                 <th>Número de expediente</th>
                                 <th>Fecha de entrega programada</th>
                                 <th>Especialidad</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-resumenes">
@@ -81,7 +82,7 @@
                                           <div class="modal-content">
                                             <div class="modal-header">
                                               <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
-                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                              
                                             </div>
                                             <div class="modal-body">
                                               <p>
@@ -125,6 +126,7 @@
                                 <td>{{ resumen.numero_expediente }}</td>
                                 <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
                                 <td>{{ resumen.especialidad.name }}</td>
+                                <td>{{ resumen.estado }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
