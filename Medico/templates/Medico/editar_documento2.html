@@ -14,7 +14,7 @@
       <!-- Botones Condicionales para Cambiar Estado -->
       {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión {{ documento.estado }}</button>
-      {% elif documento.estado == 'En revisión' %}
+      {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
       {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar</button>
