@@ -530,3 +530,24 @@ def enviar_documento(request, documento_id):
         return redirect('MedicosADS_with_id', edited_id=documento_id)
 
     return redirect('editar_documento2', documento_id=documento_id)
+
+
+@login_required
+def configuracion_view(request):
+    print('Entrando a configuracion')    
+    medicos = Doctor.objects.filter(tipo__in=['Becario', 'Residente'])
+    especialidades = Especialidad.objects.all()
+    return render(request, 'Medico/configuracion.html', {
+        'medicos': medicos,
+        'especialidades': especialidades
+    })
+    
+@login_required
+def modificar_especialidad(request, doctor_id):
+    if request.method == 'POST':
+        nueva_especialidad_id = request.POST.get('especialidad')
+        doctor = get_object_or_404(Doctor, id=doctor_id)
+        nueva_especialidad = get_object_or_404(Especialidad, id=nueva_especialidad_id)
+        doctor.especialidad = nueva_especialidad
+        doctor.save()
+    return redirect('configuracion_view')
