@@ -99,35 +99,46 @@
                                               
                                             </div>
                                             <div class="modal-body">
-                                              <p>
-                                                <strong>Número de Expediente:</strong> {{ resumen.numero_expediente }}
-                                              </p>
-                                              <p>
-                                                <strong>Nombre del Paciente:</strong> {{ resumen.paciente_nombre }}
-                                              </p>
-                                              <p>
-                                                <strong>Especialidad:</strong> {{ resumen.especialidad.name }}
-                                              </p>
-                                              <p>
-                                                <strong>Fecha de entrega programada:</strong> {{ resumen.fecha_entrega_programada }}
-                                              </p>
-                                              <p>
-                                                <strong>Estado:</strong> {{ resumen.estado }}
-                                              </p>
-                                              <p>
-                                                <strong>Medico Becario:</strong> {{ resumen.medico_becario }}
-                                              </p>
-                                              <p>
-                                                <strong>Medico Residente:</strong> {{ resumen.medico_residente }}
-                                              </p>
-                                              <p>
-                                                <strong>Medico Adscrito:</strong>
-                                                {% for adscrito in resumen.medico_adscrito.all %}
-                                                  <br />{{ adscrito }}
-                                                {% empty %}
-                                                  None
-                                                {% endfor %}
-                                              </p>
+                                              <table class="table">
+                                                <thead>
+                                                  <th scope="col">Descripción</th>
+                                                  <th scope="col">Nombre</th>
+                                                </thead>
+                                                <tbody>
+                                                  <tr>
+                                                    <th scope="row">Número de expediente: </th>
+                                                    <td> {{resumen.numero_expediente}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Nombre del paciente:  </th>
+                                                    <td> {{resumen.paciente_nombre}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Especialidad </th>
+                                                    <td> {{resumen.especialidad.name}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Fecha de entrega programada: </th>
+                                                    <td> {{resumen.fecha_entrega_programada}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Estado: </th>
+                                                    <td> {{resumen.estado}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Médico becario: </th>
+                                                    <td> {{resumen.medico_becario}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Médico residente: </th>
+                                                    <td> {{resumen.medico_residente}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Médico adscrito: </th>
+                                                    <td> {{resumen.medico_adscrito}}</td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
                                             </div>
                                             <div class="modal-footer">
                                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
