@@ -422,15 +422,7 @@ TEMPLATE_CONTENT ="""
 	<br>
 </p>
 
-<p style="text-align: center;">Nombre del m&eacute;dico: </p>
 
-<p style="text-align: center;">C&eacute;dula Profesional: </p>
-
-<p style="text-align: center;"><span class="fr-img-caption fr-fic fr-dib" style="width: 304px;"><span class="fr-img-wrap"><img src="http://127.0.0.1:8000/media/uploads/froala_editor/images/images_s0lfoMS.png" style="width: 304px;" class="fr-fic fr-dib"><span class="fr-inner"></span></span></span></p>
-
-<p>
-	<br>
-</p>
 <hr>
 
 <p>
@@ -551,3 +543,4 @@ def modificar_especialidad(request, doctor_id):
         doctor.especialidad = nueva_especialidad
         doctor.save()
     return redirect('configuracion_view')
+
