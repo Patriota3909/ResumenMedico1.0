@@ -12,7 +12,12 @@ def user_tipo_required(allowed_tipos, allowed_views=[]):
             if request.user.is_superuser:
                 print("Usuario superuser, permitiendo acceso.")
                 return view_func(request, *args, **kwargs)
+            
             try:
+                #verificamos si el tipo de usuario es del grupo de usuarios "Administrador"
+                if request.user.groups.filter(name="Administrador").exists():
+                    print("Usuario del grupo 'Administrador', permitiendo acceso...")
+                    return view_func(request, *args, **kwargs)
                 user_doctor = get_object_or_404(Doctor, user=request.user)
                 print(f"Doctor encontrado: {user_doctor.tipo}")
                 if user_doctor.tipo in allowed_tipos or view_func.__name__ in allowed_views:
