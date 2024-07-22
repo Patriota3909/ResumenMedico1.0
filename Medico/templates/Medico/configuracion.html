@@ -1,21 +1,34 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html data-bs-theme="light" lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Solicitudes</title>
-    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <title>Paginas MedicosRB y MedicosADS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Banner-Heading-Image-images.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Footer-Basic-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
- 
-  
-    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .table td, .table th {
+            vertical-align: middle;
+
+        }
+        .form-inline {
+            display: flex;
+            align-items: center;
+        }
+        .form-inline select {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,17 +46,18 @@
                                     </div>
                                     <div>
                                         <nav class="navbar navbar-expand-md navbar-dark" style="margin-top: 30px;padding-left: 24px;">
-                                            <div class="container-fluid collapse navbar-collapse" id="navbarButtons"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1" type="button" style="padding-left: 0px;margin-left: 8px;"><span class="navbar-toggler-icon"></span></button>
+                                            <div class="container collapse navbar-collapse" id="navbarButtons"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1" type="button" style="padding-left: 0px;margin-left: 8px;"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                                                 <div class="collapse navbar-collapse" id="navcol-1">
                                                     <ul class="navbar-nav">
                                                         <li class="nav-item"><a class="nav-link active" href="{% url 'solicitud' %}">Solicitud</a></li>
                                                         <li class="nav-item"><a class="nav-link" href="{% url 'lista_resumenes' %}">Busqueda global</a></li>
-                                                        <li class="nav-item"><a class="nav-link"  href="{% url 'configuracion_view'%}">Configuración</a></li>
+                                                        <li class="nav-item"><a class="nav-link" href="{% url 'configuracion_view'%}">Configuración</a></li>
                                                         <li class="nav-item"><a  class ="nav-link" href="{% url 'exit' %}">Salir</a></button></li>
                                                     </ul>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </nav>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-6 order-first order-md-last" style="min-height: 200px;"><img class="w-100 h-100 fit-cover" src="{% static 'assets/img/20231025-_DSC7871.jpg' %}" width="546" height="364" style="margin-bottom: -92px;border-radius: 9px;border-top-left-radius: 9px;border-top-right-radius: 9px;border-bottom-right-radius: 9px;border-bottom-left-radius: 9px;"></div>
@@ -53,51 +67,61 @@
                 </section>
             </div>
         </section>
-        <section>
-            <div class="container text-start">
-                <section class="position-relative py-4 py-xl-5">
-                    <div class="container">
-                        <div class="row mb-5">
-                            <div class="col-md-8 col-xl-6 text-center mx-auto">
-                                <h4 class="text-center border rounded d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255);background: #163756fa;margin-bottom: 6px;margin-top: -50px;margin-top: 4px;border-color: rgba(13,4,4,0);">Crear solicitud</h4>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-md-8 col-xl-6" style="margin-left: 2px;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;margin-bottom: 104px;">
-                                <div class="card mb-5">
-                                    <div class="card-body text-start border rounded shadow-sm d-flex flex-column align-items-center" style="padding-top: 0px;padding-bottom: 0px;padding: 20px;padding-left: 31px;padding-right: 31px;">
-                                        <div class="bs-icon-lg bs-icon-circle bs-icon-primary bs-icon my-4" style="background: rgb(51,76,112);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-video2">
-                                                <path d="M10 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"></path>
-                                                <path d="M2 1a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM1 3a1 1 0 0 1 1-1h2v2H1zm4 10V2h9a1 1 0 0 1 1 1v9c0 .285-.12.543-.31.725C14.15 11.494 12.822 10 10 10c-3.037 0-4.345 1.73-4.798 3zm-4-2h3v2H2a1 1 0 0 1-1-1zm3-1H1V8h3zm0-3H1V5h3z"></path>
-                                            </svg></div>
-                                        <form class="text-center w-100" method="post">
-                                            {% csrf_token %}
-                                            <div class="text-start mb-3"><label class="form-label text-start">Nombre del paciente</label><input class="form-control m" id ="paciente_nombre" name="paciente_nombre" type="text" style="margin-left: 20px margin-rigth:20px;"></div>
-                                            <div class="text-start mb-3"><label class="form-label">Número de expediente</label><input class="form-control" id="numero_expediente" name="numero_expediente" type="number"></div>
-                                            <div class="text-start mb-3"><label class="form-label">Correo electrónico</label><input class="form-control" id="correo_electronico" name="correo_electronico" type="email" name="email"></div>
-                                            <div class="text-start mb-3"><label class="form-label">Edad</label><input class="form-control" id="edad" name="edad" type="number"></div>
-                                            <div class="text-start mb-3"><label class="form-label">Especialidad</label>
-                                                <select class="form-select" id="especialidad" name="especialidad">
-                                                {% for especialidad in especialidades%}
-                                                <option value="{{ especialidad.id }}">{{ especialidad.name}}</option>
-                                                {% endfor %}
-                                                </select></div>
-                                            <div class="text-start mb-3"><label class="form-label">Motivo de solicitud</label><textarea class="form-control" id="motivo_solicitud" name="motivo_solicitud"></textarea></div>
-                                            <div class="mb-3"><button class="btn btn-primary text-bg-dark d-block w-100" data-bss-hover-animate="pulse" type="submit" style="margin-top: 67px;">Enviar</button></div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </section>
-    </main>
+
+
+     <!-- INICIO DE SECCION DE CONFIGURACION-->
+ <section id="configuracion-panel">
+    <div class="container text-start">
+        <h1 class="text-center" style="color: rgb(64,114,163);">Configuración</h1>
+        <div class="mb-3">
+            <label for="especialidad-filtro" class="form-label">Filtrar por especialidad</label>
+            <select id="especialidad-filtro" class="form-select">
+                <option value="">Todas</option>
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.name }}">{{ especialidad.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Especialidad</th>
+                        <th style="color: rgb(138,36,50);">Modificar Especialidad</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-medicos">
+                    {% for doctor in medicos %}
+                    <tr data-especialidad="{{ doctor.especialidad.name }}">
+                        <td>{{ doctor.user.username }}</td>
+                        <td>{{ doctor.tipo }}</td>
+                        <td>{{ doctor.especialidad.name }}</td>
+                        <td>
+                            <form method="post" action="{% url 'modificar_especialidad' doctor.id %}">
+                                {% csrf_token %}
+                                <select name="especialidad" class="form-select">
+                                    {% for especialidad in especialidades %}
+                                    <option value="{{ especialidad.id }}" {% if doctor.especialidad.id == especialidad.id %}selected{% endif %}>{{ especialidad.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+  
+</main>
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
             <ul class="list-inline">
-                <li class="list-inline-item me-4"><a class="link-secondary" href="#">Instituto Mexicano de Oftalmología I.A.P.</a></li>
+                <li class="list-inline-item me-4"><a class="link-secondary" href="#">Instituto Mexicano de Oftalmología I.AP.</a></li>
             </ul>
             <ul class="list-inline">
                 <li class="list-inline-item me-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-facebook">
@@ -115,8 +139,55 @@
     </footer>
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'assets/js/bs-init.js' %}"></script>
-  
+    <script>
+        $(document).ready(function () {
+            $('#especialidad-filtro').on('change', function () {
+                let especialidadSeleccionada = $(this).val();
+                $('#tabla-medicos tr').each(function () {
+                    let especialidad = $(this).data('especialidad');
+                    if (especialidadSeleccionada === '' || especialidad === especialidadSeleccionada) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 
 </html>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

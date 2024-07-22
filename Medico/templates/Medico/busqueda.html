@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      .table td, .table th {
+          vertical-align: middle;
+      }
+  </style>
 </head>
 
 <body>
@@ -38,12 +43,12 @@
                                                 <div class="collapse navbar-collapse" id="navcol-1">
                                                     <ul class="navbar-nav">
                                                         <li class="nav-item"><a class="nav-link active" href="{% url 'solicitud' %}">Solicitud</a></li>
-                                                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_resumenes' %}">Busqueda global</a></li>
-                                                        <li class="nav-item"><a class="nav-link" href="#">Configuración</a></li>
-                                                        <li class="nav-item"><a  class ="nav-link" href={% url 'exit' %}>Salir</a></button></li>
+                                                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_resumenes' %}" id="busqueda-link">Busqueda global</a></li>
+                                                        <li class="nav-item"><a class="nav-link" href="{% url 'configuracion_view'%}">Configuración</a></li>
+                                                        <li class="nav-item"><a  class ="nav-link" href="{% url 'exit' %}">Salir</a></button></li>
                                                     </ul>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </nav>
                                     </div>
                                 </div>
@@ -54,7 +59,16 @@
                 </section>
             </div>
         </section>
-        <section>
+      
+     
+
+
+
+
+
+
+        <!--Inicia seccion de busqueda global-->
+        <section id="busqueda-panel">
             <div class="container text-start">
                 <div class="search-container">
                     <h1 class="text-center" style="color: rgb(64,114,163);">Búsqueda global</h1>
@@ -71,6 +85,7 @@
                                 <th>Número de expediente</th>
                                 <th>Fecha de entrega programada</th>
                                 <th>Especialidad</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-resumenes">
@@ -81,7 +96,8 @@
                                         <div class="modal-dialog" role="document">
                                           <div class="modal-content">
                                             <div class="modal-header">
-                                              <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente <strong>{{ resumen.numero_expediente }}</strong></h5>
+                                              <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">
                                               <p>
@@ -94,7 +110,7 @@
                                                 <strong>Especialidad:</strong> {{ resumen.especialidad.name }}
                                               </p>
                                               <p>
-                                                <strong>Fecha de entrega programada:</strong> {{ resumen.fecha_entrega_programada|date:"F j" }}
+                                                <strong>Fecha de entrega programada:</strong> {{ resumen.fecha_entrega_programada }}
                                               </p>
                                               <p>
                                                 <strong>Estado:</strong> {{ resumen.estado }}
@@ -125,6 +141,7 @@
                                 <td>{{ resumen.numero_expediente }}</td>
                                 <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
                                 <td>{{ resumen.especialidad.name }}</td>
+                                <td>{{ resumen.estado }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -157,6 +174,19 @@
 
     <script>
         $(document).ready(function () {
+
+          //Secciones ocultas 
+            $('#busqueda-link').on('click', function () {
+              $('#busqueda-panel').show();
+              $('#configuracion-panel').hide();
+          });
+          $('#configuracion-link').on('click', function () {
+              $('#configuracion-panel').show();
+              $('#busqueda-panel').hide();
+          });
+
+
+
           // Barra de Búsqueda
           $('#barra-busqueda').on('input', function () {
             filtrarResumenes()

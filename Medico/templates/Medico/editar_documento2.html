@@ -18,6 +18,7 @@
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
       {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar</button>
+        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
       {% endif %}
     </div>
   </nav>
@@ -109,9 +110,10 @@
     <!-- FIN Modal de confirmación de estado: Listo para enviar -->
 
   <!-- Modal de confirmación de estado: Enviar -->
-  <form method="post" id="form_enviado" action="{% url 'cambiar_estado' documento.id %}">
+   <!-- Modal de confirmación de estado: Enviar -->
+   <form method="post" id="form_enviado" action="{% url 'enviar_documento' documento.id %}">
     {% csrf_token %}
-    <input type="hidden" name="nuevo_estado" value="Enviado" />
+    <input type="hidden" name="correo_paciente" value="{{ documento.correo_electronico }}">
     <div class="modal fade" id="confirmModal_enviado" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -129,6 +131,33 @@
     </div>
   </form>
   <!-- FIN Modal de confirmación de estado: Enviar -->
+
+   <!-- Modal de confirmación para insertar firma digital -->
+   <form method="post" id="form_firma" action="{% url 'insertar_firma' documento.id %}">
+    {% csrf_token %}
+    <div class="modal fade" id="confirmModal_firma" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalLabel">Confirmar Inserción de Firma</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Seguro que deseas insertar tus datos y firma digital en el documento?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Sí, insertar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- FIN Modal de confirmación para insertar firma digital -->
+
+
+
+
 
   <!-- Modal de confirmación de generar PDF con vista previa -->
   <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
