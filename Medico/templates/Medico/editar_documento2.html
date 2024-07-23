@@ -2,6 +2,22 @@
 {% load static %}
 {% block links %}
   {{ form.media }}
+  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/line_height.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/plugins/image.min.css"></script>
+  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/font_family.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
+  <!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/froala-editor@3.2.6/css/froala_editor.pkgd.min.css">
+
+<!-- JAVASCRIPT -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@3.2.6/js/froala_editor.pkgd.min.js"></script>
+
+
+
 {% endblock %}
 {% block content %}
   <nav class="navbar navbar-light bg-light fixed-top">
@@ -9,8 +25,7 @@
       <!-- Botón para guardar el contenido -->
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
       <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
-      <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#pdfModal">Vista previa</button>
-
+      
       <!-- Botones Condicionales para Cambiar Estado -->
       {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión {{ documento.estado }}</button>
@@ -35,9 +50,13 @@
           </p>
         </div>
       </div>
-
       <!-- Editor de summernote -->
-      <div class="froala-container">{{ form.texto }}</div>
+      <div class="froala-container">
+        <div class="overlay">
+          <p>Has alcanzado el límite de contenido de una hoja A4.</p>
+        </div>
+        {{ form.texto }}
+      </div>
     </div>
 
     <!-- Modal de confirmación de guardado -->
@@ -76,7 +95,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Símon</button>
+            <button type="submit" class="btn btn-primary">Sí</button>
           </div>
         </div>
       </div>
@@ -185,17 +204,25 @@
   <script>
     $(function () {
       $('textarea').froalaEditor({
+        documentReady: true
         width: '780', // Ancho de un documento A4 en píxeles
         heightMin: 1115,
         heightMax: 1115,
-        toolbarButtons: ['bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
+        toolbarButtons: ['lineHeight','bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
         pluginsEnabled: ['align', 'link', 'lists']
-      })
-    })
+        fontFamily: {
+          "Roboto,sans-serif": 'Roboto',
+          "Oswald,sans-serif": 'Oswald',
+          "Montserrat,sans-serif": 'Montserrat',
+          "'Open Sans Condensed',sans-serif": 'Open Sans Condensed'
+        },
+        fontFamilySelection: true
+      });
+    });
     
     document.addEventListener('DOMContentLoaded', function () {
       const form = document.getElementById('form_revisión')
       console.log('Form action URL:', form.action)
-    })
+    });
   </script>
 {% endblock %}

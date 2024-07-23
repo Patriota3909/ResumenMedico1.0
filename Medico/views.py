@@ -19,6 +19,8 @@ from .forms import ResumenForm
 from django.contrib import messages
 from django.utils.html import format_html
 from django.core.mail import EmailMessage
+from django.contrib.auth.models import Group
+from django.utils.html import escape
 
 
 
@@ -36,7 +38,12 @@ def home(request):
         if request.user.is_superuser:
             return redirect('admin:index')
         else:
-            return redirect('login')
+            #vericamos si el usuario pertenece al grupo administrador
+            admin_group = Group.objects.get(name="Administrador")
+            if admin_group in request.user.groups.all():
+                return redirect('solicitud')
+            else:
+                return redirect('login')
 
         return render(request, 'home.html')
     return render(request, 'Medico/home.html')
@@ -329,38 +336,19 @@ def mi_vista(request):
 ################################################################################################################################################################
 ################################################################################################################################################################
 TEMPLATE_CONTENT ="""
-<p><img src="http://127.0.0.1:8000/media/uploads/froala_editor/images/images.png" style="width: 64px;" class="fr-fic fr-dii fr-fil fr-rounded">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Quer&eacute;taro, Qro. a__ del mes__ del a&ntilde;o 20___</p>
+<p><img src="{{ MEDIA_URL }}img/image.png" style="width: 64px;" class="fr-fic fr-dii fr-fil fr-rounded">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Quer&eacute;taro, Qro. a__ del mes__ del a&ntilde;o 20___</p>
 
-<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;RESUMEN M&Eacute;DICO</strong></p>
+<p style="text-align: center;"><strong>RESUMEN M&Eacute;DICO</strong></p>
 
 <p style="text-align: center;"><strong>_________________________________________________________________________________</strong></p>
 
-<table style="width: 100%;">
-	<tbody>
-		<tr>
-			<td style="width: 24.964%;">Nombre del paciente:</td>
-			<td style="width: 33.3333%; width: 25.0000%;"><strong>{nombre}</strong></td>
-			<td style="width: 24.964%;">G&eacute;nero:</td>
-			<td style="width: 24.964%;"></td>
-		</tr>
-		<tr>
-			<td style="width: 24.964%;">Numero de expediente:</td>
-			<td style="width: 33.3333%; width: 25.0000%;"><strong>{expediente}</strong></td>
-			<td style="width: 24.964%;">Fecha de nacimiento:</td>
-			<td style="width: 24.964%;"></td>
-		</tr>
-		<tr>
-			<td style="width: 24.964%;">Edad:</td>
-			<td style="width: 33.3333%; width: 25.0000%;"><strong>{edad}</strong></td>
-			<td style="width: 24.964%;">
-				<br>
-			</td>
-			<td style="width: 24.964%;">
-				<br>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<ul>
+	<li style="text-align: left; line-height: 1;">Nombre del paciente: <strong>{nombre}</strong></li>
+	<li style="text-align: left; line-height: 1;">N&uacute;mero de expediente: <strong>{expediente}</strong></li>
+	<li style="text-align: left; line-height: 1;">Edad: <strong>{edad}</strong></li>
+	<li style="text-align: left; line-height: 1;">G&eacute;nero:&nbsp;</li>
+	<li style="text-align: left; line-height: 1;">Fecha de nacimiento:</li>
+</ul>
 
 <p style="margin-left: 40px; text-align: center;"><span style="font-size: 12px;"><u>INFORME</u></span></p>
 
@@ -388,7 +376,7 @@ TEMPLATE_CONTENT ="""
 	<br>
 </p>
 
-<table style="width: 46%; margin-right: calc(54%);">
+<table style="width: 46%; margin-right: 54%;">
 	<thead>
 		<tr>
 			<th colspan="3" style="width: 99.723%;" class="fr-thick"><span style="font-size: 12px;"><span style="font-family: Tahoma, Geneva, sans-serif;">PRON&Oacute;STICO (PARA LA VIDA Y PARA LA FUNCI&Oacute;N)</span>&nbsp;</span></th>
@@ -417,21 +405,7 @@ TEMPLATE_CONTENT ="""
 		</tr>
 	</tbody>
 </table>
-
-<p>
-	<br>
-</p>
-
-
-<hr>
-
-<p>
-	<br>
-</p>
-
-
-
-
+<br>
 
 """
 
@@ -478,12 +452,11 @@ def insertar_firma(request, documento_id):
 
     if request.method == 'POST':
         firma_electronica_url = doctor.firma_electronica.url
+        print(firma_electronica_url)
 
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
         firma_html = format_html(
-            '<div style="text-align: right;"><p>Cedula {} </p><img src="{}" alt="Firma Electrónica" style="width: 200px; height: 100px;"></div>',
-            doctor.cedula, firma_electronica_url
-        )
+            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 100px; height: 100px;"></div>', firma_electronica_url)
         documento.texto += firma_html
         documento.save()
 
@@ -499,8 +472,14 @@ def enviar_documento(request, documento_id):
     if request.method == 'POST':
         # Renderizar la plantilla HTML a PDF
         template = get_template('Medico/pdf_template.html')
-        context = {'documento': documento}
+        content_with_absolute_urls = documento.texto.replace(
+            '/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'
+        )
+        context = {
+            'content': content_with_absolute_urls
+        }
         html = template.render(context)
+        print(html)
         response = HttpResponse(content_type='application/pdf')
         pisa_status = pisa.CreatePDF(html, dest=response)
         if pisa_status.err:
@@ -515,6 +494,7 @@ def enviar_documento(request, documento_id):
         )
         email.attach('resumen.pdf', response.content, 'application/pdf')
         email.send()
+        print("Se envio el documento")
                 # Cambiar el estado del documento a "Enviado"
         documento.estado = 'Enviado'
         documento.save()
