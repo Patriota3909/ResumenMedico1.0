@@ -89,7 +89,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-resumenes">
+                        <tbody id="tabla-resumenes" style="text-transform: none;">
                             {% for resumen in resumenes %}
                             <tr>
                                 <td><button class="btn btn-primary text-center border rounded-circle" data-toggle="modal" data-target="#modal1-{{ resumen.id }}" data-bss-hover-animate="pulse"  type="button" style="color: rgb(242,241,241);background: rgb(140,24,24);"><i class="fa fa-eye"></i></button>
@@ -99,7 +99,7 @@
                                             <div class="modal-header">
                                               <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente <strong>{{ resumen.numero_expediente }}</strong></h5>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body" style="text-transform: none;">
                                               <p>
                                                 <strong>Número de Expediente:</strong> {{ resumen.numero_expediente }}
                                               </p>
@@ -128,6 +128,9 @@
                                                 {% empty %}
                                                   None
                                                 {% endfor %}
+                                              </p>
+                                              <p>
+                                                <strong>Email del paciente:</strong> {{ resumen.correo_electronico }}
                                               </p>
                                             </div>
                                             <div class="modal-footer">
