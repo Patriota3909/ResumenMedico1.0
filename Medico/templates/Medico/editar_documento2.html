@@ -23,7 +23,9 @@
   <nav class="navbar navbar-light bg-light fixed-top">
     <div class="container-fluid justify-content-center">
       <!-- Botón para guardar el contenido -->
+       {% if user_tipo != 'Administrador'%}
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
+      {% endif %}
       <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
       
       <!-- Botones Condicionales para Cambiar Estado -->
@@ -53,7 +55,7 @@
       <!-- Editor de summernote -->
       <div class="froala-container">
         <div class="overlay">
-          <p>Has alcanzado el límite de contenido de una hoja A4.</p>
+          <p></p>
         </div>
         {{ form.texto }}
       </div>

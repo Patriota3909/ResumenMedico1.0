@@ -9,7 +9,7 @@ def user_tipo_required(allowed_tipos, allowed_views=[]):
         def _wrapped_view(request,*args, **kwargs):
             print(f"Ejecutando decorador para la vista: {view_func.__name__}")
             
-            if request.user.is_superuser:
+            if request.user.is_superuser or request.user.groups.filter(name="Administrador").exists():
                 print("Usuario superuser, permitiendo acceso.")
                 return view_func(request, *args, **kwargs)
             

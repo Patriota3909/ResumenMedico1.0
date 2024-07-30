@@ -52,7 +52,7 @@
                                         </nav>
                                     </div>
                                 </div>
-                                <div class="col-md-6 order-first order-md-last" style="min-height: 200px;"><img class="w-100 h-100 fit-cover" src="{% static 'assets/img/20231025-_DSC7871.jpg' %}" width="546" height="364" style="margin-bottom: -92px;border-radius: 9px;border-top-left-radius: 9px;border-top-right-radius: 9px;border-bottom-right-radius: 9px;border-bottom-left-radius: 9px;"></div>
+                                <div class="col-md-6 order-first order-md-last" style="min-height: 200px;"><img class="w-100 h-100 fit-cover" src="{% static 'assets/img/medico2.jpg' %}" width="546" height="364" style="margin-bottom: -92px;border-radius: 9px;border-top-left-radius: 9px;border-top-right-radius: 9px;border-bottom-right-radius: 9px;border-bottom-left-radius: 9px;"></div>
                             </div>
                         </div>
                     </div>
@@ -80,12 +80,13 @@
                     <table class="table table-striped table-hover" id="myTable">
                         <thead>
                             <tr>
-                                <th>Acciones</th>
+                                <th>Ver</th>
                                 <th>Nombre del paciente</th>
                                 <th>Número de expediente</th>
                                 <th>Fecha de entrega programada</th>
                                 <th>Especialidad</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-resumenes">
@@ -141,6 +142,13 @@
                                 <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
                                 <td>{{ resumen.especialidad.name }}</td>
                                 <td>{{ resumen.estado }}</td>
+                                <td>
+                                  {% if resumen.estado == "Enviado" %}
+                                      <a href="{% url 'editar_documento2' documento_id=resumen.id %}" class="btn btn-success">
+                                         Ver
+                                      </a>
+                                  {% endif %}
+                              </td>
                             </tr>
                             {% endfor %}
                         </tbody>

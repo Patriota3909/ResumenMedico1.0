@@ -415,8 +415,12 @@ TEMPLATE_CONTENT ="""
 @login_required
 @user_tipo_required(['Adscrito', 'Residente', 'Becario'])
 def editar_documento2(request, documento_id):
-    user_tipo = request.user.doctor.tipo
     documento = get_object_or_404(Resumen, id=documento_id)
+
+    #user_tipo = request.user.doctor.tipo
+    user_tipo = getattr(request.user, 'doctor', None)
+    user_tipo = user_tipo.tipo if user_tipo else 'Administrador'
+
 
     if request.method == 'POST':
         form = ResumenForm(request.POST, instance=documento)

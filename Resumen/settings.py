@@ -26,7 +26,7 @@ SECRET_KEY = '%d13xxow^*96$s#=#nq%u$hogm)q6)*v$aevi@ur3b=o-sm5u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '52.90.107.138', 'resumenesimo.ddns.net']
+ALLOWED_HOSTS = ['localhost', '52.90.107.138', 'resumenesimo.ddns.net','127.0.0.1']
 
 
 # Application definition
