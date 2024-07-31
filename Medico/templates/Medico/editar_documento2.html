@@ -34,8 +34,8 @@
       {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
       {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar</button>
         <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
+        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
       {% endif %}
     </div>
   </nav>
@@ -92,7 +92,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <h1>Este resumen pasará a prueba</h1>
+            <h1>Este resumen se enviará a revisión</h1>
             <h2>¿Estás de acuerdo?</h2>
           </div>
           <div class="modal-footer">
@@ -117,7 +117,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <h1>Este resumen pasará a listos para enviar</h1>
+              <h1>Este resumen se enviará a listos para enviar</h1>
               <h2>¿Estás de acuerdo?</h2>
             </div>
             <div class="modal-footer">

@@ -129,11 +129,11 @@
                                                   <p>Número de Expediente: {{ documento.numero_expediente }}</p>
                                                   <p>Nombre del Paciente: {{ documento.paciente_nombre }}</p>
                                                   <p>Especialidad: {{ documento.especialidad.name }}</p>
-                                                  <p>Fecha de Solicitud: {{ documento.fecha_entrega_programada|date:"F j" }}</p>
+                                                  <p>Fecha de entrega programada: {{ documento.fecha_entrega_programada|date:"F j" }}</p>
                                                   <p>Estado: {{ documento.estado }}</p>
-                                                  <p>Medico Becario: {{ documento.medico_becario }}</p>
-                                                  <p>Medico Residente: {{ documento.medico_residente }}</p>
-                                                  <p>Medico Adscrito:
+                                                  <p>Médico Becario: {{ documento.medico_becario }}</p>
+                                                  <p>Médico Residente: {{ documento.medico_residente }}</p>
+                                                  <p>Médico Adscrito:
                                                     {% for adscrito in documento.medico_adscrito.all %}
                                                       <br />{{ adscrito }}
                                                     {% empty %}
@@ -165,7 +165,7 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar Medico Residentes</h5>
+                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar Medico Residente</h5>
                                                         
                                                     </div>
                                                     <div class="modal-body">
@@ -237,7 +237,7 @@
                                                   <h5 class="modal-title" id="modalLabel-{{ documento.id }}">Detalles del Expediente {{ documento.numero_expediente }}</h5>
                                                   
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body" style="text-transform: none;">
                                                   <p>
                                                     Número de Expediente: {{ documento.numero_expediente }}
                                                   </p>
@@ -248,7 +248,7 @@
                                                     Especialidad: {{ documento.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    Fecha de Solicitud: {{ documento.fecha_entrega_programada|date:"F j" }}
+                                                    Fecha de entrega programada: {{ documento.fecha_entrega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
                                                     Estado: {{ documento.estado }}
