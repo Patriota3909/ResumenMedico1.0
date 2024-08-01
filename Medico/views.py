@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ResumenForm
 from django.contrib import messages
+from django.templatetags.static import static
 from django.utils.html import format_html
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import Group
@@ -336,80 +337,36 @@ def mi_vista(request):
 ################################################################################################################################################################
 ################################################################################################################################################################
 TEMPLATE_CONTENT ="""
-<p><img src="{{ MEDIA_URL }}img/image.png" style="width: 64px;" class="fr-fic fr-dii fr-fil fr-rounded">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Quer&eacute;taro, Qro. a__ del mes__ del a&ntilde;o 20___</p>
+<p><img src="{image_url}" style="width: 116px; height: 52.1017px;" class="fr-fic fr-dii">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Instituto Mexicano de Oftalmolog&iacute;a I.A.P</p>
 
-<p style="text-align: center;"><strong>RESUMEN M&Eacute;DICO</strong></p>
+<p style="text-align: center;">Resumen M&eacute;dico</p>
 
-<p style="text-align: center;"><strong>_________________________________________________________________________________</strong></p>
+<p style="line-height: 1;">Nombre del paciente: <strong>{nombre}</strong> </p>
 
-<ul>
-	<li style="text-align: left; line-height: 1;">Nombre del paciente: <strong>{nombre}</strong></li>
-	<li style="text-align: left; line-height: 1;">N&uacute;mero de expediente: <strong>{expediente}</strong></li>
-	<li style="text-align: left; line-height: 1;">Edad: <strong>{edad}</strong></li>
-	<li style="text-align: left; line-height: 1;">G&eacute;nero:&nbsp;</li>
-	<li style="text-align: left; line-height: 1;">Fecha de nacimiento:</li>
-</ul>
+<p style="line-height: 1;">N&uacute;mero de expediente: <strong>{expediente}</strong></p>
 
-<p style="margin-left: 40px; text-align: center;"><span style="font-size: 12px;"><u>INFORME</u></span></p>
+<p style="line-height: 1;">Edad: <strong>{edad}</strong></p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;">Padecimiento actual:</span></p>
+<p style="line-height: 1; text-align: center;">INFORME</p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><br></span></p>
+<p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Diagnostico:</strong></span></p>
+<p style="line-height: 1; text-align: left;">Diagnostico:</p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Tratamientos&nbsp;</strong><strong>realizados</strong>:</span></p>
+<p style="line-height: 1; text-align: left;">Tratamientos realizados:</p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Resultados&nbsp;</strong><strong>de&nbsp;</strong><strong>estudios&nbsp;</strong><strong>de&nbsp;</strong><strong>laboratorio&nbsp;</strong><strong>y&nbsp;</strong><strong>gabinete</strong>:</span></p>
+<p style="line-height: 1; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
 
-<p style="margin-left: 40px; text-align: left;"><span style="font-size: 12px;"><strong>Evoluci&oacute;n</strong>:</span></p>
+<p style="line-height: 1; text-align: left;">Evoluci&oacute;n:</p>
 
-<p style="margin-left: 40px; text-align: left;">
+<p style="line-height: 1;">
 	<br>
 </p>
 
-<p style="margin-left: 40px; text-align: left;">
+<p style="line-height: 1;">
 	<br>
 </p>
-
-<p>
-	<br>
-</p>
-
-<table style="width: 46%; margin-right: 54%;">
-	<thead>
-		<tr>
-			<th colspan="3" style="width: 99.723%;" class="fr-thick"><span style="font-size: 12px;"><span style="font-family: Tahoma, Geneva, sans-serif;">PRON&Oacute;STICO (PARA LA VIDA Y PARA LA FUNCI&Oacute;N)</span>&nbsp;</span></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">FUNCI&Oacute;N</span></td>
-			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">VIDA</span></td>
-		</tr>
-		<tr>
-			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Favorable</span></td>
-			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-		</tr>
-		<tr>
-			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Reservado</span></td>
-			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-		</tr>
-		<tr>
-			<td style="width: 25.6283%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;">Desfavorable</span></td>
-			<td style="width: 37.3583%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-			<td style="width: 35.0152%; vertical-align: middle; text-align: center;" class="fr-thick"><span style="font-size: 11px;"><br></span></td>
-		</tr>
-	</tbody>
-</table>
-<br>
-
 """
-
-
 
 
 @login_required
@@ -426,13 +383,49 @@ def editar_documento2(request, documento_id):
         form = ResumenForm(request.POST, instance=documento)
         if form.is_valid():
             form.save()
-            doctor = Doctor.objects.get(user=request.user)
-            if doctor.tipo == "Adscrito":
-                return redirect('MedicosADS_with_id', edited_id=documento.id)
-            elif doctor.tipo in ['Residente', 'Becario']:
-                return redirect('MedicosRB_with_id', edited_id=documento.id)
+            #doctor = Doctor.objects.get(user=request.user)
+            #if doctor.tipo == "Adscrito":
+            #    return redirect('MedicosADS_with_id', edited_id=documento.id)
+            #elif doctor.tipo in ['Residente', 'Becario']:
+            #    return redirect('MedicosRB_with_id', edited_id=documento.id)
+            messages.success(request, 'Documento guardado correctamente.')
+            return redirect('editar_documento2', documento_id = documento.id)
     else:
         if not documento.texto:
+            image_url = static('assets/img/imo.jpg')
+            TEMPLATE_CONTENT = f"""
+            <p class="non-editable"><img src="{image_url}" style="width: 116px; height: 52.1017px;" class="fr-fic fr-dii">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Instituto Mexicano de Oftalmolog&iacute;a I.A.P</p>
+
+            <p class="non-editable" style="text-align: center;"><strong>Resumen M&eacute;dico</strong></p>
+
+            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">Nombre completo: {{nombre}}</span></strong></p>
+
+            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">N&uacute;mero de expediente: {{expediente}}</span></strong></p>
+
+            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">Edad: {{edad}}</span></strong></p>
+
+            <p class="non-editable" style="line-height: 1; text-align: center;"><u>INFORME</u></p>
+
+            <p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
+
+            <p style="line-height: 1; text-align: left;">Diagnostico:</p>
+
+            <p style="line-height: 1; text-align: left;">Tratamientos realizados:</p>
+
+            <p style="line-height: 1; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
+
+            <p style="line-height: 1; text-align: left;">Evoluci&oacute;n:</p>
+
+            <p style="line-height: 1;">
+            	<br>
+            </p>
+
+            <p style="line-height: 1;">
+            	<br>
+            </p>
+
+                        """
+
             documento.texto = TEMPLATE_CONTENT.format(
                 nombre = documento.paciente_nombre,
                 edad = documento.edad,
@@ -461,8 +454,9 @@ def insertar_firma(request, documento_id):
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
         firma_html = format_html(
             '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 100px; height: 100px;"></div>', firma_electronica_url)
-        documento.texto += firma_html
+        documento.texto += str(firma_html)
         documento.save()
+        print('SE GUARDO EL DOCUMENTO CON LA FIRMA')
 
         return redirect('editar_documento2', documento_id=documento_id)
 

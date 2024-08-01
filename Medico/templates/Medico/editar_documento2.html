@@ -40,6 +40,18 @@
     </div>
   </nav>
 
+
+
+    <!-- Mostrar mensajes -->
+    {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
   <form method="post" id="editForm">
     {% csrf_token %}
     <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
@@ -48,11 +60,11 @@
         <div class="col-md-12 col-xl-12 text-center mx-auto">
           <h2>Estás editando el resumen de: {{ documento.paciente_nombre|upper }}</h2>
           <p class="w-lg-50">
-            con número de expediente: <strong>{{ documento.numero_expediente }}</strong>
+          Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
           </p>
         </div>
       </div>
-      <!-- Editor de summernote -->
+      <!-- Editor de froala -->
       <div class="froala-container">
         <div class="overlay">
           <p></p>
@@ -220,6 +232,14 @@
         },
         fontFamilySelection: true
       });
+      
+      var initialContent = `{% autoescape off %}{{ form.texto.value|safe }}{% endautoescape %}`;
+      $('textarea').froalaEditor('html.set', initialContent);
+       // Desaparecer el mensaje después de 5 segundos
+       setTimeout(function() {
+        $('.alert').fadeOut('slow');
+      }, 5000); // 5000 milisegundos = 5 segundos
+
     });
     
     document.addEventListener('DOMContentLoaded', function () {
