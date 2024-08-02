@@ -1,34 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>PDF</title>
+    <meta charset="UTF-8">
     <style>
-        @page {
-            size: A4;
-            margin: 20mm;
-        }
         body {
             font-family: Arial, sans-serif;
-            width: 174mm; /* ajustar según el margen para mantener la consistencia con A4 */
-        }
-        h1, h2, h3, h4, h5, h6 {
-            color: #333;
-        }
-        p {
             margin: 0;
             padding: 0;
         }
-        table {
-            width: 46%;
-            margin-right: 54%;
+        .header, .footer {
+            text-align: center;
+            position: relative;
+            width: 100%;
         }
+        .header {
+            top: 0;
+        }
+        .footer {
+            bottom: 0;
+        }
+        .content {
+            margin: 20px 20px;
+        }
+        img {
+            max-width: 100%;
+        }
+        
+        .banner {
+            background-color: #f8f9fa;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-radius: 8px;
+            border: 1px solid #ccc; /* Añade esta línea para el borde */
+            
+        }
+        
+        .banner-left {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px; /* Ajusta este valor según sea necesario */
+        }
+        
+        .top-left {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        
+        .top-left img {
+            height: auto;
+            margin-left: 20px;
+        }
+        
+        .banner-content {
+            text-align: left;
+            margin-left: 20px;
+        }
+        
+        .banner-content h1 {
+            
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            
+        }
+        
+        .banner-content p {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 0;
+        }
+        
+        .top-right {
+            text-align: right;
+            margin-right: 100px;
+        }
+        
+        .top-right p {
+            margin: 0;
+            font-size: 14px;
+            color: #070808;
+        }
+        
+        .info {
+            margin: 20px 0 0 20px;
+            font-size: 12px;
+        }
+        
+        .info p {
+            margin: 1px 0;
+        }
+      
+        
     </style>
-  
 </head>
 <body>
-    <div>
+
+    <div class="header">
+        <div class="banner">
+            <div class="banner-left">
+                <div class="top-left">
+                    <img src="{{ logo_url }}" alt="Logo" style="width: 116px; height: 60px;">
+                </div>
+                <div class="banner-content">
+                    <h1>Instituto Mexicano de Oftalmología I.A.P.</h1>
+                    <p>Resumen clínico</p>
+                </div>
+                <div class="info">
+                    <p style="line-height: 1; text-align: left;">Nombre del paciente: <strong>{{ nombre }}</strong></p>
+                    <p style="line-height: 1; text-align: left;">Número de expediente: <strong>{{ expediente }}</strong></p>
+                    <p style="line-height: 1; text-align: left;">Edad: <strong>{{ edad }}</strong></p>
+                </div>
+            </div>
+            <div class="top-right">
+                <p>Fecha: <strong>{{ fecha_actual }}</strong></p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="content">
+        <p class="non-editable" style="line-height: 1; text-align: center;"><u>INFORME</u></p>
         {{ content|safe }}
+        
+    </div>
+    <div class="footer">
+        <p>_________________________________________________________________</p>
+            <div class="container text-muted py-4 py-lg-5">
+                <p class="mb-0" style="color: dimgrey;">Instituto Mexicano de Oftalmología I.A.P.</p>
+            </div>
+        
     </div>
 </body>
 </html>

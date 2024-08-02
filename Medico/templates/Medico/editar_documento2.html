@@ -58,7 +58,7 @@
       <!-- Bloque div para el titulo -->
       <div class="row mb-5">
         <div class="col-md-12 col-xl-12 text-center mx-auto">
-          <h2>Estás editando el resumen de: {{ documento.paciente_nombre|upper }}</h2>
+          <p>Estás editando el resumen de: <strong>{{ documento.paciente_nombre|upper }}</strong><p>
           <p class="w-lg-50">
           Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
           </p>
@@ -67,7 +67,7 @@
       <!-- Editor de froala -->
       <div class="froala-container">
         <div class="overlay">
-          <p></p>
+          <p> <strong> Nota</strong>: No incluyas imagenes de IMO, como portada o datos del paciente como el nombre, número de expediente, edad, ni fecha. al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente</p>
         </div>
         {{ form.texto }}
       </div>
@@ -78,7 +78,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h5>
+            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">¿Seguro que deseas guardar los cambios?</div>
@@ -104,8 +104,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <h1>Este resumen se enviará a revisión</h1>
-            <h2>¿Estás de acuerdo?</h2>
+            Este resumen se enviará a revisión
+            ¿Estás de acuerdo?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -129,8 +129,8 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <h1>Este resumen se enviará a listos para enviar</h1>
-              <h2>¿Estás de acuerdo?</h2>
+              Este resumen se enviará a listos para enviar
+              ¿Estás de acuerdo?
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -154,7 +154,10 @@
             <h5 class="modal-title" id="confirmModalLabel">Confirmar envío</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">¿Está seguro de enviar este resumen?</div>
+          <div class="modal-body">¿Está seguro de enviar este resumen?
+            <p>Nombre del paciente: {{ documento.paciente_nombre}}</p>
+            <p>Se enviará al correo : {{ documento.correo_electronico}}</p>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary">Sí, enviar</button>
@@ -172,11 +175,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar Inserción de Firma</h5>
+            <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>¿Seguro que deseas insertar tus datos y firma digital en el documento?</p>
+            <p>¿Seguro que deseas agregar tus datos y firma digital en el documento?</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -147,8 +147,8 @@
                                 <td>{{ resumen.estado }}</td>
                                 <td>
                                   {% if resumen.estado == "Enviado" %}
-                                      <a href="{% url 'editar_documento2' documento_id=resumen.id %}" class="btn btn-success">
-                                         Ver
+                                      <a href="{% url 'descargar_pdf' documento_id=resumen.id %}" class="btn btn-success">
+                                         Descargar
                                       </a>
                                   {% endif %}
                               </td>

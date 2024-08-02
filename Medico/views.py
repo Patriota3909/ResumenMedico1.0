@@ -22,6 +22,10 @@ from django.utils.html import format_html
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import Group
 from django.utils.html import escape
+from django.contrib.staticfiles import finders
+import os
+from datetime import datetime
+from django.http import FileResponse
 
 
 
@@ -336,37 +340,7 @@ def mi_vista(request):
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
-TEMPLATE_CONTENT ="""
-<p><img src="{image_url}" style="width: 116px; height: 52.1017px;" class="fr-fic fr-dii">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Instituto Mexicano de Oftalmolog&iacute;a I.A.P</p>
 
-<p style="text-align: center;">Resumen M&eacute;dico</p>
-
-<p style="line-height: 1;">Nombre del paciente: <strong>{nombre}</strong> </p>
-
-<p style="line-height: 1;">N&uacute;mero de expediente: <strong>{expediente}</strong></p>
-
-<p style="line-height: 1;">Edad: <strong>{edad}</strong></p>
-
-<p style="line-height: 1; text-align: center;">INFORME</p>
-
-<p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
-
-<p style="line-height: 1; text-align: left;">Diagnostico:</p>
-
-<p style="line-height: 1; text-align: left;">Tratamientos realizados:</p>
-
-<p style="line-height: 1; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
-
-<p style="line-height: 1; text-align: left;">Evoluci&oacute;n:</p>
-
-<p style="line-height: 1;">
-	<br>
-</p>
-
-<p style="line-height: 1;">
-	<br>
-</p>
-"""
 
 
 @login_required
@@ -394,18 +368,6 @@ def editar_documento2(request, documento_id):
         if not documento.texto:
             image_url = static('assets/img/imo.jpg')
             TEMPLATE_CONTENT = f"""
-            <p class="non-editable"><img src="{image_url}" style="width: 116px; height: 52.1017px;" class="fr-fic fr-dii">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Instituto Mexicano de Oftalmolog&iacute;a I.A.P</p>
-
-            <p class="non-editable" style="text-align: center;"><strong>Resumen M&eacute;dico</strong></p>
-
-            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">Nombre completo: {{nombre}}</span></strong></p>
-
-            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">N&uacute;mero de expediente: {{expediente}}</span></strong></p>
-
-            <p class="non-editable" style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style="font-size:16px;line-height:107%;">Edad: {{edad}}</span></strong></p>
-
-            <p class="non-editable" style="line-height: 1; text-align: center;"><u>INFORME</u></p>
-
             <p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
 
             <p style="line-height: 1; text-align: left;">Diagnostico:</p>
@@ -462,6 +424,29 @@ def insertar_firma(request, documento_id):
 
     return render(request, 'Medico/editar_documento2.html', {'documento': documento})
 
+
+
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    print(f"Processing URI: {uri}")  # Debugging line
+
+    if uri.startswith(settings.MEDIA_URL):
+        path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+    elif uri.startswith(settings.STATIC_URL):
+        path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
+    else:
+        print(f"URI not handled: {uri}")  # Debugging line
+        return uri
+
+    if not os.path.isfile(path):
+        print(f"File not found: {path}")  # Debugging line
+        raise Exception(f'Media URI must start with {settings.MEDIA_URL} or {settings.STATIC_URL}')
+    return path
+
+
 @login_required
 def enviar_documento(request, documento_id):
     documento = get_object_or_404(Resumen, id=documento_id)
@@ -472,34 +457,54 @@ def enviar_documento(request, documento_id):
         template = get_template('Medico/pdf_template.html')
         content_with_absolute_urls = documento.texto.replace(
             '/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'
+        ).replace(
+            '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
         )
+        logo_url = request.build_absolute_uri(static('assets/img/imo.jpg'))
+        fecha_actual = datetime.now().strftime('%d/%m/%Y')
         context = {
-            'content': content_with_absolute_urls
+            'content': content_with_absolute_urls,
+            'nombre': documento.paciente_nombre,
+            'expediente': documento.numero_expediente,
+            'edad': documento.edad,
+            'logo_url': logo_url,
+            'fecha_actual': fecha_actual,
+
         }
         html = template.render(context)
+
         print(html)
+
         response = HttpResponse(content_type='application/pdf')
-        pisa_status = pisa.CreatePDF(html, dest=response)
+        response['Content-Disposition'] = 'attachment; filename ="resumen.pdf"'
+
+        pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+
         if pisa_status.err:
             return HttpResponse('Error al generar el PDF')
 
         # Enviar el correo electrónico
-        email = EmailMessage(
-            'Resumen Médico',
-            'Adjunto encontrará su resumen médico en formato PDF.',
-            'from@example.com',
-            [correo_paciente]
-        )
-        email.attach('resumen.pdf', response.content, 'application/pdf')
-        email.send()
-        print("Se envio el documento")
+        try:
+            email = EmailMessage(
+                'Resumen Médico',
+                'Adjunto encontrará su resumen médico en formato PDF.',
+                settings.DEFAULT_FROM_EMAIL,
+                [correo_paciente]
+            )
+            email.attach('resumen.pdf', response.content, 'application/pdf')
+            email.send()
+            print("Se envio el documento")
                 # Cambiar el estado del documento a "Enviado"
-        documento.estado = 'Enviado'
-        documento.save()
+            documento.estado = 'Enviado'
+            documento.save()
 
-        return redirect('MedicosADS_with_id', edited_id=documento_id)
+            return redirect('MedicosADS_with_id', edited_id=documento_id)
+        except Exception as e:
+            print(f"Error al enviar el correo: {e}")
+            return HttpResponse('Error al enviar el correo')
 
     return redirect('editar_documento2', documento_id=documento_id)
+
 
 
 @login_required
@@ -521,4 +526,36 @@ def modificar_especialidad(request, doctor_id):
         doctor.especialidad = nueva_especialidad
         doctor.save()
     return redirect('configuracion_view')
+
+def descargar_pdf(request, documento_id):
+    documento = get_object_or_404(Resumen, id=documento_id)
+
+    # Ruta del archivo PDF
+    pdf_dir = os.path.join(settings.MEDIA_ROOT, 'documentos')
+    pdf_path = os.path.join(pdf_dir, f'{documento_id}.pdf')
+
+    # Verificar si la carpeta existe, si no, crearla
+    if not os.path.exists(pdf_dir):
+        os.makedirs(pdf_dir)
+
+    # Si el archivo no existe, genera el PDF
+    if not os.path.exists(pdf_path):
+        # Renderizar la plantilla HTML a PDF
+        template = get_template('Medico/pdf_template.html')
+        context = {
+            'content': documento.texto.replace('/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'),
+            'nombre': documento.paciente_nombre,
+            'expediente': documento.numero_expediente,
+            'edad': documento.edad,
+            'fecha_actual': timezone.now().strftime("%d/%m/%Y"),
+            'logo_url': request.build_absolute_uri(static('assets/img/imo.jpg'))
+        }
+        html = template.render(context)
+        with open(pdf_path, 'wb') as pdf_file:
+            pisa_status = pisa.CreatePDF(html, dest=pdf_file, link_callback=link_callback)
+            if pisa_status.err:
+                return HttpResponse('Error al generar el PDF')
+
+    # Retornar el archivo PDF como respuesta
+    return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
 
