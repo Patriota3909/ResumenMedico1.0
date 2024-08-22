@@ -133,12 +133,7 @@
                                                   <p>Estado: {{ documento.estado }}</p>
                                                   <p>Médico Becario: {{ documento.medico_becario }}</p>
                                                   <p>Médico Residente: {{ documento.medico_residente }}</p>
-                                                  <p>Médico Adscrito:
-                                                    {% for adscrito in documento.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                  <p>Médico Adscrito:{{documento.medico_adscrito}}
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -260,12 +255,7 @@
                                                     Medico Residente: {{ documento.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in documento.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Medicos Adscritos: {{documento.medico_adscrito.all}}
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
