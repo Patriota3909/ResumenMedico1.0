@@ -42,10 +42,10 @@
                                             <div class="container collapse navbar-collapse" id="navbarButtons"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1" type="button" style="padding-left: 0px;margin-left: 8px;"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                                                 <div class="collapse navbar-collapse" id="navcol-1">
                                                     <ul class="navbar-nav">
-                                                        <li class="nav-item"><a class="nav-link active" href="{% url 'solicitud' %}">Solicitud</a></li>
-                                                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_resumenes' %}" id="busqueda-link">Búsqueda global</a></li>
-                                                        <li class="nav-item"><a class="nav-link" href="{% url 'configuracion_view'%}">Configuración</a></li>
-                                                        <li class="nav-item"><a  class ="nav-link" href="{% url 'exit' %}">Salir</a></button></li>
+                                                        <li class="nav-item"><a class="nav-link active text-nowrap" style="padding-left: 8px; padding-right: 8px;" href="{% url 'solicitud' %}">Solicitud</a></li>
+                                                        <li class="nav-item"><a class="nav-link text-nowrap" style="padding-left: 8px; padding-right: 8px;" href="{% url 'lista_resumenes' %}" id="busqueda-link">Búsqueda global</a></li>
+                                                        <li class="nav-item"><a class="nav-link text-nowrap" style="padding-left: 8px; padding-right: 8px;" href="{% url 'configuracion_view'%}">Configuración</a></li>
+                                                        <li class="nav-item"><a  class ="nav-link text-nowrap" style="padding-left: 8px; padding-right: 8px;" href="{% url 'exit' %}">Salir</a></button></li>
                                                     </ul>
                                                 </div>
                                             </div> 
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="container text-center d-xl-flex align-items-xl-center">
-                <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded d-xl-flex align-items-center align-content-center align-items-xl-center" style="margin-top: 30px;margin-right: 5px;margin-left: 148px;">
+                <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded d-xl-flex align-items-center align-content-center align-items-xl-center" style="margin-top: 30px;margin-right: auto;margin-left: auto; width: 100%;">
                     <table class="table table-striped table-hover" id="myTable">
                         <thead>
                             <tr>
@@ -99,38 +99,30 @@
                                             <div class="modal-header">
                                               <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente <strong>{{ resumen.numero_expediente }}</strong></h5>
                                             </div>
-                                            <div class="modal-body" style="text-transform: none;">
+                                            <div class="modal-body" style="text-transform: none; text-align: justify;">
                                               <p>
-                                                <strong>Número de Expediente:</strong> {{ resumen.numero_expediente }}
+                                                Nombre del Paciente: <strong>{{ resumen.paciente_nombre }} </strong>
                                               </p>
                                               <p>
-                                                <strong>Nombre del Paciente:</strong> {{ resumen.paciente_nombre }}
+                                                Especialidad:<strong> {{ resumen.especialidad.name }}</strong>
                                               </p>
                                               <p>
-                                                <strong>Especialidad:</strong> {{ resumen.especialidad.name }}
+                                                Fecha de entrega programada al paciente:<strong> {{ resumen.fecha_entrega_programada|date:"F j" }}</strong>
                                               </p>
                                               <p>
-                                                <strong>Fecha de entrega programada:</strong> {{ resumen.fecha_entrega_programada|date:"F j" }}
+                                                Estado:<strong> {{ resumen.estado }}</strong>
                                               </p>
                                               <p>
-                                                <strong>Estado:</strong> {{ resumen.estado }}
+                                                Medico Becario:<strong> {{ resumen.medico_becario }}</strong>
                                               </p>
                                               <p>
-                                                <strong>Medico Becario:</strong> {{ resumen.medico_becario }}
+                                                Medico Residente:<strong> {{ resumen.medico_residente }}</strong>
                                               </p>
                                               <p>
-                                                <strong>Medico Residente:</strong> {{ resumen.medico_residente }}
+                                                Medico Adscrito:<strong> {{resumen.medico_adscrito}}</strong>
                                               </p>
                                               <p>
-                                                <strong>Medico Adscrito:</strong>
-                                                {% for adscrito in resumen.medico_adscrito.all %}
-                                                  <br />{{ adscrito }}
-                                                {% empty %}
-                                                  None
-                                                {% endfor %}
-                                              </p>
-                                              <p>
-                                                <strong>Email del paciente:</strong> {{ resumen.correo_electronico }}
+                                                Email del paciente:<strong> {{ resumen.correo_electronico }}</strong>
                                               </p>
                                             </div>
                                             <div class="modal-footer">

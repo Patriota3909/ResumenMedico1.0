@@ -126,19 +126,14 @@
                                                   
                                                 </div>
                                                 <div class="modal-body">
-                                                  <p>Número de Expediente: {{ documento.numero_expediente }}</p>
-                                                  <p>Nombre del Paciente: {{ documento.paciente_nombre }}</p>
-                                                  <p>Especialidad: {{ documento.especialidad.name }}</p>
-                                                  <p>Fecha de entrega programada: {{ documento.fecha_entrega_programada|date:"F j" }}</p>
-                                                  <p>Estado: {{ documento.estado }}</p>
-                                                  <p>Médico Becario: {{ documento.medico_becario }}</p>
-                                                  <p>Médico Residente: {{ documento.medico_residente }}</p>
-                                                  <p>Médico Adscrito:
-                                                    {% for adscrito in documento.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                  <p>Número de Expediente: <strong>{{ documento.numero_expediente }}</p></strong>
+                                                  <p>Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</p></strong>
+                                                  <p>Especialidad: <strong>{{ documento.especialidad.name }}</p></strong>
+                                                  <p>Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"F j" }}</p></strong>
+                                                  <p>Estado: <strong>{{ documento.estado }}</p></strong>
+                                                  <p>Médico Becario: <strong>{{ documento.medico_becario }}</p></strong>
+                                                  <p>Médico Residente: <strong>{{ documento.medico_residente }}</p></strong>
+                                                  <p>Médico Adscrito:<strong>{{documento.medico_adscrito}}</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -260,12 +255,7 @@
                                                     Medico Residente: {{ documento.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in documento.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Medicos Adscritos: {{documento.medico_adscrito.all}}
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
