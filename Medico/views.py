@@ -100,25 +100,31 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
 @login_required
 @user_tipo_required(['Adscrito'])
 def lista_resumenes_adscrito(request, edited_id=None):
-    
+    user = request.user
     #Obtenemos la especialidad del doctor
     especialidad = None
     try: 
-        doctor = Doctor.objects.get(user=request.user)
+        doctor = Doctor.objects.get(user=user)
         especialidad = doctor.especialidad
     #Fitlamos los resumenes por estado y por la especialidad del medico
     except Doctor.DoesNotExist:
         if not request.user.is_superuser:
             raise PermissionDenied("No tiene los permisos para ingresar a esta pagina, por favor comincate con soporte")
+        
+    if doctor.tipo == "Adscrito":
+        resumenes_revision =Resumen.objects.filter(estado="En revisión", medico_adscrito=doctor).order_by('-fecha_modificacion')
+        resumenes_listos_para_enviar =Resumen.objects.filter(estado="Listos para enviar", medico_adscrito=doctor).order_by('-fecha_modificacion')
+        resumenes_enviados =Resumen.objects.filter(estado="Enviado", medico_adscrito=doctor).order_by('-fecha_modificacion')
+        
                 
     en_revision = Resumen.objects.filter(estado='En revisión', especialidad=especialidad)
     listos_para_enviar = Resumen.objects.filter(estado='Listo para enviar', especialidad=especialidad)
     enviados = Resumen.objects.filter(estado='Enviado', especialidad=especialidad)
 
     return render(request, 'Medico/MedicosADS.html', {
-        'en_revision': en_revision,
-        'listos_para_enviar': listos_para_enviar,
-        'enviados': enviados,
+        'en_revision': resumenes_revision,
+        'listos_para_enviar': resumenes_listos_para_enviar,
+        'enviados': resumenes_enviados,
         'edited_id': edited_id,
     })
 
