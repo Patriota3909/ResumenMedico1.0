@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '%d13xxow^*96$s#=#nq%u$hogm)q6)*v$aevi@ur3b=o-sm5u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '52.90.107.138', 'resumenesimo.ddns.net','127.0.0.1']
 
