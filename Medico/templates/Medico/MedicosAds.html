@@ -223,12 +223,7 @@
                                                     Medico Residente: {{ resumen.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in resumen.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Medicos Adscritos: {{resumen.medico_adscrito}}
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
