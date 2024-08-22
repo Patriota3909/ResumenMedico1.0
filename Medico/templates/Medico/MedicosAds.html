@@ -116,30 +116,30 @@
                                                   <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
                                                   
                                                 </div>
-                                                <div class="modal-body" style="text-transform: none; text-align: justify;">
+                                                <div class="modal-body" style="text-transform: none;">
                                                   <p>
-                                                    Número de Expediente: <strong>{{ resumen.numero_expediente }}</strong>
+                                                    Número de Expediente: {{ resumen.numero_expediente }}
                                                   </p>
                                                   <p>
-                                                    Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
+                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
                                                   </p>
                                                   <p>
-                                                    Especialidad: <strong>{{ resumen.especialidad.name }}</strong>
+                                                    Especialidad: {{ resumen.especialidad.name }}
                                                   </p>
                                                   <p>
-                                                    Fecha de entrega programada: <strong>{{ resumen.fecha_entrega_programada|date:"F j" }}</strong>
+                                                    Fecha de entrega programada: {{ resumen.fecha_entrega_programada|date:"F j" }}
                                                   </p>
                                                   <p>
-                                                    Estado: <strong>{{ resumen.estado }}</strong>
+                                                    Estado: {{ resumen.estado }}
                                                   </p>
                                                   <p>
-                                                    Medico Becario: <strong>{{ resumen.medico_becario }}</strong>
+                                                    Medico Becario: {{ resumen.medico_becario }}
                                                   </p>
                                                   <p>
-                                                    Medico Residente: <strong>{{ resumen.medico_residente }}</strong>
+                                                    Medico Residente: {{ resumen.medico_residente }}
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos: <strong>{{resumen.medico_adscrito}}</strong>
+                                                    Medicos Adscritos: {{resumen.medico_adscrito}}
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
