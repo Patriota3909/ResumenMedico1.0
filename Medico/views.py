@@ -324,6 +324,7 @@ def lista_resumenes(request):
     
     
     resumenes = sorted(resumenes, key=lambda x: x.fecha_entrega_programada)
+    
     return render(request, 'Medico/busqueda.html', {
         'resumenes': resumenes,
         'especialidades': especialidades,
