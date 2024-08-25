@@ -90,7 +90,7 @@
                     <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">En revisión</h1>
                     
                 </div>
-                    <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
+                    <div class="table-responsive text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
@@ -116,35 +116,30 @@
                                                   <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
                                                   
                                                 </div>
-                                                <div class="modal-body" style="text-transform: none;">
+                                                <div class="modal-body" style="text-transform: none; text-align: justify;">
                                                   <p>
-                                                    Número de Expediente: {{ resumen.numero_expediente }}
+                                                    Número de Expediente: <strong>{{ resumen.numero_expediente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
+                                                    Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
                                                   </p>
                                                   <p>
-                                                    Especialidad: {{ resumen.especialidad.name }}
+                                                    Especialidad: <strong>{{ resumen.especialidad.name }}</strong>
                                                   </p>
                                                   <p>
-                                                    Fecha de entrega programada: {{ resumen.fecha_entrega_programada|date:"F j" }}
+                                                    Fecha de entrega programada: <strong>{{ resumen.fecha_entrega_programada|date:"F j" }}</strong>
                                                   </p>
                                                   <p>
-                                                    Estado: {{ resumen.estado }}
+                                                    Estado: <strong>{{ resumen.estado }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Becario: {{ resumen.medico_becario }}
+                                                    Medico Becario: <strong>{{ resumen.medico_becario }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Residente: {{ resumen.medico_residente }}
+                                                    Medico Residente: <strong>{{ resumen.medico_residente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in resumen.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Medico Adscrito: <strong>{{ resumen.medico_adscrito.all.0 }}</strong> 
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -180,7 +175,7 @@
                     <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">Enviados</h1>
                     
                 </div>
-                    <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
+                    <div class="table-responsive text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
@@ -205,35 +200,30 @@
                                                   <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
                                                   
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body" style="text-align: justify;">
                                                   <p>
-                                                    Número de Expediente: {{ resumen.numero_expediente }}
+                                                    Número de Expediente: <strong>{{ resumen.numero_expediente }} </strong>
                                                   </p>
                                                   <p>
-                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
+                                                    Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
                                                   </p>
                                                   <p>
-                                                    Especialidad: {{ resumen.especialidad.name }}
+                                                    Especialidad: <strong>{{ resumen.especialidad.name }}</strong>
                                                   </p>
                                                   <p>
-                                                    Fecha de entrega programada: {{ resumen.fecha_entrega_programada|date:"F j" }}
+                                                    Fecha de entrega programada: <strong>{{ resumen.fecha_entrega_programada|date:"F j" }}</strong>
                                                   </p>
                                                   <p>
-                                                    Estado: {{ resumen.estado }}
+                                                    Estado: <strong>{{ resumen.estado }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Becario: {{ resumen.medico_becario }}
+                                                    Medico Becario: <strong>{{ resumen.medico_becario }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Residente: {{ resumen.medico_residente }}
+                                                    Medico Residente: <strong>{{ resumen.medico_residente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in resumen.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Medico Adscrito: <strong>{{ resumen.medico_adscrito.all.0 }}</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -263,7 +253,7 @@
                     <h1 class="text-center" style="color: var(--bs-body-bg);background: rgb(138, 36, 50);margin-top: 6px; color: white;">Listos para enviar</h1>
                     
                 </div>
-                    <div class="table-responsive text-uppercase text-center text-bg-secondary border rounded">
+                    <div class="table-responsive text-center text-bg-secondary border rounded">
                         <table class="table table-striped table-hover" id="myTable">
                             <thead>
                                 <tr>
@@ -289,35 +279,30 @@
                                                   <h5 class="modal-title" id="modalLabel-{{ resumen.id }}">Detalles del Expediente {{ resumen.numero_expediente }}</h5>
                                                   
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body" style="text-align: justify;">
                                                   <p>
-                                                    Número de Expediente: {{ resumen.numero_expediente }}
+                                                    Número de Expediente: <strong>{{ resumen.numero_expediente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Nombre del Paciente: {{ resumen.paciente_nombre }}
+                                                    Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
                                                   </p>
                                                   <p>
-                                                    Especialidad:  {{ resumen.especialidad.name }}
+                                                    Especialidad:  <strong>{{ resumen.especialidad.name }}</strong>
                                                   </p>
                                                   <p>
-                                                    Fecha de Solicitud: {{ resumen.fecha_entega_programada|date:"F j" }}
+                                                    Fecha de Solicitud: <strong>{{ resumen.fecha_entega_programada|date:"F j" }}</strong>
                                                   </p>
                                                   <p>
-                                                    Estado: {{ resumen.estado }}
+                                                    Estado: <strong>{{ resumen.estado }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Becario: {{ resumen.medico_becario }}
+                                                    Médico Becario: <strong>{{ resumen.medico_becario }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medico Residente: {{ resumen.medico_residente }}
+                                                    Médico Residente: <strong>{{ resumen.medico_residente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos:
-                                                    {% for adscrito in resumen.medico_adscrito.all %}
-                                                      <br />{{ adscrito }}
-                                                    {% empty %}
-                                                      None
-                                                    {% endfor %}
+                                                    Médico Adscrito: <strong>{{ resumen.medico_adscrito.all.0 }}+</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
