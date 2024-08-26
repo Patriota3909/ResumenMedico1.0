@@ -377,6 +377,8 @@ def editar_documento2(request, documento_id):
         if not documento.texto:
             image_url = static('assets/img/imo.jpg')
             TEMPLATE_CONTENT = f"""
+            
+            
             <p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
 
             <p style="line-height: 1; text-align: left;">Diagnostico:</p>
@@ -387,6 +389,8 @@ def editar_documento2(request, documento_id):
 
             <p style="line-height: 1; text-align: left;">Evoluci&oacute;n:</p>
 
+            <p style="line-height: 1; text-align: left;">Pronóstico:</p>
+            
             <p style="line-height: 1;">
             	<br>
             </p>
