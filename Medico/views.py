@@ -424,7 +424,7 @@ def insertar_firma(request, documento_id):
 
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
         firma_html = format_html(
-            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 100px; height: 100px;"></div>', firma_electronica_url)
+            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 200px; height: 170px;"></div>', firma_electronica_url)
         documento.texto += str(firma_html)
         documento.save()
         print('SE GUARDO EL DOCUMENTO CON LA FIRMA')
