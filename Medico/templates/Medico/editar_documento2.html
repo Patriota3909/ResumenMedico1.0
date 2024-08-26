@@ -1,22 +1,13 @@
 {% extends 'Medico/layout.html' %}
 {% load static %}
 {% block links %}
-  {{ form.media }}
-  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/line_height.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/image.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/plugins/image.min.css"></script>
-  <script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/plugins/font_family.min.js"></script>
+
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
-  <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/froala-editor@3.2.6/css/froala_editor.pkgd.min.css">
-
-<!-- JAVASCRIPT -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@3.2.6/js/froala_editor.pkgd.min.js"></script>
-
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
 {% endblock %}
 {% block content %}
@@ -64,8 +55,8 @@
           </p>
         </div>
       </div>
-      <!-- Editor de froala -->
-      <div class="froala-container">
+      <!-- Editor de summernote -->
+      <div class="summernote-container">
         <div class="overlay">
           <p> <strong> Nota</strong>: No incluyas imagenes de IMO, como portada o datos personales del paciente como el nombre, número de expediente, edad, ni fecha. Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente</p>
         </div>
@@ -217,37 +208,40 @@
   <!-- FIN Modal de confirmación de generar PDF con vista previa -->
 
 
-
   <script>
     $(function () {
-      $('textarea').froalaEditor({
-        documentReady: true
-        width: '780', // Ancho de un documento A4 en píxeles
-        heightMin: 1115,
-        heightMax: 1115,
-        toolbarButtons: ['lineHeight','bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
-        pluginsEnabled: ['align', 'link', 'lists']
-        fontFamily: {
-          "Roboto,sans-serif": 'Roboto',
-          "Oswald,sans-serif": 'Oswald',
-          "Montserrat,sans-serif": 'Montserrat',
-          "'Open Sans Condensed',sans-serif": 'Open Sans Condensed'
-        },
-        fontFamilySelection: true
+      // Inicializar Summernote en el textarea
+      $('textarea').summernote({
+        height: 1115,  // Altura en píxeles, igual que en Froala
+        minHeight: 1115, // Altura mínima
+        maxHeight: 1115, // Altura máxima
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'italic', 'underline']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['height', ['height']],
+          ['insert', ['link', 'picture']],
+          ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        fontNames: ['Roboto', 'Oswald', 'Montserrat', 'Open Sans Condensed'],
+        fontNamesIgnoreCheck: ['Roboto', 'Oswald', 'Montserrat', 'Open Sans Condensed']
       });
-      
-      var initialContent = `{% autoescape off %}{{ form.texto.value|safe }}{% endautoescape %}`;
-      $('textarea').froalaEditor('html.set', initialContent);
-       // Desaparecer el mensaje después de 5 segundos
-       setTimeout(function() {
+  
+  
+      // Desaparecer el mensaje después de 5 segundos
+      setTimeout(function() {
         $('.alert').fadeOut('slow');
       }, 5000); // 5000 milisegundos = 5 segundos
-
+  
     });
-    
+  
     document.addEventListener('DOMContentLoaded', function () {
       const form = document.getElementById('form_revisión')
       console.log('Form action URL:', form.action)
     });
   </script>
+  
 {% endblock %}

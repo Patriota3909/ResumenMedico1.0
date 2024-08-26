@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Probar Froala Editor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/css/froala_editor.pkgd.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/3.2.6/js/froala_editor.pkgd.min.js"></script>
+  
+
     
     <style>
         .fr-wrapper div.fr-element {
@@ -21,21 +21,7 @@
 
 
 <body>
-    <h1>Probar Froala Editor</h1>
-    <form method="post" action="/guardar_documento/">
-        <textarea name="contenido" id="contenido"></textarea>
-        <button type="submit">Guardar</button>
-    </form>
-    <script>
-        $(function() {
-            $('#contenido').froalaEditor({
-                width: '794', // Ancho de un documento A4 en píxeles
-                heightMin: 1123,
-                heightMax: 1123,
-                toolbarButtons: ['bold', 'italic', 'underline', 'formatUL', 'formatOL', 'insertLink'],
-                pluginsEnabled: ['align', 'link', 'lists']
-            });
-        });
-    </script>
+ 
+  
 </body>
 </html>
