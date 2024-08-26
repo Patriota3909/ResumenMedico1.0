@@ -78,6 +78,10 @@ class Resumen(models.Model):
     medico_adscrito = models.ManyToManyField(Doctor, related_name='resumenes_por_adscrito', blank=True)
     ultimo_editor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documentos_editados')
     
+    #Nuevos Campos
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    genero = models.CharField(max_length=10, null=True, blank=True)
+    
     def __str__(self):
         return (f"{self.numero_expediente}-{self.especialidad}-{self.estado}")
     

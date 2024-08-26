@@ -266,6 +266,8 @@ def solicitud(request):
         especialidad_id = request.POST['especialidad']
         especialidad = Especialidad.objects.get(id=especialidad_id)
         correo_electronico = request.POST['correo_electronico']
+        fecha_nacimiento = request.POST['fecha_nacimiento']
+        genero = request.POST['genero']
        
         resumen = Resumen(
             paciente_nombre=paciente_nombre,
@@ -274,6 +276,8 @@ def solicitud(request):
             motivo_solicitud=motivo_solicitud,
             especialidad=especialidad,
             correo_electronico=correo_electronico,
+            fecha_nacimiento=fecha_nacimiento,
+            genero=genero
             
         )
         resumen.save()
@@ -405,6 +409,8 @@ def editar_documento2(request, documento_id):
                 nombre = documento.paciente_nombre,
                 edad = documento.edad,
                 expediente = documento.numero_expediente,
+                fecha = documento.fecha_nacimiento,
+                genero = documento.genero,
 
             )
         

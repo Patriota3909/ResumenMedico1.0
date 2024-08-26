@@ -86,6 +86,15 @@
                                             <div class="text-start mb-3"><label class="form-label">Número de expediente</label><input class="form-control" id="numero_expediente" name="numero_expediente" type="number"></div>
                                             <div class="text-start mb-3"><label class="form-label">Correo electrónico</label><input class="form-control" id="correo_electronico" name="correo_electronico" type="email" name="email"></div>
                                             <div class="text-start mb-3"><label class="form-label">Edad</label><input class="form-control" id="edad" name="edad" type="number"></div>
+                                            <div class="text-start mb-3"><label class="form-label">Fecha de nacimiento</label><input class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" type="date"></div>
+                                            <div class="text-start mb-3">
+                                                <label class="form-label">Género</label>
+                                                <select class="form-select" id="genero" name="genero">
+                                                    <option value="Masculino">Masculino</option>
+                                                    <option value="Femenino">Femenino</option>
+                                                    <option value="Otro">Otro</option>
+                                                </select>
+                                            </div>
                                             <div class="text-start mb-3"><label class="form-label">Especialidad</label>
                                                 <select class="form-select" id="especialidad" name="especialidad">
                                                 {% for especialidad in especialidades%}

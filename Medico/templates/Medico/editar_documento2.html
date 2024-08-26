@@ -15,18 +15,18 @@
     <div class="container-fluid justify-content-center">
       <!-- Botón para guardar el contenido -->
        {% if user_tipo != 'Administrador'%}
-      <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
+      <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
       {% endif %}
       <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
       
       <!-- Botones Condicionales para Cambiar Estado -->
       {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
-        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
+        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
       {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
-        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
+        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
       {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
-        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
+        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
+        <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
       {% endif %}
     </div>
   </nav>
@@ -57,9 +57,9 @@
       </div>
       <!-- Editor de summernote -->
       <div class="summernote-container">
-        <div class="overlay">
-          <p> <strong> Nota</strong>: No incluyas imagenes de IMO, como portada o datos personales del paciente como el nombre, número de expediente, edad, ni fecha. Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente</p>
-        </div>
+          <div class="alert alert-danger" style="text-align: center;" role="alert">
+            No incluyas imagenes de IMO, como portada o datos personales del paciente como el nombre, número de expediente, edad, ni fecha. Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente.
+          </div>
         {{ form.texto }}
       </div>
     </div>
@@ -68,14 +68,17 @@
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar Guardado</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-light">
+            <div class="d-flex align-items-center">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
+            </div>
           </div>
-          <div class="modal-body">¿Seguro que deseas guardar los cambios?</div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" form="editForm">Guardar</button>
+          <div class="modal-body">
+            ¿Desea guardar los cambios realizados?
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" form="editForm">Si, guardar</button>
           </div>
         </div>
       </div>
@@ -216,15 +219,12 @@
         minHeight: 1115, // Altura mínima
         maxHeight: 1115, // Altura máxima
         toolbar: [
-          ['style', ['style']],
+          
           ['font', ['bold', 'italic', 'underline']],
-          ['fontname', ['fontname']],
-          ['fontsize', ['fontsize']],
-          ['color', ['color']],
           ['para', ['ul', 'ol', 'paragraph']],
           ['height', ['height']],
           ['insert', ['link', 'picture']],
-          ['view', ['fullscreen', 'codeview', 'help']]
+          ['view', ['fullscreen',]]
         ],
         fontNames: ['Roboto', 'Oswald', 'Montserrat', 'Open Sans Condensed'],
         fontNamesIgnoreCheck: ['Roboto', 'Oswald', 'Montserrat', 'Open Sans Condensed']
