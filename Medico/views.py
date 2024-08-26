@@ -97,6 +97,9 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
         
         
         })
+
+
+
 @login_required
 @user_tipo_required(['Adscrito'])
 def lista_resumenes_adscrito(request, edited_id=None):
@@ -109,7 +112,7 @@ def lista_resumenes_adscrito(request, edited_id=None):
     
     if doctor.tipo == "Adscrito":
         resumenes_revision = Resumen.objects.filter(estado="En revisión", medico_adscrito=doctor).order_by('-fecha_modificacion')
-        resumenes_listos_para_enviar = Resumen.objects.filter(estado="Listos para enviar", medico_adscrito=doctor).order_by('-fecha_modificacion')
+        resumenes_listos_para_enviar = Resumen.objects.filter(estado="Listo para enviar", medico_adscrito=doctor).order_by('-fecha_modificacion')
         resumenes_enviados = Resumen.objects.filter(estado="Enviado", medico_adscrito=doctor).order_by('-fecha_modificacion')
 
         print(f"{doctor}")
@@ -121,6 +124,10 @@ def lista_resumenes_adscrito(request, edited_id=None):
         })
     else:
         raise PermissionDenied("No tiene los permisos para acceder a esta vista.")
+    
+
+
+
 
 #-----------Renderiza, guarda, y cambio de status el resumen-------------------------------------
 @login_required
@@ -161,7 +168,7 @@ def asignar_medico_residente(request):
         resumen.save()
 
         subject = 'Tiene una nueva asignación de resumen'
-        message = f'ha sido asignado para realizar el resumen con el número de expediente {resumen.numero_expediente}. entra a tu plataforma .... para revisarlo'
+        message = f'ha sido asignado para realizar el resumen con el número de expediente {resumen.numero_expediente}. entra a resumenesimo.ddns.net para revisarlo'
         from_email = 'arturo.olivares@imoiap.com.mx'
         recipient_list = [residente.email]
 
@@ -270,6 +277,7 @@ def solicitud(request):
             
         )
         resumen.save()
+        messages.success(request, 'La solicitud se ha creado exitosamente y se ha notificado al médico becario.')
         return redirect('home') 
 
     especialidades = Especialidad.objects.all()
@@ -416,7 +424,7 @@ def insertar_firma(request, documento_id):
 
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
         firma_html = format_html(
-            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 100px; height: 100px;"></div>', firma_electronica_url)
+            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 200px; height: 170px;"></div>', firma_electronica_url)
         documento.texto += str(firma_html)
         documento.save()
         print('SE GUARDO EL DOCUMENTO CON LA FIRMA')
