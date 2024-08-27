@@ -26,6 +26,10 @@ from django.contrib.staticfiles import finders
 import os
 from datetime import datetime
 from django.http import FileResponse
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 
 
 
@@ -446,10 +450,47 @@ def insertar_firma(request, documento_id):
     if request.method == 'POST':
         firma_electronica_url = doctor.firma_electronica.url
         print(firma_electronica_url)
+        
+        # Generar el URL del resumen para el código QR
+        resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
+
+        # Crear el código QR
+        qr = qrcode.QRCode(
+            version=5,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=5,
+            border=2,
+        )
+        qr.add_data(resumen_url)
+        qr.make(fit=True)
+        
+        # Generar la imagen del QR
+        img = qr.make_image(fill_color="black", back_color="white")
+        qr_io = BytesIO()
+        img.save(qr_io, 'PNG')
+        qr_io.seek(0)
+
+        # Guardar el código QR en el sistema de archivos
+        qr_filename = f'qrs/{documento_id}_qr.png'
+        qr_path = default_storage.save(qr_filename, ContentFile(qr_io.read()))
+        
+        
+        
 
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
+        qr_url = default_storage.url(qr_path)
         firma_html = format_html(
-            '<div style="text-align: center;"><img src="{}" alt="Firma Electrónica" style="width: 200px; height: 170px;"></div>', firma_electronica_url)
+           '<table width="100%">'
+            '<tr>'
+            '<td style="text-align: left; width: 33%; font-size: 8px; color: gray;">'
+            '<p>Código de validación</p>'
+            '<img src="{}" alt="Código QR" style="width: 80px; height: 80px;">'
+            '</td>'
+            '<td style="text-align: left; width: 67%;">'
+            '<img src="{}" alt="Firma Electrónica" style="width: 200px; height: 170px;">'
+            '</td>'
+            '</tr>'
+            '</table>', qr_url, firma_electronica_url)
         documento.texto += str(firma_html)
         documento.save()
         print('SE GUARDO EL DOCUMENTO CON LA FIRMA')
@@ -596,4 +637,5 @@ def descargar_pdf(request, documento_id):
 
     # Retornar el archivo PDF como respuesta
     return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
+
 
