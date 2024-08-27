@@ -99,6 +99,7 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
         'doctor':doctor,
         'residentes':residentes,
         'edited_id':edited_id,
+        'doctor':doctor,
         
         
         })
@@ -134,6 +135,7 @@ def lista_resumenes_adscrito(request, edited_id=None):
             'count_listos_para_enviar': count_listos_para_enviar,
             'count_enviados': count_enviados,
             'edited_id': edited_id,
+            'doctor': doctor,
         })
     else:
         raise PermissionDenied("No tiene los permisos para acceder a esta vista.")
@@ -546,9 +548,11 @@ def configuracion_view(request):
     print('Entrando a configuracion')    
     medicos = Doctor.objects.filter(tipo__in=['Becario', 'Residente'])
     especialidades = Especialidad.objects.all()
+    nombre_usuario = request.user.get_full_name() or request.user.username
     return render(request, 'Medico/configuracion.html', {
         'medicos': medicos,
-        'especialidades': especialidades
+        'especialidades': especialidades,
+        'nombre_usuario':nombre_usuario,
     })
     
 @login_required

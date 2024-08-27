@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/Banner-Heading-Image-images.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Footer-Basic-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/img/ojo.svg' %}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
@@ -32,6 +33,11 @@
 </head>
 
 <body>
+    {% if user.username == 'informes.imo' %}
+    <div class="alert alert-danger" style="text-align: center;" role="alert">
+        NO CUENTAS CON LOS PERMISOS PARA ACCEDER A ESA PAGINA
+      </div>
+    {% else %}
     <main>
         <section>
             <div class="container">
@@ -118,6 +124,7 @@
 </section>
   
 </main>
+{% endif %}
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
             <ul class="list-inline">

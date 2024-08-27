@@ -36,7 +36,7 @@ class Especialidad(models.Model):
     def __str__(self):
         return (f"{self.name}-{self.code}")
 
-#Define la clase de medico, el cual depende de una especialidad
+
 class Doctor(models.Model):
     TIPOS_DE_MEDICO=[
         ("Residente","Residente"),
