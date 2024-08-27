@@ -86,11 +86,16 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
     especialidades = Especialidad.objects.all()
     residentes = Doctor.objects.filter(especialidad=doctor.especialidad, tipo="Residente")  
     
+    count_en_revision = documentos_solicitud.count()
+    count_solicitud = documentos_revison.count()
+    
     
     return render(request, 'Medico/MedicosRB.html', {
         'documentos_solicitud': documentos_solicitud,
         'documentos_revision': documentos_revison,
         'especialidades': especialidades,
+        'count_en_revision': count_en_revision,
+        'count_solicitud': count_solicitud,
         'doctor':doctor,
         'residentes':residentes,
         'edited_id':edited_id,
@@ -115,11 +120,19 @@ def lista_resumenes_adscrito(request, edited_id=None):
         resumenes_listos_para_enviar = Resumen.objects.filter(estado="Listo para enviar", medico_adscrito=doctor).order_by('-fecha_modificacion')
         resumenes_enviados = Resumen.objects.filter(estado="Enviado", medico_adscrito=doctor).order_by('-fecha_modificacion')
 
+         # Conteo de cada categoría
+        count_en_revision = resumenes_revision.count()
+        count_listos_para_enviar = resumenes_listos_para_enviar.count()
+        count_enviados = resumenes_enviados.count()
+
         print(f"{doctor}")
         return render(request, 'Medico/MedicosADS.html', {
             'en_revision': resumenes_revision,
             'listos_para_enviar': resumenes_listos_para_enviar,
             'enviados': resumenes_enviados,
+            'count_en_revision': count_en_revision,
+            'count_listos_para_enviar': count_listos_para_enviar,
+            'count_enviados': count_enviados,
             'edited_id': edited_id,
         })
     else:
@@ -383,7 +396,7 @@ def editar_documento2(request, documento_id):
             TEMPLATE_CONTENT = f"""
             
             
-            <p style="line-height: 1; text-align: left;">Padecimiento actual:</p>
+            <p style="line-height: 1; text-align: left; ">Padecimiento actual:</p>
 
             <p style="line-height: 1; text-align: left;">Diagnostico:</p>
 
@@ -409,8 +422,8 @@ def editar_documento2(request, documento_id):
                 nombre = documento.paciente_nombre,
                 edad = documento.edad,
                 expediente = documento.numero_expediente,
-                fecha = documento.fecha_nacimiento,
-                genero = documento.genero,
+                #fecha = documento.fecha_nacimiento,
+                #genero = documento.genero,
 
             )
         
@@ -486,6 +499,8 @@ def enviar_documento(request, documento_id):
             'nombre': documento.paciente_nombre,
             'expediente': documento.numero_expediente,
             'edad': documento.edad,
+            'genero': documento.genero,
+            'fecha_nacimiento': documento.fecha_nacimiento,
             'logo_url': logo_url,
             'fecha_actual': fecha_actual,
 

@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
 from froala_editor.fields import FroalaField
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 
 
@@ -53,7 +55,7 @@ class Doctor(models.Model):
         return (f"D.{self.user.username} {self.user.last_name} - {self.tipo}")
 
 
-#Define el objeto "Resumen", el cual es el modular del programa.
+
 class Resumen(models.Model):
 
     ESTADO_CHOICES = [
@@ -101,6 +103,60 @@ class Resumen(models.Model):
     @property
     def fecha_entrega_programada(self):
         return self.fecha_solicitud + timedelta(days=10)
+    
+    def verificar_y_enviar_advertencia(self):
+        # la fecha de entrega programada
+        dias_restantes = (self.fecha_entrega_programada - timezone.now()).days
+        
+        
+        if self.estado == 'Solicitud' and dias_restantes <= 3:
+            self.enviar_correo_advertencia(dias_restantes)
+
+        
+        elif self.estado == 'En revisión' and dias_restantes == 1:
+            self.enviar_correo_advertencia(dias_restantes)
+
+        
+        elif self.estado == 'Listo para enviar' and dias_restantes == 1:
+            self.enviar_correo_advertencia(dias_restantes)
+        
+
+    def enviar_correo_advertencia(self, dias_restantes):
+        # Preparar el mensaje de advertencia
+        subject = 'Advertencia: Fecha de entrega de resumen cercana'
+        message = (f"El resumen con número de expediente {self.numero_expediente} asignado a {self.medico_becario}"
+                   f"está a {dias_restantes} día(s) de su fecha de entrega programada.\n\n"
+                   f"Por favor, tome las medidas necesarias para cumplir con la fecha límite de entrega. Entra a tu platanforma resumenesimo.ddns.net para verificar la información")
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+        correos_medicos = []
+        if self.medico_becario and self.medico_becario.user.email:
+            correos_medicos.append(self.medico_becario.user.email)
+        
+        
+        for adscrito in self.medico_adscrito.all():
+            if adscrito.user.email:
+                correos_medicos.append(adscrito.user.email)
+
+
+        recipient_list = [
+            'bethania.lopez@imoiap.com.mx',
+            'esmeralda.flores@imoiap.com.mx'
+        ] + correos_medicos
+
+        # Enviar el correo electrónico
+        try:
+            email = EmailMessage(
+                subject,
+                message,
+                from_email,
+                recipient_list
+            )
+            email.send()
+            print("Correo de advertencia enviado.")
+        except Exception as e:
+            print(f"Error al enviar el correo: {e}")
+
 
 #Define es el estado del historial
 class EstadoHistorial(models.Model):

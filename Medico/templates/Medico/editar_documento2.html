@@ -12,22 +12,35 @@
 {% endblock %}
 {% block content %}
   <nav class="navbar navbar-light bg-light fixed-top">
-    <div class="container-fluid justify-content-center">
-      <!-- Botón para guardar el contenido -->
-       {% if user_tipo != 'Administrador'%}
-      <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
-      {% endif %}
-      <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
-      
-      <!-- Botones Condicionales para Cambiar Estado -->
-      {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
-        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
-      {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
-        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Listo para enviar</button>
-      {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-        <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
-        <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
-      {% endif %}
+    <div class="container-fluid d-flex justify-content-between">
+      <div class="d-flex align-items-center">        
+        <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+          <i class="fas fa-arrow-left"></i> Regresar
+        </button>
+      </div>
+        
+        
+        
+        <div class="d-flex justify-content-center">
+          <!-- Botón para guardar el contenido -->
+          {% if user_tipo != 'Administrador'%}
+          <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
+          {% endif %}
+          <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
+          
+          <!-- Botones Condicionales para Cambiar Estado -->
+          {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
+          <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
+          {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
+          <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</button>
+          {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
+          <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
+          <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
+          {% endif %}
+        </div>
+        <div class="d-flex align-items-center">
+          <!-- Vacío para balancear el diseño -->
+        </div>
     </div>
   </nav>
 
@@ -58,7 +71,7 @@
       <!-- Editor de summernote -->
       <div class="summernote-container">
           <div class="alert alert-danger" style="text-align: center;" role="alert">
-            No incluyas imagenes de IMO, como portada o datos personales del paciente como el nombre, número de expediente, edad, ni fecha. Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente.
+            No incluyas imagenes de IMO, como portada, fecha o datos personales del paciente . Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente.
           </div>
         {{ form.texto }}
       </div>
@@ -123,7 +136,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Este resumen se enviará a listos para enviar
+              Este resumen se enviará a la etapa de firma
               ¿Estás de acuerdo?
             </div>
             <div class="modal-footer">
@@ -162,6 +175,9 @@
   </form>
   <!-- FIN Modal de confirmación de estado: Enviar -->
 
+
+
+  
    <!-- Modal de confirmación para insertar firma digital -->
    <form method="post" id="form_firma" action="{% url 'insertar_firma' documento.id %}">
     {% csrf_token %}

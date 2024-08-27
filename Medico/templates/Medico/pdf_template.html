@@ -6,7 +6,7 @@
     <style>
        
         body {
-            font-family: 'FuenteIMO', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
@@ -70,17 +70,47 @@
             color: #A6A6A6;
             text-align: right;
         }
+        .table-div{
+            background-color: #f2f2f2;
+            margin: 0px 20px 0 20px;
+        }
 
-        .info {
-            margin: 5px 0 0 20px;
-            font-size: 16px;
+        .info-table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            text-align: center;
+            vertical-align: middle;
+           
+            
+        }
+        
+        .info-table th{
+            border-radius: 5px;
             text-align: left;
+            font-size: 14px;
+            margin-bottom: 6px;
+            vertical-align: middle;
+            
         }
 
-        .info p {
-            font-size: 14px;
-            margin: 1px 1px;
+        .info-table td {
+            padding: 1px;
+            font-size: 12px;
+            text-align: left;
+            vertical-align: middle; 
         }
+        .info-table .label {
+            width: 30%;
+        }
+        .info-table .value {
+            font-weight: bold;
+            width: 40%;
+        }
+        .info-table .spacer {
+            width: 10%;
+        }
+        
     </style>
 </head>
 <body>
@@ -105,20 +135,38 @@
             <h1>Instituto Mexicano de Oftalmología I.A.P.</h1>
             <p>Resumen clínico</p>
         </div>
-
-        <div class="info">
-            <p style="font-size: 15px;"><strong>Datos personales</strong></p>
-            <p style="line-height: 1; text-align: left;">Nombre del paciente: <strong>{{ nombre }}</strong></p>
-            <p style="line-height: 1; text-align: left;">Número de expediente: <strong>{{ expediente }}</strong></p>
-            <p style="line-height: 1; text-align: left;">Edad: <strong>{{ edad }}</strong></p>
-            <p style="line-height: 1; text-align: left;">Género: <strong>{{ genero }}</strong></p>
-            <p style="line-height: 1; text-align: left;">Fecha de nacimiento: <strong>{{ fecha_nacimiento }}</strong></p>
+        <div class="table-div">
+            <table class="info-table">
+                <tr>
+                    <th colspan="4" style="color: #6c757d;">DATOS PERSONALES</th>
+                </tr>
+                <tr>
+                    <td class="label">Nombre del paciente:</td>
+                    <td class="value"><strong>{{ nombre }}</strong></td>
+                    <td class="label">Edad:</td>
+                    <td class="value"><strong>{{ edad }}</strong></td>
+                </tr>
+                <tr>
+                    <td class="label">Fecha de nacimiento:</td>
+                    <td class="value"><strong>{{ fecha_nacimiento }}</strong></td>
+                    <td class="label">Género:</td>
+                    <td class="value"><strong>{{ genero }}</strong></td>
+                </tr>
+                <tr>
+                    <td class="label">Número de expediente:</td>
+                    <td class="value"><strong>{{ expediente }}</strong></td>
+                    <td class="spacer"></td>
+                    <td class="spacer"></td>
+                </tr>
+            </table>
         </div>
+            
+        
         <p>________________________________________________________________________________________________________</p>
     </div>
 
     <div class="content">
-        <p class="non-editable" style="text-align: center; display: flex; height: 40px; justify-content: center; align-items: center; font-size: 14px;"><strong></strong>INFORME</p>
+        <p class="non-editable" style="text-align: left; height: 40px; font-size: 14px; color: #6c757d;"><strong></strong>INFORME</p>
         <div class="content-safe" style="font-size: 11px;">
             {{ content|safe }}
         </div>
