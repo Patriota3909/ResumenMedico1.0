@@ -4,6 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        @page {
+            size: a4 portrait;
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; 
+                width: 512pt; 
+                top: 50pt; 
+                height: 700pt;
+            }
+        }
        
         body {
             font-family: Arial, sans-serif;
@@ -29,10 +42,7 @@
         }
 
         .banner {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            
+            background-color: #fff;            
             width: 100%;
         }
 
@@ -49,12 +59,6 @@
         .top-left img {
             width: 136px;
             height: 70px;
-        }
-
-        .banner-content h1 {
-            font-size: 23px;
-            font-weight: bold;
-            margin-bottom: 1px;
         }
 
         .banner-content p {
@@ -89,23 +93,22 @@
             border-radius: 5px;
             text-align: left;
             font-size: 14px;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
             vertical-align: middle;
             
         }
 
         .info-table td {
-            padding: 1px;
-            font-size: 12px;
+            font-size: 11px;
             text-align: left;
             vertical-align: middle; 
         }
         .info-table .label {
-            width: 30%;
+            width: 25%;
         }
         .info-table .value {
             font-weight: bold;
-            width: 40%;
+            width: 20%;
         }
         .info-table .spacer {
             width: 10%;
@@ -114,6 +117,11 @@
     </style>
 </head>
 <body>
+    <div id="footer_content">
+        <div class="footer container" style="width: 100%%;">
+            <img src="{{ logo_foo }}" alt="Logo">
+        </div>
+    </div>
 
     <div class="header">
         <div class="banner">
@@ -123,16 +131,16 @@
                         <img src="{{ logo_url }}" alt="Logo">
                     </td>
                   
-                    <td class="top-right">
-                        <p style="color: black;">Querétaro, Qro. a : <strong>{{ fecha_actual }}</strong></p>
-                        <p>IMO970130AP1</p>
-                        <p>Circuito exterior corregidora s/n Colinas del cimatario</p>
+                    <td class="top-right" style="margin-right: 20px;">
+                        <p>Fecha de expedición:  <strong> {{ fecha_actual }} </strong> </p>
+                        <p>Fecha de solicitud:  <strong> {{ fecha_solicitud}} </strong></p>
                     </td>
                 </tr>
             </table>
         </div>
+        
+
         <div class="banner-content">
-            <h1>Instituto Mexicano de Oftalmología I.A.P.</h1>
             <p>Resumen clínico</p>
         </div>
         <div class="table-div">
@@ -162,7 +170,7 @@
         </div>
             
         
-        <p>________________________________________________________________________________________________________</p>
+        
     </div>
 
     <div class="content">
@@ -172,12 +180,8 @@
         </div>
     </div>
 
-    <div class="footer">
-        <p>_________________________________________________________________</p>
-        <div class="container text-muted py-2 py-lg-3">
-            <p class="mb-0" style="color: dimgrey;">Instituto Mexicano de Oftalmología I.A.P.</p>
-        </div>
-    </div>
+    
+    
 
 </body>
 </html>

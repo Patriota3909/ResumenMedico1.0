@@ -35,7 +35,7 @@
           {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
           <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</button>
           {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-          <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar datos y firma digital</button>
+          <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar qr de validación y firma digital</button>
           <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
           {% endif %}
         </div>
@@ -59,10 +59,10 @@
 
   <form method="post" id="editForm">
     {% csrf_token %}
-    <div class="container d-flex flex-column align-items-center py-4 py-xl-5">
+    <div class="container d-flex flex-column align-items-center">
       <!-- Bloque div para el titulo -->
       <div class="row mb-5">
-        <div class="col-md-12 col-xl-12 text-center mx-auto">
+        <div class="col-md-12 col-xl-12 text-center mx-auto" style="margin-top: 10px;">
           <p>Estás editando el resumen de: <strong>{{ documento.paciente_nombre|upper }}</strong><p>
           <p class="w-lg-50">
           Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
@@ -190,7 +190,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>¿Seguro que deseas agregar tus datos y firma digital en el documento?</p>
+            <p>¿Seguro que deseas agregar qr de validación y firma digital en el documento?</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

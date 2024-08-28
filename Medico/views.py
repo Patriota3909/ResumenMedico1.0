@@ -536,7 +536,9 @@ def enviar_documento(request, documento_id):
             '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
         )
         logo_url = request.build_absolute_uri(static('assets/img/imo.jpg'))
+        logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
         fecha_actual = datetime.now().strftime('%d/%m/%Y')
+        fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
         context = {
             'content': content_with_absolute_urls,
             'nombre': documento.paciente_nombre,
@@ -546,6 +548,8 @@ def enviar_documento(request, documento_id):
             'fecha_nacimiento': documento.fecha_nacimiento,
             'logo_url': logo_url,
             'fecha_actual': fecha_actual,
+            'logo_foo': logo_foo,
+            'fecha_solicitud': fecha_solicitud,
 
         }
         html = template.render(context)
