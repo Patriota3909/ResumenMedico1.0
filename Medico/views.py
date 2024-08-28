@@ -30,6 +30,9 @@ import qrcode
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
+
 
 
 
@@ -402,23 +405,23 @@ def editar_documento2(request, documento_id):
             TEMPLATE_CONTENT = f"""
             
             
-            <p style="line-height: 1; text-align: left; ">Padecimiento actual:</p>
+            <p style="line-height: 1.2; text-align: left; ">Padecimiento actual:</p>
 
-            <p style="line-height: 1; text-align: left;">Diagnostico:</p>
+            <p style="line-height: 1.2; text-align: left;">Diagnostico:</p>
 
-            <p style="line-height: 1; text-align: left;">Tratamientos realizados:</p>
+            <p style="line-height: 1.2; text-align: left;">Tratamientos realizados:</p>
 
-            <p style="line-height: 1; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
+            <p style="line-height: 1.2; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
 
-            <p style="line-height: 1; text-align: left;">Evoluci&oacute;n:</p>
+            <p style="line-height: 1.2; text-align: left;">Evoluci&oacute;n:</p>
 
-            <p style="line-height: 1; text-align: left;">Pronóstico:</p>
+            <p style="line-height: 1.2; text-align: left;">Pronóstico:</p>
             
-            <p style="line-height: 1;">
+            <p style="line-height: 1.2;">
             	<br>
             </p>
 
-            <p style="line-height: 1;">
+            <p style="line-height: 1.2;">
             	<br>
             </p>
 
@@ -482,12 +485,12 @@ def insertar_firma(request, documento_id):
         firma_html = format_html(
            '<table width="100%">'
             '<tr>'
-            '<td style="text-align: left; width: 33%; font-size: 8px; color: gray;">'
+            '<td style="text-align: left; width: 32%; font-size: 8px; color: gray;">'
             '<p>Código de validación</p>'
-            '<img src="{}" alt="Código QR" style="width: 80px; height: 80px;">'
+            '<img src="{}" alt="Código QR" style="width: 70px; height: 70px;">'
             '</td>'
-            '<td style="text-align: left; width: 67%;">'
-            '<img src="{}" alt="Firma Electrónica" style="width: 200px; height: 170px;">'
+            '<td style="text-align: left; width: 68%;">'
+            '<img src="{}" alt="Firma Electrónica" style="width: 250px; height: 125px;">'
             '</td>'
             '</tr>'
             '</table>', qr_url, firma_electronica_url)
@@ -535,7 +538,7 @@ def enviar_documento(request, documento_id):
         ).replace(
             '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
         )
-        logo_url = request.build_absolute_uri(static('assets/img/imo.jpg'))
+        logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
         logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
         fecha_actual = datetime.now().strftime('%d/%m/%Y')
         fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
