@@ -81,6 +81,9 @@
           <div class="alert alert-danger" style="text-align: center;" role="alert">
             No incluyas imagenes de IMO, como portada, fecha o datos personales del paciente . Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente.
           </div>
+          <textarea name="texto" id="contenido_principal">
+            {{ form.texto.value }}
+          </textarea>
         {{ form.texto }}
       </div>
      
@@ -235,11 +238,44 @@
   </div>
   <!-- FIN Modal de confirmación de generar PDF con vista previa -->
 
+  <!-- Botón para abrir el off-canvas -->
+<button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
+  Ver Comentarios
+</button>
+
+<!-- Off-canvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
+  <div class="offcanvas-header">
+      <h5 id="offcanvasComentariosLabel">Comentarios</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      <ul class="list-group">
+          {% for comentario in comentarios %}
+          <li class="list-group-item">
+              <strong>{{ comentario.usuario.username }}:</strong> {{ comentario.comentario }}<br>
+              <small>{{ comentario.fecha_creacion }}</small>
+          </li>
+          {% endfor %}
+      </ul>
+
+      <!-- Formulario para agregar un nuevo comentario -->
+      <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+              <label for="comentario">Nuevo Comentario:</label>
+              <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-3">Agregar Comentario</button>
+      </form>
+  </div>
+</div>
+
 
   <script>
     $(function () {
       // Inicializar Summernote en el textarea
-      $('textarea').summernote({
+      $('#contenido_principal').summernote({
         height: 1115,  // Altura en píxeles, igual que en Froala
         minHeight: 1115, // Altura mínima
         maxHeight: 1115, // Altura máxima
@@ -252,14 +288,6 @@
           ['para', ['ul', 'ol', 'paragraph']],
   
         ],
-        callbacks: {
-          onInit: function() {
-            // Aplica el interlineado por defecto cuando se inicia el editor
-            $('.note-editable').css('line-height', '1.2');
-          }
-        }
-        
-
       });
       
   
