@@ -63,7 +63,9 @@
     </div>
   {% endif %}
 
-
+  <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
+    Ver Comentarios
+  </button>
   <form method="post" id="editForm">
     {% csrf_token %}
     <div class="container d-flex flex-column align-items-center">
@@ -75,6 +77,10 @@
           Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
           </p>
         </div>
+        
+  <!-- Botón para abrir el off-canvas -->
+
+ 
       </div>
       <!-- Editor de summernote -->
       <div class="summernote-container">
@@ -84,7 +90,7 @@
           <textarea name="texto" id="contenido_principal">
             {{ form.texto.value }}
           </textarea>
-        {{ form.texto }}
+      
       </div>
      
     </div>
@@ -238,38 +244,55 @@
   </div>
   <!-- FIN Modal de confirmación de generar PDF con vista previa -->
 
-  <!-- Botón para abrir el off-canvas -->
-<button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
-  Ver Comentarios
-</button>
 
-<!-- Off-canvas -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
-  <div class="offcanvas-header">
-      <h5 id="offcanvasComentariosLabel">Comentarios</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-      <ul class="list-group">
-          {% for comentario in comentarios %}
-          <li class="list-group-item">
-              <strong>{{ comentario.usuario.username }}:</strong> {{ comentario.comentario }}<br>
-              <small>{{ comentario.fecha_creacion }}</small>
-          </li>
-          {% endfor %}
-      </ul>
+       <!-- Off-canvas -->
+       <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasComentariosLabel">Comentarios</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-group">
+                {% for comentario in comentarios %}
+                <li class="list-group-item d-flex">
+                    <!-- Avatar -->
+                    <div class="avatar me-3">
+                        <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
+                    </div>
+                    <!-- Comment content -->
+                    <div>
+                        <strong>{{ comentario.usuario.username }}</strong><br>
+                        <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
+                        <p class="mb-0">{{ comentario.comentario }}</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <br>
+            <br>
+            <br>
+            <br>
+      
+            <!-- Formulario para agregar un nuevo comentario -->
+            <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="comentario">Nuevo Comentario:</label>
+                    <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Agregar Comentario</button>
+            </form>
+        </div>
+      </div>
+      
+      
+      
 
-      <!-- Formulario para agregar un nuevo comentario -->
-      <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
-          {% csrf_token %}
-          <div class="form-group">
-              <label for="comentario">Nuevo Comentario:</label>
-              <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary mt-3">Agregar Comentario</button>
-      </form>
-  </div>
-</div>
+
+
+
+
+
 
 
   <script>
@@ -283,9 +306,9 @@
         focus: true,
         toolbar: [
         
-          ['height', ['height']],
+
           ['font', ['bold', 'italic', 'underline']],
-          ['para', ['ul', 'ol', 'paragraph']],
+          ['para', ['ul', 'ol', '']],
   
         ],
       });

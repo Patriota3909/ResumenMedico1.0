@@ -439,7 +439,7 @@ def editar_documento2(request, documento_id):
             )
         
         form = ResumenForm(instance=documento)
-
+    print(f"comentarios: {comentarios}")
     return render(request, 'Medico/editar_documento2.html', {
         'form': form,
         'documento': documento,
@@ -652,10 +652,14 @@ def descargar_pdf(request, documento_id):
 @login_required
 @user_tipo_required(['Adscrito', 'Residente', 'Becario'])
 def agregar_comentario(request, documento_id):
+    print("Vista 'agregar_comentario' alcanzada")
+
     documento = get_object_or_404(Resumen, id=documento_id)
+    print("Entrando par guardar comentario")
 
     if request.method == 'POST':
         comentario_texto = request.POST.get('comentario')
+        print(f"Comentario recibido: {comentario_texto}")  # Depuración 2
         if comentario_texto:
             Comentario.objects.create(
                 resumen=documento,
