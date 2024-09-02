@@ -14,6 +14,15 @@
     .summernote-container .note-editable {
       line-height: 1.2; /* Ajusta el valor según tus necesidades */
     }
+
+    .textarea-no-border {
+      border: none;
+      background-color: #f5f5f5; /* Fondo gris claro */
+      border-radius: 5px; /* Bordes redondeados opcionales */
+      padding: 10px; /* Espaciado interno */
+      resize: none; /* Deshabilitar redimensionamiento si es necesario */
+  }
+  
   </style>
 {% endblock %}
 {% block content %}
@@ -251,23 +260,40 @@
             <h5 id="offcanvasComentariosLabel">Comentarios</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
+        <div class="offcanvas-body d-flex flex-column">
+
+          {% if messages %}
+          <div class="alert alert-success" role="alert">
+              {% for message in messages %}
+                  {{ message }}
+              {% endfor %}
+          </div>
+      {% endif %}
+
+
+          <div class="overflow-auto mb-3" style="max-height: 200;">
+
             <ul class="list-group">
-                {% for comentario in comentarios %}
-                <li class="list-group-item d-flex">
-                    <!-- Avatar -->
-                    <div class="avatar me-3">
-                        <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
-                    </div>
-                    <!-- Comment content -->
-                    <div>
-                        <strong>{{ comentario.usuario.username }}</strong><br>
-                        <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
-                        <p class="mb-0">{{ comentario.comentario }}</p>
-                    </div>
-                </li>
-                {% endfor %}
+              {% for comentario in comentarios %}
+              <li class="list-group-item d-flex">
+                <!-- Avatar -->
+                <div class="avatar me-3">
+                  <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
+                </div>
+                <!-- Comment content -->
+                <div>
+                  <strong>{{ comentario.usuario.username }}</strong><br>
+                  <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
+                  <p class="mb-0">{{ comentario.comentario }}</p>
+                </div>
+              </li>
+              {% endfor %}
             </ul>
+          </div>
+
+
+
+
             <br>
             <br>
             <br>
@@ -276,11 +302,12 @@
             <!-- Formulario para agregar un nuevo comentario -->
             <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="comentario">Nuevo Comentario:</label>
-                    <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Agregar Comentario</button>
+                <div class="form-group d-flex align-items-center">
+                    <textarea name="comentario" id="comentario" class="form-control flex-grow-1 textarea-no-border" rows="3" placeholder="Escribe un comentario..." required></textarea>
+                    <button type="submit" class="btn btn-send-ico ms-2 p-0">
+                      <img src="{% static 'assets/img/envio.svg' %}" alt="Enviar" width="24" height="24">
+                    </button>
+                  </div>
             </form>
         </div>
       </div>
@@ -294,37 +321,83 @@
 
 
 
-
-  <script>
-    $(function () {
-      // Inicializar Summernote en el textarea
-      $('#contenido_principal').summernote({
-        height: 1115,  // Altura en píxeles, igual que en Froala
-        minHeight: 1115, // Altura mínima
-        maxHeight: 1115, // Altura máxima
-        lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
-        focus: true,
-        toolbar: [
-        
-
-          ['font', ['bold', 'italic', 'underline']],
-          ['para', ['ul', 'ol', '']],
-  
-        ],
-      });
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Inicializar Summernote en el textarea
+          $('#contenido_principal').summernote({
+            height: 1115,  // Altura en píxeles, igual que en Froala
+            minHeight: 1115, // Altura mínima
+            maxHeight: 1115, // Altura máxima
+            lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
+            focus: true,
+            toolbar: [
+              ['font', ['bold', 'italic', 'underline']],
+              ['para', ['ul', 'ol', '']],
+            ],
+          });
       
-  
-      // Desaparecer el mensaje después de 5 segundos
-      setTimeout(function() {
-        $('.alert').fadeOut('slow');
-      }, 5000); // 5000 milisegundos = 5 segundos
-  
-    });
-  
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('form_revisión')
-      console.log('Form action URL:', form.action)
-    });
-  </script>
+          // Desaparecer el mensaje después de 5 segundos
+          setTimeout(function() {
+            const alertElement = document.querySelector('.alert');
+            if (alertElement) {
+              alertElement.style.transition = 'opacity 0.5s';
+              alertElement.style.opacity = 0;
+              setTimeout(() => alertElement.remove(), 500);
+            }
+          }, 5000); // 5000 milisegundos = 5 segundos
+      
+          // Manejar el envío del formulario de comentarios via Fetch API
+          const formComentario = document.getElementById('form_comentario');
+          formComentario.addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+      
+            const formData = new FormData(formComentario);  // Crear un FormData con los datos del formulario
+            const url = formComentario.action;  // Obtener la URL de acción del formulario
+      
+            fetch(url, {
+              method: 'POST',
+              body: new URLSearchParams(formData),  // Convertir FormData a URLSearchParams para enviarlo en formato URL-encoded
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Header para indicar que es una petición AJAX
+              },
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                // Insertar los comentarios actualizados en el off-canvas
+                document.getElementById('lista_comentarios').innerHTML = data.comentarios_html;
+      
+                // Limpiar el campo de texto del comentario
+                document.getElementById('comentario').value = '';
+      
+                // Mostrar un mensaje de éxito (opcional)
+                const successMessage = document.createElement('div');
+                successMessage.className = 'alert alert-success';
+                successMessage.textContent = 'Comentario agregado correctamente.';
+                formComentario.insertAdjacentElement('afterend', successMessage);
+                setTimeout(() => {
+                  successMessage.style.transition = 'opacity 0.5s';
+                  successMessage.style.opacity = 0;
+                  setTimeout(() => successMessage.remove(), 500);
+                }, 5000);
+              } else {
+                throw new Error('Error en la respuesta del servidor.');
+              }
+            })
+            .catch(() => {
+              // Mostrar un mensaje de error (opcional)
+              const errorMessage = document.createElement('div');
+              errorMessage.className = 'alert alert-danger';
+              errorMessage.textContent = 'Hubo un error al agregar el comentario. Inténtalo de nuevo.';
+              formComentario.insertAdjacentElement('afterend', errorMessage);
+              setTimeout(() => {
+                errorMessage.style.transition = 'opacity 0.5s';
+                errorMessage.style.opacity = 0;
+                setTimeout(() => errorMessage.remove(), 500);
+              }, 5000);
+            });
+          });
+        });
+      </script>
   
 {% endblock %}

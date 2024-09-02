@@ -1,0 +1,14 @@
+{% load static %}
+
+{% for comentario in comentarios %}
+<li class="list-group-item d-flex">
+    <div class="avatar me-3">
+        <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
+    </div>
+    <div>
+        <strong>{{ comentario.usuario.username }}</strong><br>
+        <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
+        <p class="mb-0">{{ comentario.comentario }}</p>
+    </div>
+</li>
+{% endfor %}

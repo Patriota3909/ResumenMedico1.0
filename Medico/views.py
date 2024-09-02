@@ -32,6 +32,8 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 
@@ -652,22 +654,21 @@ def descargar_pdf(request, documento_id):
 @login_required
 @user_tipo_required(['Adscrito', 'Residente', 'Becario'])
 def agregar_comentario(request, documento_id):
-    print("Vista 'agregar_comentario' alcanzada")
-
-    documento = get_object_or_404(Resumen, id=documento_id)
-    print("Entrando par guardar comentario")
-
     if request.method == 'POST':
         comentario_texto = request.POST.get('comentario')
-        print(f"Comentario recibido: {comentario_texto}")  # Depuración 2
         if comentario_texto:
+            documento = get_object_or_404(Resumen, id=documento_id)
             Comentario.objects.create(
                 resumen=documento,
                 usuario=request.user,
                 comentario=comentario_texto
             )
-            messages.success(request, 'Comentario agregado correctamente.')
-        else:
-            messages.error(request, 'No puedes enviar un comentario vacío.')
 
-    return redirect('editar_documento2', documento_id=documento.id)
+            # Renderizar los comentarios nuevamente y enviarlos como respuesta
+            comentarios = Comentario.objects.filter(resumen=documento)
+            comentarios_html = render_to_string('Medico/partials/comentarios_list.html', {'comentarios': comentarios})
+            return JsonResponse({'success': True, 'comentarios_html': comentarios_html})
+
+        return JsonResponse({'success': False, 'message': 'No puedes enviar un comentario vacío.'})
+
+    return redirect('editar_documento2', documento_id=documento_id)
