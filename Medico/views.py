@@ -127,21 +127,26 @@ def lista_resumenes_adscrito(request, edited_id=None):
         resumenes_revision = Resumen.objects.filter(estado="En revisión", medico_adscrito=doctor).order_by('-fecha_modificacion')
         resumenes_listos_para_enviar = Resumen.objects.filter(estado="Listo para enviar", medico_adscrito=doctor).order_by('-fecha_modificacion')
         resumenes_enviados = Resumen.objects.filter(estado="Enviado", medico_adscrito=doctor).order_by('-fecha_modificacion')
-
+        resumenes_total = Resumen.objects.filter(especialidad=doctor.especialidad).order_by('-fecha_modificacion')
          # Conteo de cada categoría
+        
+        
         count_en_revision = resumenes_revision.count()
         count_listos_para_enviar = resumenes_listos_para_enviar.count()
         count_enviados = resumenes_enviados.count()
+        count_total = resumenes_total.count()
 
         print(f"{doctor}")
         return render(request, 'Medico/MedicosADS.html', {
             'en_revision': resumenes_revision,
             'listos_para_enviar': resumenes_listos_para_enviar,
             'enviados': resumenes_enviados,
+            'total': resumenes_total,
             'count_en_revision': count_en_revision,
             'count_listos_para_enviar': count_listos_para_enviar,
             'count_enviados': count_enviados,
             'edited_id': edited_id,
+            'count_total': count_total,
             'doctor': doctor,
         })
     else:
