@@ -108,7 +108,10 @@
                                                 Especialidad:<strong> {{ resumen.especialidad.name }}</strong>
                                               </p>
                                               <p>
-                                                Fecha de entrega programada al paciente:<strong> {{ resumen.fecha_entrega_programada|date:"F j" }}</strong>
+                                                Fecha de entrega programada al paciente:<strong> {{ resumen.fecha_entrega_programada|date:"d m Y" }}</strong>
+                                              </p>
+                                              <p>
+                                                Fecha de solicitud:<strong> {{ resumen.fecha_solicitud|date:"d m Y" }}</strong>
                                               </p>
                                               <p>
                                                 Estado:<strong> {{ resumen.estado }}</strong>

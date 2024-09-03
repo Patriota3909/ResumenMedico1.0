@@ -24,6 +24,7 @@ from django.contrib.auth.models import Group
 from django.utils.html import escape
 from django.contrib.staticfiles import finders
 import os
+import base64
 from datetime import datetime
 from django.http import FileResponse
 import qrcode
@@ -479,22 +480,22 @@ def insertar_firma(request, documento_id):
         qr.add_data(resumen_url)
         qr.make(fit=True)
         
-        # Generar la imagen del QR
-        img = qr.make_image(fill_color="black", back_color="white")
+         # Generar la imagen del QR en memoria
         qr_io = BytesIO()
+        img = qr.make_image(fill_color="black", back_color="white")
         img.save(qr_io, 'PNG')
         qr_io.seek(0)
-
-        # Guardar el código QR en el sistema de archivos
-        qr_filename = f'qrs/{documento_id}_qr.png'
-        qr_path = default_storage.save(qr_filename, ContentFile(qr_io.read()))
-        
-        
+        qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
+        qr_url = f"data:image/png;base64,{qr_base64}"
         
 
         # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
-        qr_url = default_storage.url(qr_path)
+        
         firma_html = format_html(
+            '<br>'
+            '<br>'
+            '<br>'
+            '<br>'
            '<table width="100%">'
             '<tr>'
             '<td style="text-align: left; width: 32%; font-size: 8px; color: gray;">'
