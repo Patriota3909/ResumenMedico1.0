@@ -239,7 +239,7 @@ def cambiar_estado(request, documento_id):
                 
                     send_mail(
                         subject='Se ha solicitado la revisión de un resumen',
-                        message= f'Se ha solicitado la revisión del resumen con numero de expedediente {documento.numero_expediente}',
+                        message= f'Se ha solicitado la revisión del resumen con numero de expedediente {documento.numero_expediente}. Puedes revisarlo en la plataforma resumenesimo.ddns.net',
                         from_email= settings.DEFAULT_FROM_EMAIL,
                         recipient_list=email_addresses,
                         fail_silently=False,

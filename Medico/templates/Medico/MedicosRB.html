@@ -130,10 +130,10 @@
                                                   
                                                 </div>
                                                 <div class="modal-body" style="text-align: justify;">
-                                                  <p>Número de Expediente: <strong>{{ documento.numero_expediente }}</p></strong>
                                                   <p>Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</p></strong>
                                                   <p>Especialidad: <strong>{{ documento.especialidad.name }}</p></strong>
                                                   <p>Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</p></strong>
+                                                  <p>Fecha de solicitud: <strong>{{ documento.solicitud|date:"d-m-Y" }}</p></strong>
                                                   <p>Estado: <strong>{{ documento.estado }}</p></strong>
                                                   <p>Médico Becario: <strong>{{ documento.medico_becario }}</p></strong>
                                                   <p>Médico Residente: <strong>{{ documento.medico_residente }}</p></strong>
@@ -238,9 +238,6 @@
                                                 </div>
                                                 <div class="modal-body" style="text-transform: none; text-align: justify ;">
                                                   <p>
-                                                    Número de Expediente: <strong>{{ documento.numero_expediente }}</strong>
-                                                  </p>
-                                                  <p>
                                                     Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</strong>
                                                   </p>
                                                   <p>
@@ -248,6 +245,9 @@
                                                   </p>
                                                   <p>
                                                     Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</strong>
+                                                  </p>
+                                                  <p>
+                                                    Fecha de solicitud: <strong>{{ documento.fecha_solicitud|date:"d-m-Y" }}</strong>
                                                   </p>
                                                   <p>
                                                     Estado: <strong>{{ documento.estado }}</strong>
@@ -259,7 +259,7 @@
                                                     Medico Residente: <strong>{{ documento.medico_residente }}</strong>
                                                   </p>
                                                   <p>
-                                                    Medicos Adscritos: <strong>{{documento.medico_adscrito.all.0}}</strong>
+                                                    Medico Adscrito: <strong>{{documento.medico_adscrito.all.0}}</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">

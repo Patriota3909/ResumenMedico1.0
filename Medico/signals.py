@@ -60,7 +60,7 @@ def asignar_medicos(sender, instance, created, **kwargs):
             if recipient_list:
                 subject = 'Nuevo resumen medico asignado'
                 message = f'Se ha asignado un nuevo resumen con el numero de expediente {instance.numero_expediente}. Revisalo en tu plataforma de resumenes medicos en la siguiente dirección: resumenesimo.ddns.net'
-                from_email = 'arturo.olivares@imoiap.com.mx'
+                from_email = 'resumenes.imo@imoiap.com.mx'
 
                 try:
                     send_mail(subject, message, from_email, recipient_list)
