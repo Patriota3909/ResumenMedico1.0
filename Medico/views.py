@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from datetime import timedelta
 from .decorators import doctor_tipo_required, status_permission_required
 from django.contrib.auth.decorators import login_required 
-from .models import Resumen, Especialidad, Doctor, Documento
+from .models import Resumen, Especialidad, Doctor, Documento, Comentario
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import logout
 from django.http import HttpRequest, HttpResponseBadRequest, HttpResponse
@@ -32,6 +32,8 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 
@@ -387,11 +389,13 @@ def mi_vista(request):
 @user_tipo_required(['Adscrito', 'Residente', 'Becario'])
 def editar_documento2(request, documento_id):
     documento = get_object_or_404(Resumen, id=documento_id)
+    comentarios = Comentario.objects.filter(resumen=documento).order_by('-fecha_de_creacion')
 
     #user_tipo = request.user.doctor.tipo
     user_tipo = getattr(request.user, 'doctor', None)
     user_tipo = user_tipo.tipo if user_tipo else 'Administrador'
-
+    
+    total_comments_count = Comentario.objects.filter(resumen=documento).count()
 
     if request.method == 'POST':
         form = ResumenForm(request.POST, instance=documento)
@@ -436,17 +440,20 @@ def editar_documento2(request, documento_id):
                 nombre = documento.paciente_nombre,
                 edad = documento.edad,
                 expediente = documento.numero_expediente,
+                
                 #fecha = documento.fecha_nacimiento,
                 #genero = documento.genero,
 
             )
         
         form = ResumenForm(instance=documento)
-
+    print(f"comentarios: {comentarios}")
     return render(request, 'Medico/editar_documento2.html', {
         'form': form,
         'documento': documento,
         'user_tipo': user_tipo,
+        'comentarios': comentarios,
+        'total_comments_count': total_comments_count,
     })
     
     
@@ -651,3 +658,19 @@ def descargar_pdf(request, documento_id):
     return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
 
 
+@login_required
+@user_tipo_required(['Adscrito', 'Residente', 'Becario'])
+def agregar_comentario(request, documento_id):
+    if request.method == 'POST':
+        comentario_texto = request.POST.get('comentario')
+        if comentario_texto:
+            documento = get_object_or_404(Resumen, id=documento_id)
+            Comentario.objects.create(
+                resumen=documento,
+                usuario=request.user,
+                comentario=comentario_texto
+            )
+            # Redirigir a la misma página para recargar los comentarios
+            return redirect('editar_documento2', documento_id=documento_id)
+
+    return redirect('editar_documento2', documento_id=documento_id)

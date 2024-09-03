@@ -42,23 +42,6 @@
   
 </head>
 <body>
-    <nav class="navbar navbar-expand-md text-uppercase shadow" data-bs-theme="light">
-        <div class="container"><img src="{% static 'img/LOGOIMO.jpg'%}" width="50" height="49"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
-            <span class="visually-hidden"></span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1" style="filter: blur(0px);backdrop-filter: blur(0px);-webkit-backdrop-filter: blur(0px);">
-                <ul class="navbar-nav mx-auto" style="border-bottom-style: initial;border-bottom-color: rgb(65,16,16);">
-                  
-           
-                    <li>
-                        {%if request.user.is_authenticated %}
-                        <h3>Edicion de RESUMEN</h3>
-                        {% endif %}
-                    </li>
-                </ul>
-               
-            </div>
-        </div>
-    </nav>
   
     <div class="container">
         {% block content %}

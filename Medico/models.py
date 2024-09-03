@@ -178,3 +178,15 @@ class Asignacion(models.Model):
     
     def __str__(self):
         return f"{self.especialidad.name} - {self.tipo_medico} - {self.ultimo_medico.user.username}"
+    
+    
+
+class Comentario(models.Model):
+    resumen = models.ForeignKey(Resumen, on_delete=models.CASCADE, related_name='comentarios')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    comentario = models.TextField()
+    fecha_de_creacion = models.DateTimeField(auto_now_add=True)
+    
+    def __str__ (self):
+        return f"Comentario de {self.usuario} el dia {self.fecha_de_creacion}"
+    
