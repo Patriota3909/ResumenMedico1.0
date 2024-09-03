@@ -133,7 +133,7 @@
                                                   <p>Número de Expediente: <strong>{{ documento.numero_expediente }}</p></strong>
                                                   <p>Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</p></strong>
                                                   <p>Especialidad: <strong>{{ documento.especialidad.name }}</p></strong>
-                                                  <p>Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"F j" }}</p></strong>
+                                                  <p>Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</p></strong>
                                                   <p>Estado: <strong>{{ documento.estado }}</p></strong>
                                                   <p>Médico Becario: <strong>{{ documento.medico_becario }}</p></strong>
                                                   <p>Médico Residente: <strong>{{ documento.medico_residente }}</p></strong>
@@ -152,7 +152,7 @@
 
                                     <td>{{ documento.paciente_nombre }}</td>
                                     <td>{{ documento.numero_expediente }}</td>
-                                    <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
+                                    <td>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</td>
                                     <td>{{documento.medico_becario}}</td>
                                     <td>{{documento.medico_residente}}</td>
                                     <td>{{ documento.especialidad.name}}</td>
@@ -247,7 +247,7 @@
                                                     Especialidad: <strong>{{ documento.especialidad.name }}</strong>
                                                   </p>
                                                   <p>
-                                                    Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"F j" }}</strong>
+                                                    Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</strong>
                                                   </p>
                                                   <p>
                                                     Estado: <strong>{{ documento.estado }}</strong>
@@ -271,7 +271,7 @@
                                     </td>
                                     <td>{{ documento.paciente_nombre }}</td>
                                     <td>{{ documento.numero_expediente }}</td>
-                                    <td>{{ documento.fecha_entrega_programada|date:"F j" }}</td>
+                                    <td>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</td>
                                     <td>{{ documento.medico_becario }}</td>
                                     <td>{{ documento.medico_residente }}</td>
                                     <td>

@@ -212,9 +212,16 @@
   <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: brown;">
     <div class="container">
       <!-- Izquierda: Flecha de regreso -->
+      {% if user_tipo == 'Becario' %}
+      <a class="btn btn-outline-light" href="{% url 'MedicosRB' %}">
+        <i class="fas fa-arrow-left"></i> 
+      </a>
+
+      {% else %}
       <a class="btn btn-outline-light" href="{% url 'MedicosADS' %}">
         <i class="fas fa-arrow-left"></i> 
       </a>
+      {%endif%}
       
       <!-- Centro: Enlaces del Navbar -->
       <div class="navbar-collapse-center">
@@ -230,7 +237,7 @@
           </li>
           {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
           <li class="nav-item">
-            <a class="nav-link" id="tabla_enviados" href="#" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</a>
+            <a class="nav-link" id="tabla_enviados" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</a>
           </li>
           {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
           <li class="nav-item">
