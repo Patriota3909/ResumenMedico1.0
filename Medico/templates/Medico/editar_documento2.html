@@ -1,6 +1,17 @@
-{% extends 'Medico/layout.html' %}
 {% load static %}
-{% block links %}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="es">
+<head>
+
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap">
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/img/ojo.svg' %}">
+  <script src="{% static 'summernote/jquery-3.4.1.slim.min.js' %}" crossorigin="anonymous"></script>
+  <link href="{% static 'summernote/summernote-lite.min.css' %}" rel="stylesheet" />
+  <script src="{% static 'summernote/summernote-lite.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -10,10 +21,131 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="{% static 'assets/img/ojo.svg' %}">
 
+
   <style>
-    .summernote-container .note-editable {
-      line-height: 1.2; /* Ajusta el valor según tus necesidades */
+    body{
+      font-family: 'Nunito', sans-serif;
+      padding-top: 70px; 
     }
+
+    .navbar .nav-link {
+      color: white;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 5px;
+      transition: color 0.3s ease-in-out;
+    }
+  
+    /* Animación del borde blanco debajo del texto */
+    .navbar .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      display: block;
+      left: 0;
+      bottom: 0;
+      background: white;
+      transition: width 0.3s ease-in-out;
+    }
+    .navbar-nav .nav-item {
+      margin-left: 20px; /* Ajusta este valor según tus necesidades */
+      margin-right: 20px; /* Ajusta este valor según tus necesidades */
+    }
+  
+    /* Cambia el color del texto y anima el borde cuando se pasa el cursor */
+    .navbar .nav-link:hover {
+      color: white;
+    }
+  
+    .navbar .nav-link:hover::after {
+      width: 100%;
+    }
+  
+    .navbar .btn-outline-secondary {
+      margin-right: 1rem;
+    }
+  
+    .navbar .btn-outline-light {
+      margin-left: 1rem;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-collapse-center {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Estilos del contenido del modal */
+.custom-modal-content {
+  border-radius: 10px;
+  border: none; /* Quita los bordes */
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Añade una sombra suave */
+}
+
+
+/* Estilo para el título del modal */
+.modal-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* Estilo para el cuerpo del modal */
+.modal-body {
+  font-size: 16px;
+  color: black; /* Color gris para el texto */
+}
+
+/* Botones de acción en el modal */
+.modal-footer .btn {
+  padding: 10px 20px;
+  border-radius: 7px;
+  font-size: 16px;
+}
+
+/* Botón primario */
+.modal-footer .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Botón de cancelar */
+.modal-footer .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+/* Estilo para la cabecera del modal */
+.modal-header {
+  border-bottom: none;
+  display: flex;
+  justify-content: center;
+}
+
+/* Ajustes para centrar el texto */
+.modal-body p {
+  margin: 0;
+}
+
+/* Centrando el modal */
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Opcional: Cambiar el color de fondo del modal */
+.custom-modal-content {
+  background-color: #ffffff; /* Fondo blanco */
+}
+
+
 
     .textarea-no-border {
       border: none;
@@ -22,59 +154,115 @@
       padding: 10px; /* Espaciado interno */
       resize: none; /* Deshabilitar redimensionamiento si es necesario */
   }
+
+  .textarea-no-border:focus,
+.btn-send-ico:focus {
+    outline: none;
+    box-shadow: none; /* También elimina cualquier sombra que pueda aparecer */
+}
+
+/* Otros estilos que tengas */
+.textarea-no-border {
+    border: none;
+    background-color: #f5f5f5; /* Fondo gris claro */
+    border-radius: 5px; /* Bordes redondeados opcionales */
+    padding: 10px; /* Espaciado interno */
+    resize: none; /* Deshabilitar redimensionamiento si es necesario */
+}
+
+.btn-send-ico {
+    background: none; /* Elimina el fondo del botón */
+    border: none; /* Elimina el borde del botón */
+    cursor: pointer; /* Muestra el cursor de mano al pasar sobre el botón */
+}
+
+.textarea-no-border:focus {
+  background-color: #f5f5f5; /* Mantiene el fondo gris */
+  outline: none; /* Elimina el borde azul de enfoque */
+  box-shadow: none; /* Elimina cualquier sombra que pueda aparecer */
+}
+.notification-icon {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px; /* Ajusta según sea necesario */
+  right: -8px; /* Ajusta según sea necesario */
+  padding: 2px 6px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  display: inline-block; /* Por defecto, no se muestra */
+}
+
+.notification-icon .notification-badge {
+  display: inline-block; /* Mostrar el globito si hay mensajes sin leer */
+}
+
   
   </style>
-{% endblock %}
-{% block content %}
-
-
-  <nav class="navbar navbar-light bg-light fixed-top">
-    <div class="container-fluid d-flex justify-content-between">
-      <div class="d-flex align-items-center">        
-        <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
-          <i class="fas fa-arrow-left"></i> Regresar
-        </button>
-      </div>
-        
-        
-        
-        <div class="d-flex justify-content-center">
-          <!-- Botón para guardar el contenido -->
+</head>
+<body>
+  
+  
+  
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: brown;">
+    <div class="container">
+      <!-- Izquierda: Flecha de regreso -->
+      <a class="btn btn-outline-light" href="{% url 'MedicosADS' %}">
+        <i class="fas fa-arrow-left"></i> 
+      </a>
+      
+      <!-- Centro: Enlaces del Navbar -->
+      <div class="navbar-collapse-center">
+        <ul class="navbar-nav">
           {% if user_tipo != 'Administrador'%}
-          <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</button>
+          <li class="nav-item">
+            <a class="nav-link" id="tabla_revision" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</a>
+          </li>
           {% endif %}
-          <!-- Botón para generar el PDF, QUE APERTURA UN MODAL -->
-          
-          <!-- Botones Condicionales para Cambiar Estado -->
           {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
-          <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</button>
+          <li class="nav-item">
+            <a class="nav-link" id="tabla_listos" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</a>
+          </li>
           {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
-          <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</button>
+          <li class="nav-item">
+            <a class="nav-link" id="tabla_enviados" href="#" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</a>
+          </li>
           {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-          <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Insertar qr de validación y firma digital</button>
-          <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</button>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Agregar firma digital</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</a>
+          </li>
           {% endif %}
-        </div>
-        <div class="d-flex align-items-center">
-          <!-- Vacío para balancear el diseño -->
-        </div>
+        </ul>
+      </div>
+      
+     <!-- Derecha: Ícono de notificaciones -->
+     <div class="d-flex align-items-center">
+      <div class="notification-icon position-relative">
+          <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
+              <i class="fas fa-envelope"></i>
+          </button>
+          {% if total_comments_count > 0 %}
+          <span class="notification-badge">{{ total_comments_count }}</span>
+          {% endif %}
+      </div>
+  </div>
+</div>
+    
     </div>
   </nav>
+  
+  
 
+  
 
-
-    <!-- Mostrar mensajes -->
-    {% if messages %}
-    <div class="container mt-3">
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
-    Ver Comentarios
-  </button>
   <form method="post" id="editForm">
     {% csrf_token %}
     <div class="container d-flex flex-column align-items-center">
@@ -82,322 +270,259 @@
       <div class="row mb-5">
         <div class="col-md-12 col-xl-12 text-center mx-auto" style="margin-top: 10px;">
           <p>Estás editando el resumen de: <strong>{{ documento.paciente_nombre|upper }}</strong><p>
-          <p class="w-lg-50">
-          Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
-          </p>
-        </div>
-        
-  <!-- Botón para abrir el off-canvas -->
-
- 
-      </div>
-      <!-- Editor de summernote -->
-      <div class="summernote-container">
-          <div class="alert alert-danger" style="text-align: center;" role="alert">
-            No incluyas imagenes de IMO, como portada, fecha o datos personales del paciente . Al generar el pdf que se envia al paciente, estos datos se incluyen automaticamente.
+            <p class="w-lg-50">
+              Número de expediente: <strong>{{ documento.numero_expediente }}</strong>
+            </p>
           </div>
+          
+          <!-- Botón para abrir el off-canvas -->
+          
+          
+        </div>
+        <!-- Editor de summernote -->
+        <div class="summernote-container">
+          {% if messages %}
+            <div class="container mt-3">
+              {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          <div class="alert alert-danger" style="text-align: center;">
+            No incluyas imagenes de IMO, como portada, fecha o datos personales del paciente.</div>
+            
           <textarea name="texto" id="contenido_principal">
             {{ form.texto.value }}
           </textarea>
+          
+        </div>
+          <!-- Mostrar mensajes -->
+
+        
+      </div>
       
-      </div>
-     
-    </div>
-
-    <!-- Modal de confirmación de guardado -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="d-flex align-items-center">
-              <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
+      <!-- Modal de confirmación de guardado -->
+      <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal-content">
+            <div class="modal-header bg-light">
+              <div class="d-flex align-items-center">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
+              </div>
+            </div>
+            <div class="modal-body text-center">
+              ¿Desea guardar los cambios realizados?
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" form="editForm">Si, guardar</button>
             </div>
           </div>
-          <div class="modal-body">
-            ¿Desea guardar los cambios realizados?
-          </div>
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" form="editForm">Si, guardar</button>
-          </div>
         </div>
       </div>
-    </div>
-    <!-- FIN Modal de confirmación de guardado -->
-  </form>
-
-  <!-- INICIAR MODAL PARA ENVIAR A REVISIÓN -->
-  <form method="post" action="{% url 'cambiar_estado' documento.id %}">
-    {% csrf_token %}
-    <input type="hidden" name="nuevo_estado" value="En revisión" />
-    <div class="modal fade" id="confirmModal_enrevision" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            Este resumen se enviará a revisión
-            ¿Estás de acuerdo?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Sí</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-  <!-- FINALIZA MODAL PARA CAMBIO DE ESTADO EN REVISIÓN -->
-
-    <!-- Modal de confirmación de estado: Listo para enviar -->
-    <form method="post" id="form_listoenviar" action="{% url 'cambiar_estado' documento.id %}">
+      <!-- FIN Modal de confirmación de guardado -->
+    </form>
+    
+    <!-- INICIAR MODAL PARA ENVIAR A REVISIÓN -->
+    <form method="post" action="{% url 'cambiar_estado' documento.id %}">
       {% csrf_token %}
-      <input type="hidden" name="nuevo_estado" value="Listo para enviar" />
-      <div class="modal fade" id="confirmModal_listoenviar" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
+      <input type="hidden" name="nuevo_estado" value="En revisión" />
+
+      <div class="modal fade" id="confirmModal_enrevision" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal-content">
+            <div class="modal-header bg-light">
+              <div class="d-flex align-items-center">
               <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
             </div>
-            <div class="modal-body">
-              Este resumen se enviará a la etapa de firma
+            <div class="modal-body text-center">
+              Este resumen se enviará a revisión
               ¿Estás de acuerdo?
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-primary">Sí</button>
             </div>
           </div>
         </div>
       </div>
+
+    </form>
+    <!-- FINALIZA MODAL PARA CAMBIO DE ESTADO EN REVISIÓN -->
+    
+    <!-- Modal de confirmación de estado: Listo para enviar -->
+    <form method="post" id="form_listoenviar" action="{% url 'cambiar_estado' documento.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="nuevo_estado" value="Listo para enviar" />
+
+      <div class="modal fade" id="confirmModal_listoenviar" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal-content">
+            <div class="modal-header bg-light">
+              <div class="d-flex align-items-center">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
+              </div>
+            </div>
+            <div class="modal-body text-center">
+              Este resumen se enviará a la etapa de firma
+              ¿Estás de acuerdo?
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Sí</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </form>
     <!-- FIN Modal de confirmación de estado: Listo para enviar -->
-
-  <!-- Modal de confirmación de estado: Enviar -->
-   <!-- Modal de confirmación de estado: Enviar -->
-   <form method="post" id="form_enviado" action="{% url 'enviar_documento' documento.id %}">
-    {% csrf_token %}
-    <input type="hidden" name="correo_paciente" value="{{ documento.correo_electronico }}">
-    <div class="modal fade" id="confirmModal_enviado" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar envío</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">¿Está seguro de enviar este resumen?
-            <p>Nombre del paciente: {{ documento.paciente_nombre}}</p>
-            <p>Se enviará al correo : {{ documento.correo_electronico}}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Sí, enviar</button>
+    
+    
+    <!-- Modal de confirmación de estado: Enviar -->
+    <form method="post" id="form_enviado" action="{% url 'enviar_documento' documento.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="correo_paciente" value="{{ documento.correo_electronico }}">
+      <div class="modal fade" id="confirmModal_enviado" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal-content">
+            <div class="modal-header bg-light">
+              <div class="d-flex align-items-center">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar envío </h5>
+              </div>
+            </div>
+            <div class="modal-body text-center"><strong>Asegurese de haber agregado su firma digital</strong>
+              <p>¿Está seguro de enviar este resumen?</p>
+              <p>Nombre del paciente: {{ documento.paciente_nombre}}</p>
+              <p>Se enviará al correo : {{ documento.correo_electronico}}</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Sí, enviar</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
-  <!-- FIN Modal de confirmación de estado: Enviar -->
-
-
-
+    </form>
+    <!-- FIN Modal de confirmación de estado: Enviar -->
+    
+    
+    
+    
+    <!-- Modal de confirmación para insertar firma digital -->
+    <form method="post" id="form_firma" action="{% url 'insertar_firma' documento.id %}">
+      {% csrf_token %}
+      <div class="modal fade" id="confirmModal_firma" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content custom-modal-content">
+            <div class="modal-header bg-light">
+              <div class="d-flex align-items-center">
+              <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
+              </div>
+            </div>
+            <div class="modal-body text-center">
+              <p>¿Seguro que deseas agregar qr de validación y firma digital en el documento?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Sí, insertar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- FIN Modal de confirmación para insertar firma digital -->
+    
   
-   <!-- Modal de confirmación para insertar firma digital -->
-   <form method="post" id="form_firma" action="{% url 'insertar_firma' documento.id %}">
-    {% csrf_token %}
-    <div class="modal fade" id="confirmModal_firma" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>¿Seguro que deseas agregar qr de validación y firma digital en el documento?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Sí, insertar</button>
-          </div>
+    
+    <!-- Off-canvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasComentariosLabel">Comentarios</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">      
+        <div class="overflow-auto mb-3" id="lista_comentarios" style="max-height: 200;">
+          <ul class="list-group">
+            {% for comentario in comentarios %}
+            <li class="list-group-item d-flex">
+              
+              <div class="avatar me-3">
+                <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
+              </div>
+              
+              <div>
+                <strong>{{ comentario.usuario.username }}</strong><br>
+                <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
+                <p class="mb-0">{{ comentario.comentario }}</p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
+        
+        
+        
+        
+        <br>
+        <br>
+        <br>
+        <br>
+        
+        <!-- Formulario para agregar un nuevo comentario -->
+        <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
+          {% csrf_token %}
+          <div class="form-group d-flex align-items-center">
+            <textarea name="comentario" id="comentario" class="form-control flex-grow-1 textarea-no-border" rows="3" placeholder="Escribe un comentario..." required></textarea>
+            <button type="submit" class="btn btn-send-ico ms-2 p-0">
+              <img src="{% static 'assets/img/envio.svg' %}" alt="Enviar" width="24" height="24">
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
-  <!-- FIN Modal de confirmación para insertar firma digital -->
-
-
-
-
-
-  <!-- Modal de confirmación de generar PDF con vista previa -->
-  <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="pdfModalLabel">Generar PDF</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h6>Vista previa del documento</h6>
-          <div id="preview-content" style="border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto;"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="confirmGeneratePDF">Generar PDF</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- FIN Modal de confirmación de generar PDF con vista previa -->
-
-
-       <!-- Off-canvas -->
-       <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
-        <div class="offcanvas-header">
-            <h5 id="offcanvasComentariosLabel">Comentarios</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body d-flex flex-column">
-
-          {% if messages %}
-          <div class="alert alert-success" role="alert">
-              {% for message in messages %}
-                  {{ message }}
-              {% endfor %}
-          </div>
-      {% endif %}
-
-
-          <div class="overflow-auto mb-3" style="max-height: 200;">
-
-            <ul class="list-group">
-              {% for comentario in comentarios %}
-              <li class="list-group-item d-flex">
-                <!-- Avatar -->
-                <div class="avatar me-3">
-                  <img src="{% static 'assets/img/user.svg' %}" alt="avatar" class="rounded-circle" width="40" height="40">
-                </div>
-                <!-- Comment content -->
-                <div>
-                  <strong>{{ comentario.usuario.username }}</strong><br>
-                  <small class="text-muted">{{ comentario.fecha_de_creacion }}</small>
-                  <p class="mb-0">{{ comentario.comentario }}</p>
-                </div>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-
-
-
-
-            <br>
-            <br>
-            <br>
-            <br>
-      
-            <!-- Formulario para agregar un nuevo comentario -->
-            <form method="POST" action="{% url 'agregar_comentario' documento.id %}">
-                {% csrf_token %}
-                <div class="form-group d-flex align-items-center">
-                    <textarea name="comentario" id="comentario" class="form-control flex-grow-1 textarea-no-border" rows="3" placeholder="Escribe un comentario..." required></textarea>
-                    <button type="submit" class="btn btn-send-ico ms-2 p-0">
-                      <img src="{% static 'assets/img/envio.svg' %}" alt="Enviar" width="24" height="24">
-                    </button>
-                  </div>
-            </form>
-        </div>
-      </div>
-      
-      
-      
-
-
-
-
-
-
-
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          // Inicializar Summernote en el textarea
-          $('#contenido_principal').summernote({
-            height: 1115,  // Altura en píxeles, igual que en Froala
-            minHeight: 1115, // Altura mínima
-            maxHeight: 1115, // Altura máxima
-            lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
-            focus: true,
-            toolbar: [
-              ['font', ['bold', 'italic', 'underline']],
-              ['para', ['ul', 'ol', '']],
-            ],
-          });
-      
-          // Desaparecer el mensaje después de 5 segundos
-          setTimeout(function() {
-            const alertElement = document.querySelector('.alert');
-            if (alertElement) {
-              alertElement.style.transition = 'opacity 0.5s';
-              alertElement.style.opacity = 0;
-              setTimeout(() => alertElement.remove(), 500);
-            }
-          }, 5000); // 5000 milisegundos = 5 segundos
-      
-          // Manejar el envío del formulario de comentarios via Fetch API
-          const formComentario = document.getElementById('form_comentario');
-          formComentario.addEventListener('submit', function(e) {
-            e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
-      
-            const formData = new FormData(formComentario);  // Crear un FormData con los datos del formulario
-            const url = formComentario.action;  // Obtener la URL de acción del formulario
-      
-            fetch(url, {
-              method: 'POST',
-              body: new URLSearchParams(formData),  // Convertir FormData a URLSearchParams para enviarlo en formato URL-encoded
-              headers: {
-                'X-Requested-With': 'XMLHttpRequest',  // Header para indicar que es una petición AJAX
-              },
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                // Insertar los comentarios actualizados en el off-canvas
-                document.getElementById('lista_comentarios').innerHTML = data.comentarios_html;
-      
-                // Limpiar el campo de texto del comentario
-                document.getElementById('comentario').value = '';
-      
-                // Mostrar un mensaje de éxito (opcional)
-                const successMessage = document.createElement('div');
-                successMessage.className = 'alert alert-success';
-                successMessage.textContent = 'Comentario agregado correctamente.';
-                formComentario.insertAdjacentElement('afterend', successMessage);
-                setTimeout(() => {
-                  successMessage.style.transition = 'opacity 0.5s';
-                  successMessage.style.opacity = 0;
-                  setTimeout(() => successMessage.remove(), 500);
-                }, 5000);
-              } else {
-                throw new Error('Error en la respuesta del servidor.');
-              }
-            })
-            .catch(() => {
-              // Mostrar un mensaje de error (opcional)
-              const errorMessage = document.createElement('div');
-              errorMessage.className = 'alert alert-danger';
-              errorMessage.textContent = 'Hubo un error al agregar el comentario. Inténtalo de nuevo.';
-              formComentario.insertAdjacentElement('afterend', errorMessage);
-              setTimeout(() => {
-                errorMessage.style.transition = 'opacity 0.5s';
-                errorMessage.style.opacity = 0;
-                setTimeout(() => errorMessage.remove(), 500);
-              }, 5000);
-            });
-          });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar Summernote en el textarea
+        $('#contenido_principal').summernote({
+          height: 1115,  // Altura en píxeles, igual que en Froala
+          minHeight: 1115, // Altura mínima
+          maxHeight: 1115, // Altura máxima
+          lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
+          focus: true,
+          toolbar: [
+          ['font', ['bold', 'italic', 'underline']],
+          ['para', ['ul', 'ol', '']],
+          ],
         });
-      </script>
-  
-{% endblock %}
+        
+        // Desaparecer el mensaje después de 5 segundos
+        setTimeout(function() {
+          const alertElement = document.querySelector('.alert');
+          if (alertElement) {
+            alertElement.style.transition = 'opacity 0.5s';
+            alertElement.style.opacity = 0;
+            setTimeout(() => alertElement.remove(), 500);
+          }
+        }, 3000); // 5000 milisegundos = 5 segundos
+        
+        
+        });
+
+
+    </script>
+    
+    
+  </body>

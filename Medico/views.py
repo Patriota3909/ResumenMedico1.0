@@ -389,7 +389,8 @@ def editar_documento2(request, documento_id):
     #user_tipo = request.user.doctor.tipo
     user_tipo = getattr(request.user, 'doctor', None)
     user_tipo = user_tipo.tipo if user_tipo else 'Administrador'
-
+    
+    total_comments_count = Comentario.objects.filter(resumen=documento).count()
 
     if request.method == 'POST':
         form = ResumenForm(request.POST, instance=documento)
@@ -447,6 +448,7 @@ def editar_documento2(request, documento_id):
         'documento': documento,
         'user_tipo': user_tipo,
         'comentarios': comentarios,
+        'total_comments_count': total_comments_count,
     })
     
     
@@ -663,12 +665,7 @@ def agregar_comentario(request, documento_id):
                 usuario=request.user,
                 comentario=comentario_texto
             )
-
-            # Renderizar los comentarios nuevamente y enviarlos como respuesta
-            comentarios = Comentario.objects.filter(resumen=documento)
-            comentarios_html = render_to_string('Medico/partials/comentarios_list.html', {'comentarios': comentarios})
-            return JsonResponse({'success': True, 'comentarios_html': comentarios_html})
-
-        return JsonResponse({'success': False, 'message': 'No puedes enviar un comentario vacío.'})
+            # Redirigir a la misma página para recargar los comentarios
+            return redirect('editar_documento2', documento_id=documento_id)
 
     return redirect('editar_documento2', documento_id=documento_id)
