@@ -84,7 +84,8 @@
                                 <th>Ver</th>
                                 <th>Nombre del paciente</th>
                                 <th>Número de expediente</th>
-                                <th>Fecha de entrega programada</th>
+                                <th>Fecha de solicitud</th>
+                                <th>Fecha de entrega</th>
                                 <th>Especialidad</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
@@ -138,7 +139,8 @@
                                 </td>
                                 <td>{{ resumen.paciente_nombre }}</td>
                                 <td>{{ resumen.numero_expediente }}</td>
-                                <td>{{ resumen.fecha_entrega_programada|date:"F j" }}</td>
+                                <td>{{ resumen.fecha_solicitud|date:"d m Y" }}</td>
+                                <td>{{ resumen.fecha_entrega_programada|date:"d m Y" }}</td>
                                 <td>{{ resumen.especialidad.name }}</td>
                                 <td>{{ resumen.estado }}</td>
                                 <td>
