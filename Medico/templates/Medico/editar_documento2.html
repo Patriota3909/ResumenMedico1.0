@@ -260,7 +260,7 @@
      <div class="d-flex align-items-center">
       <div class="notification-icon position-relative">
           <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
-              <i class="fas fa-envelope"></i>
+              <i class="fas fa-comments"></i>
           </button>
           {% if total_comments_count > 0 %}
           <span class="notification-badge">{{ total_comments_count }}</span>
@@ -350,6 +350,8 @@
               </div>
             </div>
             <div class="modal-body text-center">
+              <p><strong>Asegurate de haber guardado primero el documento</strong></p>
+              <br>
               Este resumen se enviará a revisión
               ¿Estás de acuerdo?
             </div>
@@ -378,7 +380,9 @@
               </div>
             </div>
             <div class="modal-body text-center">
-              Este resumen se enviará a la etapa de firma
+              <p><strong>Asegurate de haber guardado primero el documento</strong></p>
+              <br>
+              Este resumen pasará a la etapa de firma digital
               ¿Estás de acuerdo?
             </div>
             <div class="modal-footer justify-content-between">
