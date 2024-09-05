@@ -52,7 +52,7 @@ class Doctor(models.Model):
     firma_electronica = models.ImageField(upload_to='firma_electronica/', null=True, blank=True)
     
     def __str__(self):
-        return (f"D.{self.user.username} {self.user.last_name} - {self.tipo}")
+        return (f"{self.user.first_name} {self.user.last_name}")
 
 
 

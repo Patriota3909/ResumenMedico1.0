@@ -416,8 +416,10 @@ def editar_documento2(request, documento_id):
             
             
             <p style="line-height: 1.2; text-align: left; ">Padecimiento actual:</p>
+            
+            <p style="line-height: 1.2; text-align: left; ">Exploración oftalmologica:</p>
 
-            <p style="line-height: 1.2; text-align: left;">Diagnostico:</p>
+            <p style="line-height: 1.2; text-align: left;">Diagnóstico:</p>
 
             <p style="line-height: 1.2; text-align: left;">Tratamientos realizados:</p>
 
@@ -551,6 +553,7 @@ def enviar_documento(request, documento_id):
         ).replace(
             '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
         )
+        medico_becario_nombre = documento.medico_becario
         logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
         logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
         fecha_actual = datetime.now().strftime('%d/%m/%Y')
@@ -566,6 +569,7 @@ def enviar_documento(request, documento_id):
             'fecha_actual': fecha_actual,
             'logo_foo': logo_foo,
             'fecha_solicitud': fecha_solicitud,
+            'medico_becario': documento.medico_becario,
 
         }
         html = template.render(context)
