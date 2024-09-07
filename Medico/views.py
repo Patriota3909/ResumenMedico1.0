@@ -546,16 +546,46 @@ def enviar_documento(request, documento_id):
     if request.method == 'POST':
         # Renderizar la plantilla HTML a PDF
         template = get_template('Medico/pdf_template.html')
+        
+        # Reemplazar rutas relativas con rutas absolutas para medios y estáticos
         content_with_absolute_urls = documento.texto.replace(
             '/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'
         ).replace(
             '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
         )
+        
+        # Obtener la firma electrónica del médico
+        doctor = Doctor.objects.get(user=request.user)
+        firma_electronica_url = doctor.firma_electronica.url
+        
+        # Generar el código QR
+        resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
+        qr = qrcode.QRCode(
+            version=5,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=5,
+            border=2,
+        )
+        qr.add_data(resumen_url)
+        qr.make(fit=True)
+
+        # Generar la imagen del QR en memoria
+        qr_io = BytesIO()
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(qr_io, 'PNG')
+        qr_io.seek(0)
+        qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
+        qr_url = f"data:image/png;base64,{qr_base64}"
+
+        # Obtener otras variables
         medico_becario_nombre = documento.medico_becario
         logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
         logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
         fecha_actual = datetime.now().strftime('%d/%m/%Y')
         fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
+        print(f"Firma electrónica URL: {firma_electronica_url}")
+
+        # Contexto para renderizar en la plantilla
         context = {
             'content': content_with_absolute_urls,
             'nombre': documento.paciente_nombre,
@@ -568,10 +598,11 @@ def enviar_documento(request, documento_id):
             'logo_foo': logo_foo,
             'fecha_solicitud': fecha_solicitud,
             'medico_becario': documento.medico_becario,
-
+            'firma_electronica': firma_electronica_url,  # Añadir firma
+            'codigo_qr': qr_url  # Añadir código QR
         }
-        html = template.render(context)
 
+        html = template.render(context)
         print(html)
 
         response = HttpResponse(content_type='application/pdf')
@@ -592,8 +623,8 @@ def enviar_documento(request, documento_id):
             )
             email.attach('resumen.pdf', response.content, 'application/pdf')
             email.send()
-            print("Se envio el documento")
-                # Cambiar el estado del documento a "Enviado"
+
+            # Cambiar el estado del documento a "Enviado"
             documento.estado = 'Enviado'
             documento.save()
 
