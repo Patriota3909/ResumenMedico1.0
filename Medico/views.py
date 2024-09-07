@@ -496,8 +496,6 @@ def insertar_firma(request, documento_id):
         firma_html = format_html(
             '<br>'
             '<br>'
-            '<br>'
-            '<br>'
            '<table width="100%">'
             '<tr>'
             '<td style="text-align: left; width: 32%; font-size: 8px; color: gray;">'
