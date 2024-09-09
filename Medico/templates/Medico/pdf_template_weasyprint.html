@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Médico</title>
+    <style type="text/css" media="print">
+    @media print {
+        @page {
+            size: A4;
+            margin: 20mm 15mm 40mm 15mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            font-size: 12px;
+        }
+
+        
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 3px;
+            margin-top: -60px;
+        }
+
+        .header img {
+            max-width: 150px;
+            margin-top: -20px;
+        }
+
+        .header-info {
+            text-align: right;
+            color: darkgray;
+            padding-top: 30px;
+        }
+
+        .header-info p {
+            margin: 0;
+            font-size: 10px;
+            color: #333;
+        }
+
+        /* Información del paciente */
+        .patient-info {
+            border: 1px solid #333; /* Borde alrededor del contenedor */
+            padding: 15px;
+            position: relative; /* Para que el título pueda superponerse */
+            margin-top: 5px;
+        }
+
+        .patient-info .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .patient-info .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .patient-info p {
+            margin: 2px 0;
+        }
+
+        /* Columna izquierda y derecha */
+        .patient-info .col {
+            width: 48%;
+        }
+
+        
+        .patient-info h2 {
+            position: absolute;
+            top: -30px; /* Mueve el título hacia arriba para que interrumpa el borde */
+            left: 20px;
+            background: white; /* Fondo blanco para cubrir el borde detrás del título */
+            padding: 0 3px; /* Espaciado interno del título */
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .content {
+            margin:0 10px;
+            padding-bottom: 60px;
+            
+        }
+
+        .content p {
+            line-height: 1.0;
+            margin-bottom: 1px;
+            page-break-inside: auto; /* Permite que el contenido fluya entre páginas */
+            text-align: justify;
+        }
+        .footer {
+            position: running(footer);
+            bottom: 100mm;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: auto; /* Define la altura del footer */
+            text-align: center;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+    
+        /* Estilos adicionales para el contenido dentro del footer */
+        .footer-content {
+            display: flex;
+            justify-content: space-between; /* Divide el contenido en tres partes */
+            align-items: center;
+        }
+    
+                /* Estilo específico para la imagen del código QR */
+        .qr-code img {
+            height: 50px; /* Ajusta este valor según tus necesidades */
+        }
+
+        /* Estilo específico para la imagen de la firma del doctor */
+        .doctor-signature img {
+            height: 80px; /* Ajusta este valor para cambiar el tamaño de la firma */
+        }
+
+    
+        /* Asegurarse de que el logo no interfiera con el contenido */
+        .footer img[alt="Logo Footer"] {
+            height: 30px;
+            margin-top: 5px;
+        }
+        /* Instrucciones para que el footer se repita en cada página */
+        @page {
+            @bottom-center {
+                content: element(footer); /* Inserta el contenido del footer en cada página */
+                }
+        }
+        
+
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Header con logo a la izquierda y fechas a la derecha -->
+    <div class="header">
+        <img src="{{ logo_url }}" alt="Logo IMO">
+        <div class="header-info">
+            <p>Fecha de solicitud:<strong> {{ fecha_solicitud }} </strong></p>
+            <p>Fecha de expedición:<strong> {{ fecha_actual }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Información del paciente con una tabla en dos columnas -->
+    <div class="patient-info">
+        <h2>Información del Paciente</h2>
+        <div class="row">
+            <div class="col">
+                <p><span class="label">Nombre completo:</span> {{ nombre }}</p>
+                <p><span class="label">Número de expediente:</span> {{ expediente }}</p>
+                <p><span class="label">Edad:</span> {{ edad }}</p>
+            </div>
+            <div class="col">
+                <p><span class="label">Género:</span> {{ genero }}</p>
+                <p><span class="label">Fecha de nacimiento:</span> {{ fecha_nacimiento }}</p>
+                <p><span class="label">Departamento:</span> {{ especialidad }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido del resumen generado con el editor -->
+    <div class="content">
+        <h2>Resumen Clínico </h2>
+        {{ content|safe }}
+        <br>
+        <strong><i>Elaborado por: {{ medico_becario }}</i></strong>
+    </div>
+    
+    
+    <!-- Footer con el logo y los datos de contacto -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="qr-code">
+                <img src="{{ codigo_qr }}" alt="Código QR">
+            </div>
+            <div class="doctor-signature">
+                <img src="{{ firma_electronica }}" alt="Firma del Doctor">
+            </div>
+        </div>
+        <img src="{{ logo_foo }}" alt="Logo Footer">
+    </div>
+
+</body>
+</html>

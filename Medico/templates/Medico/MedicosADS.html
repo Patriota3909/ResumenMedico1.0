@@ -53,16 +53,13 @@
                                 <a class="nav-link" id="tabla_revision" href="#">En revisión ({{ count_en_revision }})</a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link" id="tabla_listos" href="#">Falta firma ({{ count_listos_para_enviar }})</a>
-                              </li>
-                              <li class="nav-item">
                                 <a class="nav-link" id="tabla_enviados" href="#">Enviados ({{ count_enviados }})</a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link" href="{% url 'exit' %}">Salir</a>
+                                <a class="nav-link" id="tabla_total" href="#">Ver todos ({{ count_total }})</a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link" id="tabla_total" href="#">Ver todos ({{ count_total }})</a>
+                                <a class="nav-link" href="{% url 'exit' %}">Salir</a>
                               </li>
                             </ul>
                           </div>
@@ -418,29 +415,21 @@
       document.getElementById('tabla_revision').addEventListener('click', function (event) {
         event.preventDefault()
         document.getElementById('tabla1').style.display = 'block'
-        document.getElementById('tabla2').style.display = 'none'
-        document.getElementById('tabla3').style.display = 'none'
-        document.getElementById('tabla4').style.display = 'none'
-      })
-      
-      document.getElementById('tabla_listos').addEventListener('click', function (event) {
-        event.preventDefault()
-        document.getElementById('tabla1').style.display = 'none'
-        document.getElementById('tabla2').style.display = 'block'
+        
         document.getElementById('tabla3').style.display = 'none'
         document.getElementById('tabla4').style.display = 'none'
       })
       document.getElementById('tabla_enviados').addEventListener('click', function (event) {
         event.preventDefault()
         document.getElementById('tabla1').style.display = 'none'
-        document.getElementById('tabla2').style.display = 'none'
+        
         document.getElementById('tabla3').style.display = 'block'
         document.getElementById('tabla4').style.display = 'none'
       })
       document.getElementById('tabla_total').addEventListener('click', function (event) {
         event.preventDefault()
         document.getElementById('tabla1').style.display = 'none'
-        document.getElementById('tabla2').style.display = 'none'
+        
         document.getElementById('tabla3').style.display = 'none'
         document.getElementById('tabla4').style.display = 'block'
       })

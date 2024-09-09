@@ -12,6 +12,9 @@
   <script src="{% static 'summernote/summernote-lite.min.js' %}"></script>
   <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
+  <!-- Driver.js CSS y JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -208,6 +211,9 @@
   display: inline-block; /* Mostrar el globito si hay mensajes sin leer */
 }
 
+
+
+
   
   </style>
 </head>
@@ -234,32 +240,32 @@
         <ul class="navbar-nav">
           {% if user_tipo != 'Administrador'%}
           <li class="nav-item">
-            <a class="nav-link" id="tabla_revision" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</a>
+            <a class="nav-link" id="aGuardar" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar</a>
           </li>
           {% endif %}
           {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
           <li class="nav-item">
-            <a class="nav-link" id="tabla_listos" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</a>
+            <a class="nav-link" id="enRevision" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</a>
           </li>
           {% elif documento.estado == 'En revisión' and user_tipo == 'Adscrito' %}
           <li class="nav-item">
-            <a class="nav-link" id="tabla_enviados" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_listoenviar">Pasar a la firma</a>
+            <a class="nav-link" id="vistaPreviaBtn" href="#" data-bs-toggle="modal" data-bs-target="#modalVistaPrevia">Vista previa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"id="enviarResumen" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</a>
           </li>
           {% elif documento.estado == 'Listo para enviar' and user_tipo == 'Adscrito' %}
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_firma">Agregar firma digital</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enviado">Enviar resumen al paciente</a>
-          </li>
+         
           {% endif %}
+          
+          
         </ul>
       </div>
       
      <!-- Derecha: Ícono de notificaciones -->
      <div class="d-flex align-items-center">
       <div class="notification-icon position-relative">
-          <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
+          <button id="notification" class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvasComentarios" aria-controls="offcanvasComentarios">
               <i class="fas fa-comments"></i>
           </button>
           {% if total_comments_count > 0 %}
@@ -293,7 +299,7 @@
           
         </div>
         <!-- Editor de summernote -->
-        <div class="summernote-container">
+        <div class="summernote-container" id="cPrincipal">
           {% if messages %}
             <div class="container mt-3">
               {% for message in messages %}
@@ -301,8 +307,7 @@
               {% endfor %}
             </div>
             {% endif %}
-          <div class="alert alert-danger" style="text-align: center;">
-            No incluyas imagenes de IMO, como portada, fecha o datos personales del paciente.</div>
+          
             
           <textarea name="texto" id="contenido_principal">
             {{ form.texto.value }}
@@ -350,7 +355,7 @@
               </div>
             </div>
             <div class="modal-body text-center">
-              <p><strong>Asegurate de haber guardado primero el documento</strong></p>
+              <p><strong>ASEGURATE DE HABER GUARDADO EL DOCUMENTO ANTES DE ENVIARLO A REVISION</strong></p>
               <br>
               Este resumen se enviará a revisión
               ¿Estás de acuerdo?
@@ -366,39 +371,9 @@
     </form>
     <!-- FINALIZA MODAL PARA CAMBIO DE ESTADO EN REVISIÓN -->
     
-    <!-- Modal de confirmación de estado: Listo para enviar -->
-    <form method="post" id="form_listoenviar" action="{% url 'cambiar_estado' documento.id %}">
-      {% csrf_token %}
-      <input type="hidden" name="nuevo_estado" value="Listo para enviar" />
-
-      <div class="modal fade" id="confirmModal_listoenviar" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content custom-modal-content">
-            <div class="modal-header bg-light">
-              <div class="d-flex align-items-center">
-              <h5 class="modal-title" id="confirmModalLabel">Confirmar cambio</h5>
-              </div>
-            </div>
-            <div class="modal-body text-center">
-              <p><strong>Asegurate de haber guardado primero el documento</strong></p>
-              <br>
-              Este resumen pasará a la etapa de firma digital
-              ¿Estás de acuerdo?
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Sí</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </form>
-    <!-- FIN Modal de confirmación de estado: Listo para enviar -->
-    
     
     <!-- Modal de confirmación de estado: Enviar -->
-    <form method="post" id="form_enviado" action="{% url 'enviar_documento' documento.id %}">
+    <form method="post" id="form_enviado" action="{% url 'enviar_documento_weasyprint' documento.id %}">
       {% csrf_token %}
       <input type="hidden" name="correo_paciente" value="{{ documento.correo_electronico }}">
       <div class="modal fade" id="confirmModal_enviado" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -410,7 +385,7 @@
               <h5 class="modal-title" id="confirmModalLabel">Confirmar envío </h5>
               </div>
             </div>
-            <div class="modal-body text-center"><strong>Asegurese de haber agregado su firma digital</strong>
+            <div class="modal-body text-center">
               <p>¿Está seguro de enviar este resumen?</p>
               <p>Nombre del paciente: {{ documento.paciente_nombre}}</p>
               <p>Se enviará al correo : {{ documento.correo_electronico}}</p>
@@ -427,32 +402,7 @@
     
     
     
-    
-    <!-- Modal de confirmación para insertar firma digital -->
-    <form method="post" id="form_firma" action="{% url 'insertar_firma' documento.id %}">
-      {% csrf_token %}
-      <div class="modal fade" id="confirmModal_firma" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content custom-modal-content">
-            <div class="modal-header bg-light">
-              <div class="d-flex align-items-center">
-              <h5 class="modal-title" id="confirmModalLabel">Confirmar</h5>
-              </div>
-            </div>
-            <div class="modal-body text-center">
-              <p>¿Seguro que deseas agregar qr de validación y firma digital en el documento?</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Sí, insertar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-    <!-- FIN Modal de confirmación para insertar firma digital -->
-    
-  
+   
     
     <!-- Off-canvas -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasComentarios" aria-labelledby="offcanvasComentariosLabel">
@@ -500,6 +450,28 @@
         </form>
       </div>
     </div>
+
+
+    <!--INICIA MODAL DE VISTA PREVIA-->
+    <div class="modal fade" id="modalVistaPrevia" tabindex="-1" aria-labelledby="modalVistaPreviaLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalVistaPreviaLabel">Vista Previa</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                  <!-- Aquí incrustamos el PDF -->
+                  <iframe id="vistaPreviaPDF" src="{% url 'generar_pdf_weasyprint' documento.id %}" width="100%" height="500px"></iframe>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!--TERMINA MODLA DE VISTA PREVIA-->
+
     
     
     
@@ -514,17 +486,17 @@
       document.addEventListener('DOMContentLoaded', function() {
         // Inicializar Summernote en el textarea
         $('#contenido_principal').summernote({
-          height: 1115,  // Altura en píxeles, igual que en Froala
-          minHeight: 1115, // Altura mínima
-          maxHeight: 1115, // Altura máxima
+          height: 1115,
+          minHeight: 1115,
+          maxHeight: 1115,
           lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
           focus: true,
           toolbar: [
-          ['font', ['bold', 'italic', 'underline']],
-          ['para', ['ul', 'ol', '']],
+            ['font', ['bold', 'italic', 'underline']],
+            ['para', ['ul', 'ol', '']],
           ],
         });
-        
+    
         // Desaparecer el mensaje después de 5 segundos
         setTimeout(function() {
           const alertElement = document.querySelector('.alert');
@@ -533,13 +505,107 @@
             alertElement.style.opacity = 0;
             setTimeout(() => alertElement.remove(), 500);
           }
-        }, 3000); // 5000 milisegundos = 5 segundos
+          }, 3000);
+
+        const vistaPreviaBtn = document.getElementById('vistaPreviaBtn');
+        const enviarResumen = document.getElementById('enviarResumen');
+        const enRevision = document.getElementById('enRevision');
+
+        if (vistaPreviaBtn && enviarResumen) {
+          // Validar si el usuario ya vio la guía
+          if (!localStorage.getItem('guiaVistaPreviaVisto')) {
+            // Verificar si window.driver existe
+            if (window.driver) {
+              const driver = window.driver.js.driver;
+              
+              // Crear el objeto driver
+              const driverObj = driver({
+                showProgress: true,
+                steps:[
+                  { element: '#vistaPreviaBtn', popover: { title: "Vista previa", description: "Aquí podrá visualizar el resumen generado en formato 'PDF'.  El documento ya incluye su firma digital y todos los datos del paciente." } },
+                  { element: '#enviarResumen', popover: { title: "Enviar resumen", description: "Una vez que considere que el resumen está listo, podrá enviarlo al correo del paciente." } },
+                  { element: '#notification', popover: { title: "Comentarios", description: "Aquí puede incluir comentarios relacionados al resumen,  estos  son compartidos con el médico que ha realizado el documento." } }
+                
+                
+                ]
+              });
+
+              driverObj.drive();
         
-        
-        });
 
 
+
+              // Iniciar la guía
+              //driverObj.highlight({
+              //  element: "#vistaPreviaBtn", // ID del botón de vista previa
+              //  popover: {
+              //    title: "Vista previa",
+              //    description: "Puedes ir viendo como se va generando el documento. Una vez que consideres que está listo, haz clic en 'Enviar resumen al paciente'.",
+              //    position: "right" // Ajusta la posición según sea necesario
+              //  }
+              //});
+
+
+
+
+
+              
+              // Marcar como visto en localStorage
+              localStorage.setItem('guiaVistaPreviaVisto', 'true');
+            } else {
+              console.error('Driver.js no está disponible.');
+            }
+          }
+
+
+        }else if(enRevision){
+          
+          
+          // Validar si el usuario ya vio la guía
+          if (!localStorage.getItem('guiaVistaPreviaVisto')) {
+            // Verificar si window.driver existe
+            if (window.driver) {
+              const driver = window.driver.js.driver;
+              
+              // Crear el objeto driver
+              const driverObj = driver({
+                showProgress: true,
+                steps:[
+                  { element: '#cPrincipal', popover: { title: "Contenido principal", description: "Aquí debes escribir el contenido del resumen, SIN INCLUIR los datos personales del paciente, así como tampoco fechas o imágenes. Es importante que no modifiques el tipo de letra o su tamaño, ya que al generar el documento esto se hace de manera automática." } },
+                  { element: '#aGuardar', popover: { title: "Guardar", description: "Recuerda que debes guardar el contenido antes de salir de la página, para que no se pierdan tus cambios.", side: "buttom", align: "center" } },
+                  { element: '#enRevision', popover: { title: "En revisión", description: "Una vez que consideres que el resumen está listo para ser revisado, da click en 'Enviar a revisión', para que el médico adscrito pueda hacer las correcciones" } },
+                  { element: '#notification', popover: { title: "Comentarios", description: "Aquí podrás ver y hacer comentarios. Estos se comparten con el médico adscrito" } },
+                
+                
+                ]
+              });
+
+              driverObj.drive();
+              
+              // Marcar como visto en localStorage
+              localStorage.setItem('guiaVistaPreviaVisto', 'true');
+            } else {
+              console.error('Driver.js no está disponible.');
+            }
+          }
+
+        
+        
+        
+        }else {
+
+
+
+
+
+          console.log("El botón de Vista Previa no está disponible para este usuario.");
+        }
+        
+          
+        
+      });
     </script>
+    
     
     
   </body>

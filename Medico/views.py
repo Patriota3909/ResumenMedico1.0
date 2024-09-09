@@ -35,6 +35,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from weasyprint import HTML
 
 
 
@@ -159,31 +160,7 @@ def lista_resumenes_adscrito(request, edited_id=None):
 
 
 
-#-----------Renderiza, guarda, y cambio de status el resumen-------------------------------------
-@login_required
-@user_tipo_required(['Adscrito','Residente','Becario'])
-def editar_documento(request, documento_id):
-    user_tipo = request.user.doctor.tipo
-    documento = Resumen.objects.get(id=documento_id)  
-    if request.method == 'POST':
-        content = request.POST.get('editordata')
-        documento.texto = content 
-        documento.save()
-        
-        try:
-            doctor = Doctor.objects.get(user=request.user)
-            if doctor.tipo == "Adscrito":
-                return redirect('MedicosADS_with_id', edited_id=documento.id)
-            elif doctor.tipo in ['Residente', 'Becario']:
-                return redirect('MedicosRB_with_id', edited_id=documento.id)
-        except Doctor.DoesNotExist:
-              return redirect('home') 
-    return render(request, 'Medico/editar_documento.html', {
-        'documento': documento,
-        'user_tipo': user_tipo,
-        
-        })
-#--------------------------------------------------------------------------------------------------
+
 @login_required
 @user_tipo_required(['Becario'])
 def asignar_medico_residente(request):
@@ -261,21 +238,6 @@ def cambiar_estado(request, documento_id):
 #--------------------------------------------------------------------------------------------------
 
 ###############################################################################################
-
-@csrf_exempt
-def generate_pdf(request):
-    if request.method == "POST":
-        content = request.POST.get('content')
-        template = get_template('Medico/pdf_template.html')
-        context = {'content': content}
-        html = template.render(context)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="output.pdf"'
-        pisa_status = pisa.CreatePDF(html, dest=response)
-        if pisa_status.err:
-            return HttpResponse('We had some errors <pre>' + html + '</pre>')
-        return response
-    return HttpResponse("Invalid request")
 
 
 @login_required
@@ -415,27 +377,19 @@ def editar_documento2(request, documento_id):
             TEMPLATE_CONTENT = f"""
             
             
-            <p style="line-height: 1.2; text-align: left; ">Padecimiento actual:</p>
+            <p style= "text-align: left; ">Padecimiento actual: </p>
             
-            <p style="line-height: 1.2; text-align: left; ">Exploración oftalmologica:</p>
+            <p style= "text-align: left; ">Exploración oftalmológica: </p>
 
-            <p style="line-height: 1.2; text-align: left;">Diagnóstico:</p>
+            <p style= "text-align: left;">Diagnóstico: </p>
 
-            <p style="line-height: 1.2; text-align: left;">Tratamientos realizados:</p>
+            <p style= "text-align: left;">Tratamientos realizados: </p>
 
-            <p style="line-height: 1.2; text-align: left;">Resultados de estudios de laboratorio y gabinete:</p>
+            <p style= "text-align: left;">Resultados de estudios de laboratorio y gabinete: </p>
 
-            <p style="line-height: 1.2; text-align: left;">Evoluci&oacute;n:</p>
+            <p style= "text-align: left;">Evoluci&oacute;n: </p>
 
-            <p style="line-height: 1.2; text-align: left;">Pronóstico:</p>
-            
-            <p style="line-height: 1.2;">
-            	<br>
-            </p>
-
-            <p style="line-height: 1.2;">
-            	<br>
-            </p>
+            <p style= "text-align: left;">Pronóstico: </p>
 
                         """
 
@@ -460,60 +414,6 @@ def editar_documento2(request, documento_id):
     })
     
     
-@login_required
-def insertar_firma(request, documento_id):
-    documento = get_object_or_404(Resumen, id=documento_id)
-    doctor = Doctor.objects.get(user=request.user)
-
-    if request.method == 'POST':
-        firma_electronica_url = doctor.firma_electronica.url
-        print(firma_electronica_url)
-        
-        # Generar el URL del resumen para el código QR
-        resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
-
-        # Crear el código QR
-        qr = qrcode.QRCode(
-            version=5,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=5,
-            border=2,
-        )
-        qr.add_data(resumen_url)
-        qr.make(fit=True)
-        
-         # Generar la imagen del QR en memoria
-        qr_io = BytesIO()
-        img = qr.make_image(fill_color="black", back_color="white")
-        img.save(qr_io, 'PNG')
-        qr_io.seek(0)
-        qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
-        qr_url = f"data:image/png;base64,{qr_base64}"
-        
-
-        # Insertar los datos del doctor y la firma electrónica al final del contenido del documento
-        
-        firma_html = format_html(
-            '<br>'
-            '<br>'
-           '<table width="100%">'
-            '<tr>'
-            '<td style="text-align: left; width: 32%; font-size: 8px; color: gray;">'
-            '<p>Código de validación</p>'
-            '<img src="{}" alt="Código QR" style="width: 70px; height: 70px;">'
-            '</td>'
-            '<td style="text-align: left; width: 68%;">'
-            '<img src="{}" alt="Firma Electrónica" style="width: 250px; height: 125px;">'
-            '</td>'
-            '</tr>'
-            '</table>', qr_url, firma_electronica_url)
-        documento.texto += str(firma_html)
-        documento.save()
-        print('SE GUARDO EL DOCUMENTO CON LA FIRMA')
-
-        return redirect('editar_documento2', documento_id=documento_id)
-
-    return render(request, 'Medico/editar_documento2.html', {'documento': documento})
 
 
 
@@ -536,104 +436,6 @@ def link_callback(uri, rel):
         print(f"File not found: {path}")  # Debugging line
         raise Exception(f'Media URI must start with {settings.MEDIA_URL} or {settings.STATIC_URL}')
     return path
-
-
-@login_required
-def enviar_documento(request, documento_id):
-    documento = get_object_or_404(Resumen, id=documento_id)
-    correo_paciente = request.POST.get('correo_paciente')
-
-    if request.method == 'POST':
-        # Renderizar la plantilla HTML a PDF
-        template = get_template('Medico/pdf_template.html')
-        
-        # Reemplazar rutas relativas con rutas absolutas para medios y estáticos
-        content_with_absolute_urls = documento.texto.replace(
-            '/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'
-        ).replace(
-            '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
-        )
-        
-        # Obtener la firma electrónica del médico
-        doctor = Doctor.objects.get(user=request.user)
-        firma_electronica_url = doctor.firma_electronica.url
-        
-        # Generar el código QR
-        resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
-        qr = qrcode.QRCode(
-            version=5,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=5,
-            border=2,
-        )
-        qr.add_data(resumen_url)
-        qr.make(fit=True)
-
-        # Generar la imagen del QR en memoria
-        qr_io = BytesIO()
-        img = qr.make_image(fill_color="black", back_color="white")
-        img.save(qr_io, 'PNG')
-        qr_io.seek(0)
-        qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
-        qr_url = f"data:image/png;base64,{qr_base64}"
-
-        # Obtener otras variables
-        medico_becario_nombre = documento.medico_becario
-        logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
-        logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
-        fecha_actual = datetime.now().strftime('%d/%m/%Y')
-        fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
-        print(f"Firma electrónica URL: {firma_electronica_url}")
-
-        # Contexto para renderizar en la plantilla
-        context = {
-            'content': content_with_absolute_urls,
-            'nombre': documento.paciente_nombre,
-            'expediente': documento.numero_expediente,
-            'edad': documento.edad,
-            'genero': documento.genero,
-            'fecha_nacimiento': documento.fecha_nacimiento,
-            'logo_url': logo_url,
-            'fecha_actual': fecha_actual,
-            'logo_foo': logo_foo,
-            'fecha_solicitud': fecha_solicitud,
-            'medico_becario': documento.medico_becario,
-            'firma_electronica': firma_electronica_url,  # Añadir firma
-            'codigo_qr': qr_url  # Añadir código QR
-        }
-
-        html = template.render(context)
-        print(html)
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename ="resumen.pdf"'
-
-        pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
-
-        if pisa_status.err:
-            return HttpResponse('Error al generar el PDF')
-
-        # Enviar el correo electrónico
-        try:
-            email = EmailMessage(
-                'Resumen Médico',
-                'Adjunto encontrará su resumen médico en formato PDF.',
-                settings.DEFAULT_FROM_EMAIL,
-                [correo_paciente]
-            )
-            email.attach('resumen.pdf', response.content, 'application/pdf')
-            email.send()
-
-            # Cambiar el estado del documento a "Enviado"
-            documento.estado = 'Enviado'
-            documento.save()
-
-            return redirect('MedicosADS_with_id', edited_id=documento_id)
-        except Exception as e:
-            print(f"Error al enviar el correo: {e}")
-            return HttpResponse('Error al enviar el correo')
-
-    return redirect('editar_documento2', documento_id=documento_id)
 
 
 
@@ -659,37 +461,6 @@ def modificar_especialidad(request, doctor_id):
         doctor.save()
     return redirect('configuracion_view')
 
-def descargar_pdf(request, documento_id):
-    documento = get_object_or_404(Resumen, id=documento_id)
-
-    # Ruta del archivo PDF
-    pdf_dir = os.path.join(settings.MEDIA_ROOT, 'documentos')
-    pdf_path = os.path.join(pdf_dir, f'{documento_id}.pdf')
-
-    # Verificar si la carpeta existe, si no, crearla
-    if not os.path.exists(pdf_dir):
-        os.makedirs(pdf_dir)
-
-    # Si el archivo no existe, genera el PDF
-    if not os.path.exists(pdf_path):
-        # Renderizar la plantilla HTML a PDF
-        template = get_template('Medico/pdf_template.html')
-        context = {
-            'content': documento.texto.replace('/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'),
-            'nombre': documento.paciente_nombre,
-            'expediente': documento.numero_expediente,
-            'edad': documento.edad,
-            'fecha_actual': timezone.now().strftime("%d/%m/%Y"),
-            'logo_url': request.build_absolute_uri(static('assets/img/imo.jpg'))
-        }
-        html = template.render(context)
-        with open(pdf_path, 'wb') as pdf_file:
-            pisa_status = pisa.CreatePDF(html, dest=pdf_file, link_callback=link_callback)
-            if pisa_status.err:
-                return HttpResponse('Error al generar el PDF')
-
-    # Retornar el archivo PDF como respuesta
-    return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
 
 
 @login_required
@@ -708,3 +479,254 @@ def agregar_comentario(request, documento_id):
             return redirect('editar_documento2', documento_id=documento_id)
 
     return redirect('editar_documento2', documento_id=documento_id)
+
+
+
+#__________________________________________________________________________________
+
+#intento con weasyprint
+@login_required
+def generar_pdf_weasyprint(request, documento_id):
+    # Obtener el documento o resumen
+    documento = get_object_or_404(Resumen, id=documento_id)
+
+    # Cargar la plantilla HTML para renderizarla como PDF
+    template = get_template('Medico/pdf_template_weasyprint.html')  # Cambiamos el nombre de la plantilla
+    
+    # Procesar el contenido de Summernote
+    content_with_absolute_urls = documento.texto.replace(
+        '/media/', request.build_absolute_uri(settings.MEDIA_URL)
+    ).replace(
+        '/static/', request.build_absolute_uri(settings.STATIC_URL)
+    )
+
+    # Obtener la firma electrónica del doctor
+    doctor = Doctor.objects.get(user=request.user)
+    firma_electronica_url = doctor.firma_electronica.url
+
+    # Generar el código QR con el enlace al resumen
+    resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
+    qr = qrcode.QRCode(
+        version=5,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=5,
+        border=2,
+    )
+    qr.add_data(resumen_url)
+    qr.make(fit=True)
+
+    # Generar la imagen del QR en memoria
+    qr_io = BytesIO()
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save(qr_io, 'PNG')
+    qr_io.seek(0)
+    qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
+    qr_url = f"data:image/png;base64,{qr_base64}"
+
+    # Obtener otras variables necesarias
+    logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
+    logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
+    fecha_actual = datetime.now().strftime('%d/%m/%Y')
+    fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
+
+    # Contexto para renderizar en la plantilla
+    context = {
+        'content': content_with_absolute_urls,
+        'nombre': documento.paciente_nombre,
+        'expediente': documento.numero_expediente,
+        'edad': documento.edad,
+        'genero': documento.genero,
+        'fecha_nacimiento': documento.fecha_nacimiento,
+        'fecha_solicitud': fecha_solicitud,
+        'logo_url': logo_url,
+        'fecha_actual': fecha_actual,
+        'logo_foo': logo_foo,
+        'firma_electronica': firma_electronica_url,  # Añadir firma
+        'codigo_qr': qr_url,  # Añadir código QR,
+        'medico_becario': documento.medico_becario,
+        'especialidad': documento.especialidad,
+    }
+
+    # Renderizar el contenido HTML
+    html = template.render(context)
+
+    # Usar WeasyPrint para convertir el HTML a PDF
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = 'inline; filename="resumen_medico.pdf"'
+
+    response['X-Frame-Options'] = 'ALLOWALL'
+
+    # Crear el PDF usando WeasyPrint
+    HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(response)
+
+    return response
+
+
+@login_required
+def enviar_documento_weasyprint(request, documento_id):
+    documento = get_object_or_404(Resumen, id=documento_id)
+    correo_paciente = request.POST.get('correo_paciente')
+
+    if request.method == 'POST':
+        # Renderizar la plantilla HTML a PDF
+        template = get_template('Medico/pdf_template_weasyprint.html')
+
+        # Procesar el contenido del documento
+        content_with_absolute_urls = documento.texto.replace(
+            '/media/', f'{request.build_absolute_uri(settings.MEDIA_URL)}'
+        ).replace(
+            '/static/', f'{request.build_absolute_uri(settings.STATIC_URL)}'
+        )
+
+        # Obtener firma electrónica del médico
+        doctor = Doctor.objects.get(user=request.user)
+        firma_electronica_url = request.build_absolute_uri(doctor.firma_electronica.url)
+
+        # Generar el código QR
+        resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
+        qr = qrcode.QRCode(
+            version=5,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=5,
+            border=2,
+        )
+        qr.add_data(resumen_url)
+        qr.make(fit=True)
+
+        # Generar la imagen del QR en memoria
+        qr_io = BytesIO()
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(qr_io, 'PNG')
+        qr_io.seek(0)
+        qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
+        qr_url = f"data:image/png;base64,{qr_base64}"
+
+        # Variables para el template
+        logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
+        logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
+        fecha_actual = datetime.now().strftime('%d/%m/%Y')
+        fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
+
+        # Contexto para el template
+        context = {
+            'content': content_with_absolute_urls,
+            'nombre': documento.paciente_nombre,
+            'expediente': documento.numero_expediente,
+            'edad': documento.edad,
+            'genero': documento.genero,
+            'fecha_nacimiento': documento.fecha_nacimiento,
+            'logo_url': logo_url,
+            'fecha_actual': fecha_actual,
+            'logo_foo': logo_foo,
+            'fecha_solicitud': fecha_solicitud,
+            'firma_electronica': firma_electronica_url,
+            'codigo_qr': qr_url,
+            'especialidad': documento.especialidad,
+        }
+
+        # Crear el PDF
+        html = template.render(context)
+        pdf_file = BytesIO()
+        HTML(string=html).write_pdf(pdf_file)
+        pdf_file.seek(0)
+
+        # Enviar el correo electrónico con el archivo PDF adjunto
+        try:
+            email = EmailMessage(
+                'Resumen Médico',
+                'Adjunto encontrará su resumen médico en formato PDF.',
+                settings.DEFAULT_FROM_EMAIL,
+                [correo_paciente]
+            )
+            email.attach('resumen_medico.pdf', pdf_file.getvalue(), 'application/pdf')
+            email.send()
+
+            # Cambiar el estado del documento a "Enviado"
+            documento.estado = 'Enviado'
+            documento.save()
+
+            return redirect('MedicosADS_with_id', edited_id=documento_id)
+        except Exception as e:
+            print(f"Error al enviar el correo: {e}")
+            return HttpResponse('Error al enviar el correo')
+
+    return redirect('editar_documento2', documento_id=documento_id)
+
+@login_required
+def generar_pdf_busqueda(request, documento_id):
+    # Obtener el documento o resumen
+    documento = get_object_or_404(Resumen, id=documento_id)
+
+    # Cargar la plantilla HTML para renderizarla como PDF
+    template = get_template('Medico/pdf_template_weasyprint.html')  
+    
+    # Procesar el contenido de Summernote
+    content_with_absolute_urls = documento.texto.replace(
+        '/media/', request.build_absolute_uri(settings.MEDIA_URL)
+    ).replace(
+        '/static/', request.build_absolute_uri(settings.STATIC_URL)
+    )
+
+    # Obtener la firma electrónica del primer medico adscrito
+    firma_electronica_url = None
+    if documento.medico_adscrito.exists():
+        doctor_adscrito = documento.medico_adscrito.first()  # Primer médico adscrito
+        firma_electronica_url = doctor_adscrito.firma_electronica.url
+
+    # Obtener el nombre del médico becario
+    medico_becario_nombre = documento.medico_becario
+
+    # Generar el código QR con el enlace al resumen
+    resumen_url = request.build_absolute_uri(f'/descargar_pdf/{documento_id}/')
+    qr = qrcode.QRCode(
+        version=5,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=5,
+        border=2,
+    )
+    qr.add_data(resumen_url)
+    qr.make(fit=True)
+
+    # Generar la imagen del QR en memoria
+    qr_io = BytesIO()
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save(qr_io, 'PNG')
+    qr_io.seek(0)
+    qr_base64 = base64.b64encode(qr_io.getvalue()).decode('utf-8')
+    qr_url = f"data:image/png;base64,{qr_base64}"
+
+    # Obtener otras variables necesarias
+    logo_url = request.build_absolute_uri(static('assets/img/imo_original.svg'))
+    logo_foo = request.build_absolute_uri(static('assets/img/footer.png'))
+    fecha_actual = datetime.now().strftime('%d/%m/%Y')
+    fecha_solicitud = documento.fecha_solicitud.strftime('%d/%m/%Y')
+
+    # Contexto para renderizar en la plantilla
+    context = {
+        'content': content_with_absolute_urls,
+        'nombre': documento.paciente_nombre,
+        'expediente': documento.numero_expediente,
+        'edad': documento.edad,
+        'genero': documento.genero,
+        'fecha_nacimiento': documento.fecha_nacimiento,
+        'fecha_solicitud': fecha_solicitud,
+        'logo_url': logo_url,
+        'fecha_actual': fecha_actual,
+        'logo_foo': logo_foo,
+        'firma_electronica': firma_electronica_url,  # Añadir la firma del primer adscrito
+        'codigo_qr': qr_url,  # Añadir código QR,
+        'medico_becario': medico_becario_nombre,  # Añadir nombre del becario
+        'especialidad': documento.especialidad,
+    }
+
+    # Renderizar el contenido HTML
+    html = template.render(context)
+
+    # Usar WeasyPrint para convertir el HTML a PDF
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = 'inline; filename="resumen_medico.pdf"'
+
+    # Crear el PDF usando WeasyPrint
+    HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(response)
+
+    return response

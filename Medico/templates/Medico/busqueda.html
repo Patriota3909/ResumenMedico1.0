@@ -145,10 +145,27 @@
                                 <td>{{ resumen.estado }}</td>
                                 <td>
                                   {% if resumen.estado == "Enviado" %}
-                                      <a href="{% url 'descargar_pdf' documento_id=resumen.id %}" class="btn btn-success">
-                                         Descargar
-                                      </a>
+                                  <a href="{% url 'generar_pdf_busqueda' resumen.id %}" target="_blank" class="btn btn-primary">
+                                    Ver PDF
+                                 </a>
                                   {% endif %}
+                                      <!-- Modal para ver PDF -->
+                                      <div class="modal fade" id="modalVerPDF{{ resumen.id }}" tabindex="-1" aria-labelledby="modalLabel{{ resumen.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalLabel{{ resumen.id }}">Vista Previa del Resumen</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <iframe src="{% url 'generar_pdf_weasyprint' resumen.id %}" width="100%" height="500px" style="border:none;"></iframe>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
                               </td>
                             </tr>
                             {% endfor %}
@@ -177,6 +194,10 @@
             <p class="mb-0">Copyright © 2024 Brand</p>
         </div>
     </footer>
+
+
+
+
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'assets/js/bs-init.js' %}"></script>
 
