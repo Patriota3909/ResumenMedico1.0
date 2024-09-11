@@ -224,7 +224,7 @@
   <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: brown;">
     <div class="container">
       <!-- Izquierda: Flecha de regreso -->
-      {% if user_tipo == 'Becario' %}
+      {% if user_tipo == 'Becario' or user_tipo == 'Residente' %}
       <a class="btn btn-outline-light" href="{% url 'MedicosRB' %}">
         <i class="fas fa-arrow-left"></i> 
       </a>
@@ -244,6 +244,10 @@
           </li>
           {% endif %}
           {% if documento.estado == 'Solicitud' and user_tipo == 'Becario' %}
+          <li class="nav-item">
+            <a class="nav-link" id="enRevision" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</a>
+          </li>
+          {% elif documento.estado == 'Solicitud' and user_tipo == 'Residente' %}
           <li class="nav-item">
             <a class="nav-link" id="enRevision" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal_enrevision">Enviar a revisión</a>
           </li>

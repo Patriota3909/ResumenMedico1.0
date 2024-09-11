@@ -130,14 +130,13 @@
                                                   
                                                 </div>
                                                 <div class="modal-body" style="text-align: justify;">
-                                                  <p>Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</p></strong>
+                                                 
                                                   <p>Especialidad: <strong>{{ documento.especialidad.name }}</p></strong>
                                                   <p>Fecha de entrega programada: <strong>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</p></strong>
                                                   <p>Fecha de solicitud: <strong>{{ documento.solicitud|date:"d-m-Y" }}</p></strong>
-                                                  <p>Estado: <strong>{{ documento.estado }}</p></strong>
-                                                  <p>Médico Becario: <strong>{{ documento.medico_becario }}</p></strong>
-                                                  <p>Médico Residente: <strong>{{ documento.medico_residente }}</p></strong>
-                                                  <p>Médico Adscrito:<strong>{{documento.medico_adscrito.all.0}}</strong>
+                                                  <p>Médico Adscrito:<strong>{{documento.medico_adscrito.all.0}}</strong></p>
+                                                  <p>
+                                                    Motivo de solicitud: <strong>{{ documento.motivo_solicitud }}</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -157,8 +156,8 @@
                                     <td>{{documento.medico_residente}}</td>
                                     <td>{{ documento.especialidad.name}}</td>
                                     <td><a href="{% url 'editar_documento2' documento.id %}"><i class="far fa-edit"></i></a></td>
-                                    {% if request.user.doctor.tipo == 'Becario' %}
                                     <td>
+                                        {% if request.user.doctor.tipo == 'Becario' and es_unico_becario %}
                                         <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
                                         <div class="modal fade" id="asignarResidenteModal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="asignarResidenteModalLabel-{{ documento.id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -186,8 +185,8 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% endif%}
                                     </td>
-                                    {% endif%}
                                 </tr>
                                 {% endfor%}
                             </tbody>
@@ -215,14 +214,7 @@
                                     <th>Fecha de entrega programada</th>
                                     <th>Becario Asignado</th>
                                     <th>Residente Asignado</th>
-                                    <th>Editar</th>
-                                    
-                                        {% if request.user.doctor.tipo == "Becario" %}
-                                        <th>
-                                            Asignar Residente
-                                        </th>
-                                        {% endif %}
-                                    
+                                    <th>Editar</th>                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -238,9 +230,6 @@
                                                 </div>
                                                 <div class="modal-body" style="text-transform: none; text-align: justify ;">
                                                   <p>
-                                                    Nombre del Paciente: <strong>{{ documento.paciente_nombre }}</strong>
-                                                  </p>
-                                                  <p>
                                                     Especialidad: <strong>{{ documento.especialidad.name }}</strong>
                                                   </p>
                                                   <p>
@@ -250,16 +239,10 @@
                                                     Fecha de solicitud: <strong>{{ documento.fecha_solicitud|date:"d-m-Y" }}</strong>
                                                   </p>
                                                   <p>
-                                                    Estado: <strong>{{ documento.estado }}</strong>
-                                                  </p>
-                                                  <p>
-                                                    Medico Becario: <strong>{{ documento.medico_becario }}</strong>
-                                                  </p>
-                                                  <p>
-                                                    Medico Residente: <strong>{{ documento.medico_residente }}</strong>
-                                                  </p>
-                                                  <p>
                                                     Medico Adscrito: <strong>{{documento.medico_adscrito.all.0}}</strong>
+                                                  </p>
+                                                  <p>
+                                                    Motivo de solicitud: <strong>{{ documento.motivo_solicitud }}</strong>
                                                   </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -274,44 +257,13 @@
                                     <td>{{ documento.fecha_entrega_programada|date:"d-m-Y" }}</td>
                                     <td>{{ documento.medico_becario }}</td>
                                     <td>{{ documento.medico_residente }}</td>
+
                                     <td>
-                                      {% if not request.user.doctor.tipo == 'Residente' %}
+                                      
                                       <a href="{% url 'editar_documento2' documento.id %}"><i class="far fa-edit"></i></a>
-                                      {% else %}
-                                      <i class="far fa-edit" style="color: grey;"></i>
-                                      {% endif %}                                    
+                                      
+                                                                       
                                     </td>
-                                    {% if request.user.doctor.tipo == 'Becario' %}
-                                    <td>
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
-                                        <div class="modal fade" id="asignarResidenteModal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="asignarResidenteModalLabel-{{ documento.id }}" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="asignarResidenteModalLabel-{{ documento.id }}">Asignar a Medico Residente</h5>
-                                                      
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="post" action="{% url 'asignar_medico_residente' %}">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="resumen_id" value="{{ documento.id }}">
-                                                            <div class="form-group">
-                                                                <label for="residente">Seleccionar Medico Residente</label>
-                                                                <select class="form-control" id="residente" name="residente">
-                                                                    {% for residente in residentes %}
-                                                                    <option value="{{ residente.id }}">{{ residente.user.get_full_name }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                            <br>
-                                                            <button type="submit" class="btn btn-danger">Asignar</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    {% endif%}
                                 </tr>
                                 {% endfor%}
                             </tbody>

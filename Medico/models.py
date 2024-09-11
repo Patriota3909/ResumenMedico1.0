@@ -46,7 +46,7 @@ class Doctor(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=10, choices=TIPOS_DE_MEDICO)
-    especialidad =  models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    especialidad =  models.ForeignKey(Especialidad, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField()
     cedula = models.CharField(max_length=50)
     firma_electronica = models.ImageField(upload_to='firma_electronica/', null=True, blank=True)
@@ -172,7 +172,7 @@ class EstadoHistorial(models.Model):
     
 #Esta asignación de se construyo para el registro de ediciones del objeto "Resumen"
 class Asignacion(models.Model):
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE, null=True, blank=True)
     tipo_medico = models.CharField(max_length=10, choices=Doctor.TIPOS_DE_MEDICO)
     ultimo_medico = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
     

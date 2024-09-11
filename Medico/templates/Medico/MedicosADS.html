@@ -117,20 +117,16 @@
                               </div>
                               <div class="modal-body" style="text-transform: none; text-align: justify;">
                                 <p>
-                                  Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
+                                  Motivo de solicitud: <strong>{{ resumen.motivo_solicitud }}</strong>
                                 </p>
-                                <p>
-                                  Especialidad: <strong>{{ resumen.especialidad.name }}</strong>
-                                </p>
+                                
                                 <p>
                                   Fecha de entrega programada: <strong>{{ resumen.fecha_entrega_programada|date:'d-m-Y' }}</strong>
                                 </p>
                                 <p>
                                   Fecha de solicitud: <strong>{{ resumen.fecha_solicitud|date:'d-m-Y' }}</strong>
                                 </p>
-                                <p>
-                                  Estado: <strong>{{ resumen.estado }}</strong>
-                                </p>
+                                
                                 <p>
                                   Medico Becario: <strong>{{ resumen.medico_becario }}</strong>
                                 </p>
@@ -195,7 +191,7 @@
                               </div>
                               <div class="modal-body" style="text-align: justify;">
                                 <p>
-                                  Nombre del Paciente: <strong>{{ resumen.paciente_nombre }}</strong>
+                                  Motivo de solicitud: <strong>{{ resumen.motivo_solicitud }}</strong>
                                 </p>
                                 <p>
                                   Especialidad: <strong>{{ resumen.especialidad.name }}</strong>

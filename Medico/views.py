@@ -78,8 +78,14 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
         doctor = Doctor.objects.get(user=user)
     except Doctor.DoesNotExist:
         raise PermissionDenied("No tienes permisos para acceder a esta vista")
+    
+    es_unico_becario = False
+    
 
     if doctor.tipo == 'Becario':
+        becarios_en_especialidad = Doctor.objects.filter(especialidad=doctor.especialidad, tipo = 'Becario').count()
+        if becarios_en_especialidad == 1:
+            es_unico_becario = True
         documentos_solicitud = Resumen.objects.filter(estado="Solicitud", medico_becario=doctor).order_by('-fecha_modificacion')
         documentos_revison = Resumen.objects.filter(estado="En revisión", medico_becario=doctor).order_by('-fecha_modificacion')
     elif doctor.tipo == 'Residente':
@@ -95,7 +101,7 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
         documentos_revision = documentos_revision.filter(Especialidad=Especialidad_obj)
 
     especialidades = Especialidad.objects.all()
-    residentes = Doctor.objects.filter(especialidad=doctor.especialidad, tipo="Residente")  
+    residentes = Doctor.objects.filter(tipo="Residente")  
     
     count_en_revision = documentos_solicitud.count()
     count_solicitud = documentos_revison.count()
@@ -111,6 +117,7 @@ def lista_solicitudes_revision(request, Especialidad_id=None, edited_id=None):
         'residentes':residentes,
         'edited_id':edited_id,
         'doctor':doctor,
+        'es_unico_becario': es_unico_becario,
         
         
         })
@@ -188,7 +195,7 @@ def asignar_medico_residente(request):
 
 #------------Cambia el status del Resumen----------------------------------------------------------
 @login_required
-@user_tipo_required(['Adscrito','Becario'])
+@user_tipo_required(['Adscrito','Becario','Residente'])
 def cambiar_estado(request, documento_id):
     print("Entrando en la vista cambiar_estado")
     if request.method == 'POST':
@@ -256,7 +263,11 @@ def solicitud(request):
         numero_expediente = request.POST['numero_expediente']
         motivo_solicitud = request.POST['motivo_solicitud']
         especialidad_id = request.POST['especialidad']
-        especialidad = Especialidad.objects.get(id=especialidad_id)
+        try:
+            especialidad = Especialidad.objects.get(id=especialidad_id)
+        except Especialidad.DoesNotExist:
+            messages.error(request ,'la especialidad seleccionada no existe')
+            return redirect('solicitud')    
         correo_electronico = request.POST['correo_electronico']
         fecha_nacimiento = request.POST['fecha_nacimiento']
         genero = request.POST['genero']
