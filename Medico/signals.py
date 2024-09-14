@@ -9,17 +9,12 @@ ESPECIALIDADES_CON_ADSCRITO_Y_BECARIO = ['Retina', 'Segmento Anterior', 'Estrabi
 ESPECIALIDADES_CON_ADSCRITO_Y_RESIDENTE = ['Primera Vez', 'Uveitis', 'Oculoplastica']
 
 def obtener_siguiente_medico(especialidad=None, tipo_medico=None, especialidad_especifica=True):
-    """
-    Si especialidad_especifica es True, filtra por especialidad y tipo de médico.
-    Si es False, solo filtra por tipo de médico (para residentes, ignorando especialidad).
-    """
-    especialidad_obj = None  # Inicializar la especialidad
+    
+    especialidad_obj = None 
 
-    # Si no es necesario filtrar por especialidad (caso para residentes)
     if not especialidad_especifica:
-        medicos = list(Doctor.objects.filter(tipo=tipo_medico).order_by('id'))  # Filtrar solo por tipo
+        medicos = list(Doctor.objects.filter(tipo=tipo_medico).order_by('id')) 
     else:
-        # Comprobar si se ha proporcionado una especialidad
         if especialidad:
             try:
                 especialidad_obj = Especialidad.objects.get(name=especialidad)
@@ -28,7 +23,7 @@ def obtener_siguiente_medico(especialidad=None, tipo_medico=None, especialidad_e
                 return None
 
         # Si la especialidad está presente, filtra por especialidad y tipo de médico
-        medicos = list(Doctor.objects.filter(especialidad=especialidad_obj, tipo=tipo_medico).order_by('id'))
+        medicos = list(Doctor.objects.filter(especialidad=especialidad_obj, tipo=tipo_medico, active = True).order_by('id'))
 
     if not medicos:
         return None

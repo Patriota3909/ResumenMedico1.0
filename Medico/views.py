@@ -24,6 +24,7 @@ from django.contrib.auth.models import Group
 from django.utils.html import escape
 from django.contrib.staticfiles import finders
 import os
+from django.core.paginator import Paginator
 import base64
 from datetime import datetime
 from django.http import FileResponse
@@ -337,11 +338,16 @@ def lista_resumenes(request):
             Q(texto__icontains=query)
         )
     
-    
+    # Ordenar los resúmenes por la fecha de entrega programada
     resumenes = sorted(resumenes, key=lambda x: x.fecha_entrega_programada)
-    
+
+    # Paginación: 10 resúmenes por página
+    paginator = Paginator(resumenes, 10)  # Cambia el '10' según cuántos quieras mostrar por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'Medico/busqueda.html', {
-        'resumenes': resumenes,
+        'page_obj': page_obj,
         'especialidades': especialidades,
     })
     
@@ -470,9 +476,20 @@ def modificar_especialidad(request, doctor_id):
         nueva_especialidad = get_object_or_404(Especialidad, id=nueva_especialidad_id)
         doctor.especialidad = nueva_especialidad
         doctor.save()
+        doctor.activo = 'activo' in request.POST
     return redirect('configuracion_view')
 
-
+@login_required
+def modificar_estado_doctor(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    print(f'Entrando a modificar estado de doctor')
+   
+    if request.method == 'POST':
+        activo = request.POST.get('active') == 'True'
+        doctor.active = activo
+        doctor.save()
+        messages.success(request, 'Se ha configuirado el  estado del médico')
+    return redirect('configuracion_view')  
 
 @login_required
 @user_tipo_required(['Adscrito', 'Residente', 'Becario'])

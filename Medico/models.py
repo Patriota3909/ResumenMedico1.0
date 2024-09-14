@@ -51,8 +51,11 @@ class Doctor(models.Model):
     cedula = models.CharField(max_length=50)
     firma_electronica = models.ImageField(upload_to='firma_electronica/', null=True, blank=True)
     
+    active = models.BooleanField(default=True)
+    
     def __str__(self):
         return (f"{self.user.first_name} {self.user.last_name}")
+    
 
 
 

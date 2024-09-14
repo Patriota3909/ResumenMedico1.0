@@ -92,7 +92,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabla-resumenes" style="text-transform: none;">
-                            {% for resumen in resumenes %}
+                            {% for resumen in page_obj %}
                             <tr>
                                 <td><button class="btn btn-primary text-center border rounded-circle" data-toggle="modal" data-target="#modal1-{{ resumen.id }}" data-bss-hover-animate="pulse"  type="button" style="color: rgb(242,241,241);background: rgb(140,24,24);"><i class="fa fa-eye"></i></button>
                                     <div class="modal fade" id="modal1-{{ resumen.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ resumen.id }}" aria-hidden="true">
@@ -170,7 +170,28 @@
                             </tr>
                             {% endfor %}
                         </tbody>
+                        
+                      
                     </table>
+                    <div class="pagination d-flex justify-content-between">
+                      <!-- Bloque de número de páginas a la izquierda -->
+                      <span class="current">
+                          Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                      </span>
+                    
+                      <!-- Bloque de enlaces de paginación a la derecha -->
+                      <span class="step-links">
+                          {% if page_obj.has_previous %}
+                              <a style="text-decoration: none; color: white;" href="?page=1">&laquo; primera</a>
+                              <a style="text-decoration: none; color: white;" href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                          {% endif %}
+                      
+                          {% if page_obj.has_next %}
+                              <a style="text-decoration: none; color: white;" href="?page={{ page_obj.next_page_number }}">siguiente</a>
+                              <a style="text-decoration: none; color: white;" href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+                          {% endif %}
+                      </span>
+                    </div>
                 </div>
             </div>
         </section>
