@@ -322,6 +322,7 @@ def lista_resumenes(request):
     especialidades = Especialidad.objects.all()
     resumenes = Resumen.objects.all()
 
+    # Filtrar por especialidades si está presente en la solicitud
     especialidad_ids = request.GET.getlist('especialidades')
     query = request.GET.get('q')
 
@@ -337,12 +338,20 @@ def lista_resumenes(request):
             Q(correo_electronico__icontains=query) |
             Q(texto__icontains=query)
         )
-    
-    # Ordenar los resúmenes por la fecha de entrega programada
-    resumenes = sorted(resumenes, key=lambda x: x.fecha_entrega_programada)
 
-    # Paginación: 10 resúmenes por página
-    paginator = Paginator(resumenes, 10)  # Cambia el '10' según cuántos quieras mostrar por página
+    # Dividir los resúmenes en dos listas: no enviados y enviados
+    no_enviados = [resumen for resumen in resumenes if resumen.estado != "Enviado"]
+    enviados = [resumen for resumen in resumenes if resumen.estado == "Enviado"]
+
+    # Ordenar por fecha_entrega_programada
+    no_enviados.sort(key=lambda x: x.fecha_entrega_programada)
+    enviados.sort(key=lambda x: x.fecha_entrega_programada)
+
+    # Combinar ambas listas
+    resumenes_ordenados = no_enviados + enviados
+
+    # Paginación
+    paginator = Paginator(resumenes_ordenados, 10)  # Mostramos 10 resúmenes por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -350,6 +359,7 @@ def lista_resumenes(request):
         'page_obj': page_obj,
         'especialidades': especialidades,
     })
+
     
 #-----------------------------------------------------------------------------------------
 
