@@ -469,7 +469,7 @@ def link_callback(uri, rel):
 @login_required
 def configuracion_view(request):
     print('Entrando a configuracion')    
-    medicos = Doctor.objects.filter(tipo__in=['Becario', 'Residente'])
+    medicos = Doctor.objects.filter(tipo__in=['Becario', 'Residente','Adscrito'])
     especialidades = Especialidad.objects.all()
     nombre_usuario = request.user.get_full_name() or request.user.username
     return render(request, 'Medico/configuracion.html', {
