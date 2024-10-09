@@ -493,16 +493,26 @@
           height: 1115,
           minHeight: 1115,
           maxHeight: 1115,
-          fontNames: ['Arial', 'Arial Black','Courier New'],
           lineHeights: ['1.2', '1.4', '1.5', '2.0', '3.0'],
           focus: true,
           toolbar: [
             ['font', ['bold', 'italic', 'underline']],
-            ['fontsize', ['fontsize']],
-            ['fontname', ['fontname']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['color', ['color']],
           ],
+
+          callbacks: {
+            onPaste: function(e) {
+              e.preventDefault(); // Evitar la acción predeterminada
+              
+              // Obtener el texto del portapapeles sin formato
+              var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+              var plainText = clipboardData.getData('text/plain');
+              
+              // Insertar el texto limpio en Summernote
+              $('#contenido_principal').summernote('pasteHTML', plainText);
+            }
+          }
+
         });
     
         // Desaparecer el mensaje después de 5 segundos

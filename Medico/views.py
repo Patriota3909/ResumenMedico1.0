@@ -768,3 +768,7 @@ def generar_pdf_busqueda(request, documento_id):
     HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(response)
 
     return response
+
+
+def pdfview(request):
+    return render(request, 'Medico/pdfview.html')

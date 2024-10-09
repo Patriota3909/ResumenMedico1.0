@@ -33,6 +33,7 @@ urlpatterns = [
     path('enviar_documento_weasyprint/<int:documento_id>/', views.enviar_documento_weasyprint, name='enviar_documento_weasyprint'),
     path('generar_pdf_busqueda/<int:documento_id>/', views.generar_pdf_busqueda, name='generar_pdf_busqueda'),
     path('modificar_estado_doctor/<int:doctor_id>/', views.modificar_estado_doctor, name='modificar_estado_doctor'),
+    path('pdfview/', views.pdfview, name='pdfview'),
 
 ]
     
