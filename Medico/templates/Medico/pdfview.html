@@ -22,19 +22,19 @@
 
     <script type="text/javascript">
       window.PDFJS_LOCALE = {
-        pdfJsWorker: '{% static "3dflip/js/pdf.worker.js" %}',
-        pdfJsCMapUrl: '{% static "3dflip/cmaps/" %}'
+        pdfJsWorker: '{% static "3d-flip-book/3d-flip-book/js/pdf.worker.js" %}',
+        pdfJsCMapUrl: '{% static "3d-flip-book/3d-flip-book/cmaps/" %}'
       }
     </script>
     <!-- Scripts para el FlipBook -->
-    <script src="{% static '3dflip/js/jquery.min.js' %}"></script>
-    <script src="{% static '3dflip/js/html2canvas.min.js' %}"></script>
-    <script src="{% static '3dflip/js/three.min.js' %}"></script>
-    <script src="{% static '3dflip/js/pdf.min.js' %}"></script>
-    <script src="{% static '3dflip/js/3dflipbook.min.js' %}"></script>
-    <script src="{% static '3dflip/js/default-book-view.js' %}"></script>
-    <script src="{% static '3dflip/templates/default-book-view.html' %}"></script>
-    <script src="{% static '3dflip/js/pdf.worker.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/jquery.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/html2canvas.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js//libs/three.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/pdf.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js//dist/3dflipbook.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/default-book-view.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/templates/default-book-view.html' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/pdf.worker.js' %}"></script>
 
     <script type="text/javascript">
       window.FB3D_LOCALE = {
@@ -47,29 +47,31 @@
     <script>
       $(document).ready(function () {
         $('.solid-container').FlipBook({
-          pdf: '{% static "pdfs/informe.pdf" %}', // Ruta correcta al PDF
+          pdf: '{% static "pdfs/informe2.pdf" %}',
+          licenseKey: 'SP-BFA756D1-FA30B6CC-9934BA5A-2F49F308',
           template: {
-            html: '{% static "3dflip/templates/default-book-view.html" %}', // Ruta correcta al archivo HTML de la plantilla
+            html: '{% static "3d-flip-book/3d-flip-book/templates/default-book-view.html" %}', // Ruta correcta al archivo HTML de la plantilla
       
             styles: [
-              '{% static "3dflip/css/black-book-view.css" %}' // Ruta correcta al archivo CSS
+              '{% static "3d-flip-book/3d-flip-book/css/black-book-view.css" %}' // Ruta correcta al archivo CSS
             ],
       
-            script: '{% static "3dflip/js/default-book-view.js" %}', // Ruta correcta al archivo JS
+            script: '{% static "3d-flip-book/3d-flip-book/js/default-book-view.js" %}', // Ruta correcta al archivo JS
       
             links: [
               {
                 rel: 'stylesheet',
-                href: '{% static "3dflip/css/font-awesome.min.css" %}' // Ruta correcta al archivo de Font Awesome
+                href: '{% static "3d-flip-book/3d-flip-book/css/font-awesome.min.css" %}' // Ruta correcta al archivo de Font Awesome
               }
             ],
       
             sounds: {
-              startFlip: '{% static "3dflip/sounds/start-flip.mp3" %}', // Ruta correcta al sonido de inicio
-              endFlip: '{% static "3dflip/sounds/end-flip.mp3" %}' // Ruta correcta al sonido de finalización
+              startFlip: '{% static "3d-flip-book/3d-flip-book/sounds/start-flip.mp3" %}', // Ruta correcta al sonido de inicio
+              endFlip: '{% static "3d-flip-book/3d-flip-book/sounds/end-flip.mp3" %}' // Ruta correcta al sonido de finalización
             }
-          },  
-          pdfWorker: '{% static "3dflip/js/pdf.worker.js" %}', 
+          },
+          pdfWorker: '{% static "3d-flip-book/3d-flip-book/js/pdf.worker.js" %}',
+          pdfJsCMapUrl: '{% static "3d-flip-book/3d-flip-book/cmaps/" %}'
         })
       })
     </script>
