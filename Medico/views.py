@@ -37,6 +37,7 @@ from PIL import Image
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from cryptography.fernet import Fernet
 
 
 
@@ -772,3 +773,15 @@ def generar_pdf_busqueda(request, documento_id):
 
 def pdfview(request):
     return render(request, 'Medico/pdfview.html')
+
+
+def pdfview2(request):
+    return render(request, 'Medico/pdfview2.html')
+    
+
+
+    
+def obtener_licencia(request):
+    cipher_suite = Fernet(settings.ENCRYPTION_KEY.encode("utf-8"))
+    decrypted_license = cipher_suite.decrypt(settings.FLIPBOOK_LICENSE_KEY.encode("utf-8")).decode("utf-8")
+    return JsonResponse({'license_key': decrypted_license})

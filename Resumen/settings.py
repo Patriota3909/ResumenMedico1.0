@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
-
+from cryptography.fernet import Fernet
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -158,3 +158,18 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
 }
+
+# settings.py
+FLIPBOOK_LICENSE_KEY = 'SP-BFA756D1-FA30B6CC-9934BA5A-2F49F308'
+
+# Generar la clave de cifrado
+encryption_key = Fernet.generate_key()
+
+# Crear la suite de cifrado
+cipher_suite = Fernet(encryption_key)
+
+# Cifrar la licencia
+FLIPBOOK_LICENSE_KEY = cipher_suite.encrypt(b'SP-BFA756D1-FA30B6CC-9934BA5A-2F49F308').decode("utf-8")
+
+# Guardar la clave de cifrado en settings
+ENCRYPTION_KEY = encryption_key.decode("utf-8")

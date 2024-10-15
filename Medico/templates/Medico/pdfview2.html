@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .solid-container {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="solid-container"></div>
+
+    <script type="text/javascript">
+      window.PDFJS_LOCALE = {
+        pdfJsWorker: '{% static "3d-flip-book/3d-flip-book/js/pdf.worker.js" %}',
+        pdfJsCMapUrl: '{% static "3d-flip-book/3d-flip-book/cmaps/" %}'
+      }
+    </script>
+    <!-- Scripts para el FlipBook -->
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/jquery.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/html2canvas.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/three.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/pdf.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/libs/3dflipbook.min.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/default-book-view.js' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/templates/default-book-view.html' %}"></script>
+    <script src="{% static '3d-flip-book/3d-flip-book/js/pdf.worker.js' %}"></script>
+
+    <script type="text/javascript">
+      window.FB3D_LOCALE = {
+        dictionary: {
+          string: 'translation'
+        }
+      }
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: "{% url 'obtener_licencia' %}",  
+          method: "GET",
+          success: function (response) {
+            $('.solid-container').FlipBook({
+              pdf: '{% static "pdfs/imo2.pdf" %}',
+              licenseKey: response.license_key,  
+              template: {
+                html: '{% static "3d-flip-book/3d-flip-book/templates/default-book-view.html" %}',
+                styles: ['{% static "3d-flip-book/3d-flip-book/css/black-book-view.css" %}'],
+                script: '{% static "3d-flip-book/3d-flip-book/js/default-book-view.js" %}',
+                links: [
+                  {
+                    rel: 'stylesheet',
+                    href: '{% static "3d-flip-book/3d-flip-book/css/font-awesome.min.css" %}'
+                  }
+                ],
+                sounds: {
+                  startFlip: '{% static "3d-flip-book/3d-flip-book/sounds/start-flip.mp3" %}',
+                  endFlip: '{% static "3d-flip-book/3d-flip-book/sounds/end-flip.mp3" %}'
+                }
+              },
+              pdfWorker: '{% static "3d-flip-book/3d-flip-book/js/pdf.worker.js" %}',
+              pdfJsCMapUrl: '{% static "3d-flip-book/3d-flip-book/cmaps/" %}'
+            })
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
