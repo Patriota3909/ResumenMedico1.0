@@ -38,7 +38,8 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from cryptography.fernet import Fernet
-
+import requests
+from oauthlib.oauth1 import SIGNATURE_HMAC_SHA256, Client
 
 
 
@@ -785,3 +786,69 @@ def obtener_licencia(request):
     cipher_suite = Fernet(settings.ENCRYPTION_KEY.encode("utf-8"))
     decrypted_license = cipher_suite.decrypt(settings.FLIPBOOK_LICENSE_KEY.encode("utf-8")).decode("utf-8")
     return JsonResponse({'license_key': decrypted_license})
+
+@csrf_exempt
+def get_patient(request):
+    
+    if request.method == 'POST':
+        USERID = request.POST.get('USERID')
+        UUID = request.POST.get('UUID')
+        Fecha = request.POST.get('Fecha')
+        token = request.POST.get('token')
+        
+        if not all ([USERID, UUID, Fecha, token]):
+            return JsonResponse({'error': 'No mams falta algun campo.',  'status_code':441}, status=441)
+        
+        trusted_token = settings.MY_TOKEN 
+        
+        if token != trusted_token:
+            return JsonResponse({'error': 'Esta mal el token car.',  'status_code':403}, status=403)
+
+        
+        #entity_id = "185355"
+    
+        CONSUMER_KEY = settings.CONSUMER_KEY
+        CONSUMER_SECRET = settings.CONSUMER_SECRET
+        REALM = settings.REALM
+        TOKEN_KEY = settings.TOKEN_KEY
+        TOKEN_SECRET = settings.TOKEN_SECRET
+
+        URL = f"https://{REALM.lower().replace('_', '-')}.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=1569&deploy=1&entityid={USERID}"
+
+
+        client = Client(
+            CONSUMER_KEY,
+            client_secret=CONSUMER_SECRET,
+            resource_owner_key=TOKEN_KEY,
+            resource_owner_secret=TOKEN_SECRET,
+            signature_method=SIGNATURE_HMAC_SHA256,
+            realm=REALM,
+            signature_type='AUTH_HEADER'
+        )
+
+        uri, headers, body = client.sign(URL, http_method='GET')
+    
+        try: 
+            response = requests.get(URL, headers=headers, data=body )
+
+            if response.status_code == 200:
+                print(f"Esta es la respuesta {response.text}")
+                response_data = response.json()
+                
+                if response_data .get('success') == False:
+                    return JsonResponse({'error': 'Este chavo(a)(e) no esta en netsuite', 'status_code':440}, status=440)
+                
+                
+                mail = response_data.get('data', {}).get('mail','')
+                
+                if not mail:
+                    return JsonResponse({'message':'Si esta pero sin correo'}, status=442)
+                else:
+                    message = 'Todo cul si existe y con correo' 
+                
+                return JsonResponse({'Simon👌': message}, status=200)
+            else:
+                return JsonResponse({'error': "Error en la consulta", 'status_code':441}, status=441)
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({'error': "Error en la consulta a la API", 'detalles': str(e)}, status=500)
+    return JsonResponse({'error': 'Mal peticion -_-'}, status=405)
