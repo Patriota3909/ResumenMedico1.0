@@ -796,12 +796,16 @@ def get_patient(request):
         Fecha = request.POST.get('Fecha')
         token = request.POST.get('token')
         
+        print(f"Token recibido: '{token}'")
+        print(f"Token esperado (trusted_token): '{settings.MY_TOKEN}'")
+        
         if not all ([USERID, UUID, Fecha, token]):
             return JsonResponse({'error': 'No mams falta algun campo.',  'status_code':441}, status=441)
         
         trusted_token = settings.MY_TOKEN 
         
         if token != trusted_token:
+            print("Token no coincide.")
             return JsonResponse({'error': 'Esta mal el token car.',  'status_code':403}, status=403)
 
         
@@ -845,6 +849,37 @@ def get_patient(request):
                     return JsonResponse({'message':'Si esta pero sin correo'}, status=442)
                 else:
                     message = 'Todo cul si existe y con correo' 
+                    
+                # Generación del PDF con WeasyPrint
+                nombre_paciente = response_data.get('data', {}).get('name', 'Paciente Desconocido')
+                
+                # Renderizamos una plantilla HTML para el PDF
+                html_string = render_to_string('Medico/pdf_brazalete.html', {
+                    'nombre': nombre_paciente,
+                    'uuid': UUID,
+                    'fecha': Fecha,
+                })
+                
+                # Convertimos la plantilla HTML a PDF usando WeasyPrint
+                pdf_file = BytesIO()
+                HTML(string=html_string).write_pdf(pdf_file)
+                pdf_file.seek(0)
+
+                # Enviamos el correo con el PDF adjunto
+                email = EmailMessage(
+                    subject='Resumen de Paciente',
+                    body='Adjunto encontrarás el PDF con los detalles del paciente.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[mail]
+                )
+                email.attach('resumen_paciente.pdf', pdf_file.getvalue(), 'application/pdf')
+                
+                try:
+                    email.send()
+                    return JsonResponse({'message': 'Correo enviado con éxito'}, status=200)
+                except Exception as e:
+                    return JsonResponse({'error': f'Error al enviar el correo: {str(e)}'}, status=500)
+                
                 
                 return JsonResponse({'Simon👌': message}, status=200)
             else:
