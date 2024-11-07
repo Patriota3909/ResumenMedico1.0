@@ -5,7 +5,7 @@ from .models import Resumen, Doctor, Asignacion, Especialidad
 from django.core.mail import send_mail
 
 
-ESPECIALIDADES_CON_ADSCRITO_Y_BECARIO = ['Retina', 'Segmento Anterior', 'Estrabismo', 'Glaucoma']
+ESPECIALIDADES_CON_ADSCRITO_Y_BECARIO = ['Retina', 'Segmento Anterior', 'Estrabismo', 'Glaucoma','Baja Visión']
 ESPECIALIDADES_CON_ADSCRITO_Y_RESIDENTE = ['Primera Vez', 'Uveitis', 'Oculoplástica']
 
 def obtener_siguiente_medico(especialidad=None, tipo_medico=None, especialidad_especifica=True):

@@ -158,7 +158,7 @@
                                     <td><a href="{% url 'editar_documento2' documento.id %}"><i class="far fa-edit"></i></a></td>
                                     <td>
                                         {% if request.user.doctor.tipo == 'Becario' and es_unico_becario %}
-                                        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#asignarResidenteModal-{{ documento.id }}">Asignar Residente</button>
+                                        
                                         <div class="modal fade" id="asignarResidenteModal-{{ documento.id }}" tabindex="-1" role="dialog" aria-labelledby="asignarResidenteModalLabel-{{ documento.id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
