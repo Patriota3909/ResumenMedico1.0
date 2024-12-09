@@ -887,3 +887,9 @@ def get_patient(request):
         except requests.exceptions.RequestException as e:
             return JsonResponse({'error': "Error en la consulta a la API", 'detalles': str(e)}, status=500)
     return JsonResponse({'error': 'Mal peticion -_-'}, status=405)
+
+
+
+def lista(request):
+    doctores = Doctor.objects.select_related('user')  # Optimiza la consulta
+    return render(request, 'Medico/lista.html', {'doctores': doctores})

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Doctores</title>
+</head>
+<body>
+    <h1>Lista de Doctores</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Correo Electrónico</th>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Tipo</th>
+                <th>Cédula</th>
+                <th>Activo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctores %}
+            <tr>
+                <td>{{ doctor.user.username }}</td>
+                <td>{{ doctor.user.email }}</td>
+                <td>{{ doctor.nombre }}</td>
+                <td>{{ doctor.especialidad }}</td>
+                <td>{{ doctor.tipo }}</td>
+                <td>{{ doctor.cedula }}</td>
+                <td>{% if doctor.active %}Sí{% else %}No{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

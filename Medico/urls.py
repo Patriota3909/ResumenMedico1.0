@@ -37,8 +37,8 @@ urlpatterns = [
     path('pdfview/2/', views.pdfview2, name='pdfview2'),
     path('obtener-licencia/', views.obtener_licencia, name='obtener_licencia'),
     path('get_patient/', views.get_patient, name='get_patient'),
+    path('lista_doctores/', views.lista, name='lista'),
+    
+    
 ]
-    
-    
-
     
