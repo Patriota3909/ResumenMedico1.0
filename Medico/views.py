@@ -486,9 +486,12 @@ def modificar_especialidad(request, doctor_id):
         nueva_especialidad_id = request.POST.get('especialidad')
         doctor = get_object_or_404(Doctor, id=doctor_id)
         nueva_especialidad = get_object_or_404(Especialidad, id=nueva_especialidad_id)
+        
+        # Actualiza la especialidad del médico
         doctor.especialidad = nueva_especialidad
         doctor.save()
-        doctor.activo = 'activo' in request.POST
+        
+        messages.success(request, f'La especialidad de {doctor.user.username} se ha actualizado a {nueva_especialidad.name}.')
     return redirect('configuracion_view')
 
 @login_required

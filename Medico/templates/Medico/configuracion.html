@@ -114,7 +114,19 @@
                     <tr data-especialidad="{{ doctor.especialidad.name }}">
                         <td>{{ doctor.user.username }}</td>
                         <td>{{ doctor.tipo }}</td>
-                        <td>{{ doctor.especialidad.name }}</td>
+                        <td>
+                            <form method="post" action="{% url 'modificar_especialidad' doctor.id %}">
+                                {% csrf_token %}
+                                <select class="form-select" name="especialidad">
+                                    {% for especialidad in especialidades %}
+                                        <option value="{{ especialidad.id }}" {% if doctor.especialidad.id == especialidad.id %}selected{% endif %}>
+                                            {{ especialidad.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+                            </form>
+                        </td>
                         <td>
                             <form method="post" action="{% url 'modificar_estado_doctor' doctor.id %}">
                                 {% csrf_token %}
