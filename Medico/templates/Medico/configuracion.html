@@ -113,7 +113,21 @@
                     {% for doctor in medicos %}
                     <tr data-especialidad="{{ doctor.especialidad.name }}">
                         <td>{{ doctor.user.username }}</td>
-                        <td>{{ doctor.tipo }}</td>
+                        <td>
+                            {% if doctor.tipo == "Adscrito" %}
+                            {{ doctor.tipo }}
+                            {% else %}
+                            <form method="post" action="{% url 'modificar_tipo' doctor.id %}">
+                                {% csrf_token %}
+                                <select class="form-select" name="tipo">
+                                    <option value="Residente" {% if doctor.tipo == "Residente" %}selected{% endif %}>Residente</option>
+                                    <option value="Becario" {% if doctor.tipo == "Becario" %}selected{% endif %}>Becario</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+                            </form>
+                        {% endif %}
+
+                        </td>
                         <td>
                             <form method="post" action="{% url 'modificar_especialidad' doctor.id %}">
                                 {% csrf_token %}

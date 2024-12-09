@@ -480,6 +480,27 @@ def configuracion_view(request):
         'nombre_usuario':nombre_usuario,
     })
     
+
+@login_required
+def modificar_tipo(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    
+    # Evitar cambios si el tipo es "Adscrito"
+    if doctor.tipo == "Adscrito":
+        messages.error(request, "No se puede cambiar el tipo de un médico Adscrito.")
+        return redirect('configuracion_view')
+    
+    if request.method == 'POST':
+        nuevo_tipo = request.POST.get('tipo')
+        if nuevo_tipo in ["Residente", "Becario"]:  # Validar solo valores permitidos
+            doctor.tipo = nuevo_tipo
+            doctor.save()
+            messages.success(request, f"El tipo de {doctor.user.username} se ha cambiado a {nuevo_tipo}.")
+        else:
+            messages.error(request, "El tipo seleccionado no es válido.")
+    
+    return redirect('configuracion_view')
+    
 @login_required
 def modificar_especialidad(request, doctor_id):
     if request.method == 'POST':

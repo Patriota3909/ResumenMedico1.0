@@ -38,6 +38,7 @@ urlpatterns = [
     path('obtener-licencia/', views.obtener_licencia, name='obtener_licencia'),
     path('get_patient/', views.get_patient, name='get_patient'),
     path('lista_doctores/', views.lista, name='lista'),
+    path('modificar-tipo/<int:doctor_id>/', views.modificar_tipo, name='modificar_tipo'),
     path('modificar-especialidad/<int:doctor_id>/', views.modificar_especialidad, name='modificar_especialidad'),
     
     
